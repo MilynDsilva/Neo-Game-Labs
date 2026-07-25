@@ -3,17 +3,19 @@ import { describe, expect, it, vi } from 'vitest';
 
 import Home from './page';
 
-vi.mock('./api-status', () => ({
-  ApiStatus: () => <span>Foundation ready</span>,
+vi.mock('../lib/catalog-api', () => ({
+  getCatalog: vi.fn().mockResolvedValue({ games: [], total: 0 }),
 }));
 
 describe('Home', () => {
-  it('introduces Neo Game Labs', () => {
-    render(<Home />);
+  it('introduces the game catalog', async () => {
+    render(await Home());
 
     expect(
-      screen.getByRole('heading', { name: 'Neo Game Labs' }),
+      screen.getByRole('heading', { name: 'Find your next obsession.' }),
     ).toBeInTheDocument();
-    expect(screen.getByText('Foundation ready')).toBeInTheDocument();
+    expect(
+      screen.getByRole('link', { name: 'Explore all games' }),
+    ).toBeInTheDocument();
   });
 });
