@@ -296,6 +296,11 @@ export class AuthService {
     });
   }
 
+  async getAuthenticatedCustomerId(rawToken?: string): Promise<string> {
+    const session = await this.requireSession(rawToken);
+    return session.customerId.toString();
+  }
+
   get sessionLifetime(): number {
     return sessionLifetimeMilliseconds;
   }

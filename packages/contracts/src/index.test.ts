@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import {
+  topUpPackagesResponseSchema,
   gameDetailSchema,
   gamePlatformDetailsSchema,
   healthResponseSchema,
@@ -15,6 +16,23 @@ describe('healthResponseSchema', () => {
     });
 
     expect(result.success).toBe(true);
+  });
+});
+
+describe('topUpPackagesResponseSchema', () => {
+  it('accepts integer minor-unit prices for supported currencies', () => {
+    expect(
+      topUpPackagesResponseSchema.parse({
+        packages: [
+          {
+            amountMinor: 10_000,
+            code: 'inr-100-v1',
+            currency: 'INR',
+            points: 100,
+          },
+        ],
+      }).packages[0]?.points,
+    ).toBe(100);
   });
 });
 

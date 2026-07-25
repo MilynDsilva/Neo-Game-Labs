@@ -19,5 +19,6 @@ import { SecurityEvent, SecurityEventSchema } from './security-event.schema.js';
     ]),
   ],
   providers: [AuthService],
+  exports: [AuthService],
 })
 export class AuthModule {}
