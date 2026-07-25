@@ -499,12 +499,128 @@ h2 {
 }
 
 .site-footer {
+  align-items: start;
   border-top: 1px solid var(--line);
   color: var(--muted);
-  display: flex;
+  display: grid;
   font-size: 0.8rem;
-  justify-content: space-between;
+  gap: 2rem;
+  grid-template-columns: 1fr auto auto;
   padding: 2rem clamp(1.25rem, 7vw, 7rem);
+}
+
+.site-footer p {
+  margin: 0.35rem 0 0;
+}
+
+.site-footer nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+}
+
+.site-footer a:hover {
+  color: var(--foreground);
+}
+
+.content-page {
+  margin: 0 auto;
+  max-width: 76rem;
+  padding: 7rem clamp(1.25rem, 7vw, 7rem);
+}
+
+.content-page-header {
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 4rem;
+  max-width: 58rem;
+  padding-bottom: 4rem;
+}
+
+.content-page-header h1,
+.status-page h1 {
+  font-size: clamp(2.8rem, 7vw, 5.8rem);
+  letter-spacing: -0.055em;
+  line-height: 0.98;
+  margin: 0.5rem 0 1.5rem;
+}
+
+.content-page-header > p:last-child,
+.status-page > p:not(.eyebrow) {
+  color: var(--muted);
+  font-size: 1.2rem;
+  line-height: 1.7;
+  max-width: 46rem;
+}
+
+.content-sections {
+  display: grid;
+  gap: 3rem;
+  max-width: 50rem;
+}
+
+.content-sections section {
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 3rem;
+}
+
+.content-sections h2 {
+  font-size: 1.55rem;
+  margin: 0 0 0.8rem;
+}
+
+.content-sections p {
+  color: var(--muted);
+  line-height: 1.8;
+}
+
+.content-sections a,
+.text-link {
+  color: var(--accent-bright);
+}
+
+.content-callout {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+  padding: 2rem;
+}
+
+.status-page {
+  min-height: 65vh;
+  padding: 8rem clamp(1.25rem, 7vw, 7rem);
+}
+
+.status-page button,
+.button-link {
+  background: var(--accent);
+  border: 0;
+  border-radius: 999px;
+  color: white;
+  display: inline-block;
+  font-weight: 700;
+  margin-top: 1rem;
+  padding: 0.85rem 1.25rem;
+}
+
+.loading-grid {
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  padding: 0 clamp(1.25rem, 7vw, 7rem) 6rem;
+}
+
+.loading-card {
+  animation: loading-pulse 1.4s ease-in-out infinite;
+  aspect-ratio: 4 / 3;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 0.9rem;
+}
+
+@keyframes loading-pulse {
+  50% {
+    opacity: 0.45;
+  }
 }
 
 @media (max-width: 900px) {
@@ -521,6 +637,10 @@ h2 {
   }
 
   .game-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .loading-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -553,7 +673,8 @@ h2 {
   }
 
   .game-grid,
-  .catalog-filters {
+  .catalog-filters,
+  .loading-grid {
     grid-template-columns: 1fr;
   }
 
@@ -572,6 +693,6 @@ h2 {
   }
 
   .site-footer {
-    display: block;
+    grid-template-columns: 1fr;
   }
 }
