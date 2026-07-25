@@ -606,6 +606,19 @@ h2 {
   padding: 0 clamp(1.25rem, 7vw, 7rem) 6rem;
 }
 
+.checkout-notice {
+  background: rgb(89 220 174 / 10%);
+  border: 1px solid rgb(89 220 174 / 35%);
+  border-radius: 0.7rem;
+  color: #8cf0ce;
+  margin: 0;
+  padding: 1rem;
+}
+
+.form-error {
+  color: #ff8994;
+}
+
 .wallet-balance {
   background: linear-gradient(135deg, var(--surface), #181238);
   border: 1px solid var(--line);

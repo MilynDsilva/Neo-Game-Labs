@@ -6,7 +6,7 @@ import { AppModule } from './app.module.js';
 import { requestIdMiddleware } from './common/request-id.middleware.js';
 
 async function bootstrap(): Promise<void> {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { rawBody: true });
   const configService = app.get(ConfigService);
 
   app.setGlobalPrefix('v1');
