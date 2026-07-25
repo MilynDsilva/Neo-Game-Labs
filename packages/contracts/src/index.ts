@@ -64,8 +64,26 @@ export const healthResponseSchema = z.object({
   timestamp: z.iso.datetime(),
 });
 
+export const customerProfileSchema = z.object({
+  displayName: z.string().trim().min(1),
+  email: z.email(),
+  id: z.string().min(1),
+  pictureUrl: z.url().optional(),
+  pointsBalance: z.number().int().nonnegative(),
+});
+
+export const authStatusSchema = z.discriminatedUnion('authenticated', [
+  z.object({ authenticated: z.literal(false) }),
+  z.object({
+    authenticated: z.literal(true),
+    customer: customerProfileSchema,
+  }),
+]);
+
 export type GameCatalogResponse = z.infer<typeof gameCatalogResponseSchema>;
 export type GameDetail = z.infer<typeof gameDetailSchema>;
 export type GamePlatform = z.infer<typeof gamePlatformSchema>;
 export type GameSummary = z.infer<typeof gameSummarySchema>;
 export type HealthResponse = z.infer<typeof healthResponseSchema>;
+export type AuthStatus = z.infer<typeof authStatusSchema>;
+export type CustomerProfile = z.infer<typeof customerProfileSchema>;

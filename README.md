@@ -31,6 +31,14 @@ The web application runs at `http://localhost:3000` and the API health endpoint
 is available at `http://localhost:4000/v1/health`. The catalog seed is
 idempotent and can be rerun safely.
 
+## Google sign-in
+
+Google sign-in remains disabled until credentials are configured. Create a Web
+application in Google Cloud, add
+`http://localhost:4000/v1/auth/google/callback` as an authorized redirect URI,
+and set `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` in `apps/api/.env`.
+Production and staging must use separate OAuth clients and HTTPS callback URLs.
+
 ## Validation
 
 ```bash

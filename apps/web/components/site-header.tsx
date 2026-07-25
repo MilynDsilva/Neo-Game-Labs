@@ -10,7 +10,7 @@ export function SiteHeader() {
       <nav aria-label="Main navigation">
         <Link href="/games">Games</Link>
         <span className="nav-muted">Library</span>
-        <span className="nav-muted">Sign in</span>
+        <Link href="/account">Sign in</Link>
       </nav>
     </header>
   );
