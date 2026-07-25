@@ -7,9 +7,13 @@ payments, points accounting, release delivery, or deployment.
 
 ## Product decisions
 
-- Identify launch countries, currencies, and languages.
+- Confirm launch countries and languages. Initial payment currencies are fixed
+  to INR and USD.
 - Choose the games available at launch and their supported platforms.
-- Confirm the conversion rule, initially proposed as ₹1 = 1 point.
+- Confirm the INR conversion rule, initially proposed as ₹1 = 1 point.
+- Select the USD-to-points packages. Do not use $1 = 1 point.
+- Decide how often currency packages may be repriced and how existing checkout
+  sessions are handled after a pricing change.
 - Define minimum and maximum top-up amounts and account balance limits.
 - Confirm whether points can be spent only on products sold directly by Neo
   Game Labs.
@@ -48,8 +52,8 @@ payments, points accounting, release delivery, or deployment.
   must never depend on a standalone MongoDB server.
 - Points are closed-loop: usable only for products sold by Neo Game Labs, not
   transferable, and not withdrawable as cash.
-- INR is stored in minor units and points are stored as integers; floating
-  point numbers are never used for monetary accounting.
+- INR and USD are stored in their integer minor units and points are stored as
+  integers; floating point numbers are never used for monetary accounting.
 - A double-entry, append-only MongoDB ledger is the source of truth for point
   balances.
 - Hosted payment checkout; card or UPI credentials never pass through Neo Game
@@ -86,7 +90,8 @@ Indian legal and tax review before accepting customer funds.
 ## Exit criteria
 
 - Payment, authentication, download delivery, and hosting providers are chosen.
-- Launch regions, currency, tax treatment, and platform support are known.
+- Launch regions, INR and USD point packages, tax treatment, and platform
+  support are known.
 - The points terms, refund rules, and chargeback behavior are approved.
 - Legal review confirms the launch model or identifies required changes.
 - Customer and admin responsibilities are clearly separated.

@@ -13,9 +13,9 @@ must exercise replica-set transactions.
 
 ## Financial consistency requirements
 
-Stripe is the source of truth for whether an INR payment succeeded. MongoDB is
-the source of truth for internal points, purchases, and entitlements. Stripe
-does not replace the internal ledger.
+Stripe is the source of truth for whether an INR or USD payment succeeded.
+MongoDB is the source of truth for internal points, purchases, and
+entitlements. Stripe does not replace the internal ledger.
 
 Every balance-changing operation must:
 
@@ -23,8 +23,8 @@ Every balance-changing operation must:
 - Use snapshot read concern and majority, journaled write concern where
   supported by the deployment.
 - Use a unique idempotency key enforced by a database index.
-- Store INR in integer paise and points as integers, never binary floating
-  point values.
+- Store payment amounts in integer minor units: paise for INR and cents for USD.
+  Store points as integers and never use binary floating point values.
 - Write immutable ledger entries; corrections use compensating entries.
 - Update the cached account balance in the same transaction as its ledger
   entries.
@@ -47,6 +47,18 @@ authoritative payment state.
   against immutable ledger entries.
 - Keep catalog documents flexible, but version product price and terms used by
   each purchase.
+
+## Currency and points
+
+- Support only `INR` and `USD` at initial launch.
+- Use fixed, versioned top-up packages for each currency rather than calculating
+  points from a live exchange rate during checkout.
+- Keep points currency-neutral after a successful top-up.
+- Store the original currency, amount in minor units, applied conversion rule,
+  and points granted on every top-up.
+- Do not infer the customer's currency from a client-provided value alone.
+- Refund through the original payment currency and gateway according to the
+  approved refund policy.
 
 ## Scale strategy
 

@@ -4,7 +4,7 @@
 
 Build `neogamelabs.com` as the customer-facing home for Neo Game Labs. Visitors
 can discover games and platform availability. Customers can sign in with
-Google, top up Neo Game Labs points using INR, spend points on games and
+Google, top up Neo Game Labs points using INR or USD, spend points on games and
 products, access purchases in a library, and submit feedback.
 
 The admin dashboard will be built in a separate repository. It will use
@@ -58,7 +58,7 @@ The first production release should include:
   applicable
 - iOS App Store and Google Play links where applicable
 - Google sign-in and a customer profile
-- INR top-ups through a hosted payment provider
+- INR and USD top-ups through a hosted payment provider
 - A points balance backed by an auditable transaction ledger
 - Point-based checkout and a customer purchase library
 - Basic feedback submission

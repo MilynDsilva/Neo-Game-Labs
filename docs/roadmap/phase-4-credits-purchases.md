@@ -2,13 +2,15 @@
 
 ## Goal
 
-Allow signed-in customers to top up points with INR, spend points on Neo Game
-Labs products, and securely access purchased games.
+Allow signed-in customers to top up points with INR or USD, spend points on Neo
+Game Labs products, and securely access purchased games.
 
 ## Points rules
 
-- Start with the proposed conversion of ₹1 = 1 point.
-- Store points as whole integers and INR in paise.
+- Start with the proposed INR conversion of ₹1 = 1 point.
+- Offer approved, fixed USD-to-points packages; never treat $1 as equivalent to
+  ₹1.
+- Store points as whole integers, INR in paise, and USD in cents.
 - Do not allow customer-to-customer transfers or cash withdrawal.
 - Allow points to be used only for products sold directly by Neo Game Labs.
 - Publish clear terms for expiry, refunds, chargebacks, and account closure.
@@ -17,8 +19,10 @@ Labs products, and securely access purchased games.
 
 ## Top-up flow
 
-- Offer predefined or policy-compliant custom INR amounts.
+- Offer predefined INR and USD top-up packages.
 - Create a server-side top-up order before hosted checkout.
+- Lock the currency, amount, points, and conversion-rule version into the
+  server-side top-up order.
 - Verify the gateway's signed webhook and authoritative payment status.
 - Process every webhook idempotently.
 - Store Stripe event IDs behind a unique MongoDB index so concurrent or retried
