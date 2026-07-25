@@ -1,5 +1,8 @@
 # Neo Game Labs Customer Platform Roadmap
 
+For the live implementation and handoff state, see
+[Project Delivery Status](../project-status.md).
+
 ## Product goal
 
 Build `neogamelabs.com` as the customer-facing home for Neo Game Labs. Visitors
