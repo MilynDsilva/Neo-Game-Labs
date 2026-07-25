@@ -3,6 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 
 import { CatalogModule } from './catalog/catalog.module.js';
+import { AuthModule } from './auth/auth.module.js';
 import { validateEnvironment } from './config/environment.js';
 import { HealthController } from './health/health.controller.js';
 
@@ -19,6 +20,7 @@ import { HealthController } from './health/health.controller.js';
         uri: configService.getOrThrow<string>('MONGODB_URI'),
       }),
     }),
+    AuthModule,
     CatalogModule,
   ],
   controllers: [HealthController],

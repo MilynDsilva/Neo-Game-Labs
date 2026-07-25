@@ -507,6 +507,56 @@ h2 {
   padding: 2rem clamp(1.25rem, 7vw, 7rem);
 }
 
+.account-layout {
+  min-height: 30rem;
+  padding: 0 clamp(1.25rem, 7vw, 7rem) 6rem;
+}
+
+.account-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+  display: grid;
+  gap: 1.5rem;
+  max-width: 42rem;
+  padding: 2rem;
+}
+
+.account-card h2,
+.account-card p {
+  margin: 0;
+}
+
+.account-card p,
+.account-balance span {
+  color: var(--muted);
+}
+
+.account-identity {
+  align-items: center;
+  display: flex;
+  gap: 1rem;
+}
+
+.account-identity img {
+  border-radius: 50%;
+  height: 4rem;
+  width: 4rem;
+}
+
+.account-balance {
+  border-bottom: 1px solid var(--line);
+  border-top: 1px solid var(--line);
+  display: flex;
+  justify-content: space-between;
+  padding: 1.5rem 0;
+}
+
+.account-balance strong {
+  color: var(--accent-bright);
+  font-size: 1.5rem;
+}
+
 @media (max-width: 900px) {
   .home-hero,
   .game-details {
