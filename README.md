@@ -40,6 +40,20 @@ application in Google Cloud, add
 and set `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` in `apps/api/.env`.
 Production and staging must use separate OAuth clients and HTTPS callback URLs.
 
+## Stripe test checkout
+
+Set `STRIPE_SECRET_KEY` and `STRIPE_WEBHOOK_SECRET` in `apps/api/.env`. For
+local webhook forwarding, run:
+
+```bash
+stripe listen --forward-to localhost:4000/v1/payments/stripe/webhook
+```
+
+Use the `whsec_...` value printed by the Stripe CLI as
+`STRIPE_WEBHOOK_SECRET`, restart the API, and use Stripe test card
+`4242 4242 4242 4242` with any future expiry and any three-digit CVC. Never
+commit Stripe keys or webhook secrets.
+
 ## Validation
 
 ```bash

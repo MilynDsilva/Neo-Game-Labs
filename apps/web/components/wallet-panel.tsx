@@ -19,8 +19,22 @@ export function WalletPanel() {
   const [wallet, setWallet] = useState<WalletResponse>();
   const [packages, setPackages] = useState<TopUpPackage[]>([]);
   const [failed, setFailed] = useState(false);
+  const [checkoutError, setCheckoutError] = useState<string>();
+  const [checkoutPackage, setCheckoutPackage] = useState<string>();
+  const [checkoutNotice, setCheckoutNotice] = useState<string>();
 
   useEffect(() => {
+    const checkout = new URLSearchParams(window.location.search).get(
+      'checkout',
+    );
+    if (checkout === 'success') {
+      setCheckoutNotice(
+        'Payment received. Your balance updates after Stripe confirms it.',
+      );
+    } else if (checkout === 'cancelled') {
+      setCheckoutNotice('Checkout was cancelled. You were not charged.');
+    }
+
     void Promise.all([
       fetch(`${apiUrl}/v1/wallet`, { credentials: 'include' }),
       fetch(`${apiUrl}/v1/wallet/top-up-packages`),
@@ -38,6 +52,31 @@ export function WalletPanel() {
       .catch(() => setFailed(true));
   }, []);
 
+  async function beginCheckout(packageCode: string) {
+    setCheckoutError(undefined);
+    setCheckoutPackage(packageCode);
+    const response = await fetch(`${apiUrl}/v1/payments/checkout`, {
+      body: JSON.stringify({
+        checkoutRequestKey: crypto.randomUUID(),
+        packageCode,
+      }),
+      credentials: 'include',
+      headers: { 'content-type': 'application/json' },
+      method: 'POST',
+    });
+    if (!response.ok) {
+      setCheckoutError(
+        response.status === 503
+          ? 'Stripe is not configured yet.'
+          : 'Checkout could not be started.',
+      );
+      setCheckoutPackage(undefined);
+      return;
+    }
+    const data = (await response.json()) as { url: string };
+    window.location.assign(data.url);
+  }
+
   if (failed) {
     return (
       <p className="empty-state">
@@ -49,6 +88,11 @@ export function WalletPanel() {
 
   return (
     <div className="wallet-layout">
+      {checkoutNotice ? (
+        <p className="checkout-notice" role="status">
+          {checkoutNotice}
+        </p>
+      ) : null}
       <section className="wallet-balance">
         <span>Available balance</span>
         <strong>{wallet.balance} points</strong>
@@ -59,8 +103,13 @@ export function WalletPanel() {
             <p className="eyebrow">Fixed packages</p>
             <h2>Top up points</h2>
           </div>
-          <p>Stripe checkout is coming next.</p>
+          <p>Secure checkout powered by Stripe.</p>
         </div>
+        {checkoutError ? (
+          <p className="form-error" role="alert">
+            {checkoutError}
+          </p>
+        ) : null}
         <div className="package-grid">
           {packages.map((item) => (
             <article key={item.code}>
@@ -70,8 +119,14 @@ export function WalletPanel() {
                   item.amountMinor / 100,
                 )}
               </span>
-              <button disabled type="button">
-                Checkout coming soon
+              <button
+                disabled={checkoutPackage !== undefined}
+                onClick={() => void beginCheckout(item.code)}
+                type="button"
+              >
+                {checkoutPackage === item.code
+                  ? 'Opening checkout…'
+                  : 'Buy with Stripe'}
               </button>
             </article>
           ))}

@@ -28,4 +28,10 @@ describe('validateEnvironment', () => {
       validateEnvironment({ GOOGLE_CLIENT_ID: 'client-id' }),
     ).toThrow();
   });
+
+  it('rejects incomplete Stripe credentials', () => {
+    expect(() =>
+      validateEnvironment({ STRIPE_SECRET_KEY: 'sk_test_example' }),
+    ).toThrow();
+  });
 });
