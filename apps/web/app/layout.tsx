@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 
+import { SiteHeader } from '../components/site-header';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -13,7 +14,14 @@ export default function RootLayout({
 }: Readonly<{ children: ReactNode }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <SiteHeader />
+        {children}
+        <footer className="site-footer">
+          <p>© {new Date().getFullYear()} Neo Game Labs</p>
+          <p>Built for players everywhere.</p>
+        </footer>
+      </body>
     </html>
   );
 }

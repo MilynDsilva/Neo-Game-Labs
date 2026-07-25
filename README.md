@@ -18,16 +18,18 @@ platform for `neogamelabs.com`.
 ## Local setup
 
 ```bash
-corepack enable
-corepack prepare pnpm@10.17.0 --activate
+npm install --global pnpm@10.17.0
 pnpm install
-cp .env.example .env
+cp .env.example apps/api/.env
+cp .env.example apps/web/.env.local
 docker compose up -d
+pnpm --filter @neogamelabs/api seed:catalog
 pnpm dev
 ```
 
 The web application runs at `http://localhost:3000` and the API health endpoint
-is available at `http://localhost:4000/v1/health`.
+is available at `http://localhost:4000/v1/health`. The catalog seed is
+idempotent and can be rerun safely.
 
 ## Validation
 
