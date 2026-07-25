@@ -27,7 +27,15 @@ are added.
 - `games`
 - `game_platforms`
 - `game_releases`
-- `customer_games`
+- `products`
+- `point_accounts`
+- `ledger_transactions`
+- `ledger_entries`
+- `top_up_orders`
+- `payment_events`
+- `purchases`
+- `purchase_items`
+- `entitlements`
 - `download_events`
 - `feedback`
 - `admin_roles`

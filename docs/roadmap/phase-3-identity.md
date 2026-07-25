@@ -17,6 +17,8 @@ account.
 - Add session revocation and security-event audit records.
 - Define account merging behavior before adding another identity provider.
 - Add rate limiting and abuse protection to authentication endpoints.
+- Create one points account for each customer and prevent duplicate accounts
+  during concurrent sign-in requests.
 
 ## Admin boundary
 
@@ -28,5 +30,6 @@ account.
 
 - Authentication flows pass security and failure-path tests.
 - A signed-out user cannot access customer-only endpoints.
+- Top-ups, point purchases, balances, and purchased downloads require sign-in.
 - A customer cannot call admin endpoints.
 - Account deletion and data export follow the approved retention policy.

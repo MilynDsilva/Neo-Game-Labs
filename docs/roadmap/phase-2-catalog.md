@@ -11,9 +11,10 @@ available.
 - Games listing with platform and availability filters
 - Search by title
 - Game detail page with description, media, requirements, supported platforms,
-  free availability, and release status
+  point price, and release status
 - Correct calls to action for:
-  - Downloading a free game
+  - Buying a game with points
+  - Downloading an owned or free game
   - Opening the Apple App Store
   - Opening Google Play
   - Opening another external store
@@ -26,7 +27,7 @@ available.
 
 - Public, cacheable catalog endpoints
 - Draft, scheduled, published, and archived game states
-- Platform-specific pricing, links, requirements, and release metadata
+- Platform-specific point prices, links, requirements, and release metadata
 - Media metadata with optimized delivery
 - Protected admin endpoints for catalog and release management
 
@@ -35,6 +36,7 @@ The separate admin dashboard will provide the UI for protected endpoints.
 ## Exit criteria
 
 - Only published games and releases appear publicly.
+- Prices shown by the frontend match authoritative backend product prices.
 - Store links are validated and platform-specific calls to action are correct.
 - Catalog pages meet agreed accessibility, SEO, and performance targets.
 - Empty, loading, error, and unavailable-game states are implemented.

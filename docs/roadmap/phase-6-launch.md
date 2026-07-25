@@ -6,12 +6,13 @@ Launch a platform that is secure, measurable, recoverable, and supportable.
 
 ## Security and privacy
 
-- Complete threat modeling for authentication, admin APIs, release publication,
-  and downloads.
+- Complete threat modeling for authentication, hosted checkout, payment
+  webhooks, the points ledger, purchases, admin APIs, and downloads.
 - Review authorization for every non-public endpoint.
 - Configure security headers, content security policy, rate limits, and CORS.
 - Run dependency, secret, static analysis, and dynamic security scans.
-- Complete privacy, cookie, terms, and acceptable-use reviews.
+- Complete legal and tax review of points, privacy, cookies, terms, refunds,
+  expiry, and acceptable use.
 - Verify that logs and analytics do not capture secrets or unnecessary personal
   data.
 
@@ -19,16 +20,19 @@ Launch a platform that is secure, measurable, recoverable, and supportable.
 
 - Define service-level targets and alerts.
 - Add database backups and perform a restoration exercise.
-- Document deployment, rollback, incident, release-withdrawal, and
-  customer-support procedures.
+- Document deployment, rollback, incident, payment reconciliation, chargeback,
+  refund, release-withdrawal, and customer-support procedures.
 - Configure domain DNS, TLS, email authentication, CDN, and caching.
-- Load-test catalog, authentication callbacks, and download delivery.
-- Add feature flags or kill switches for downloads.
+- Load-test catalog, authentication callbacks, payment webhooks, point
+  purchases, and download authorization.
+- Add feature flags or kill switches for top-ups, point purchases, and
+  downloads.
 
 ## Quality
 
-- Run end-to-end tests for browsing, Google sign-in, library management,
-  downloads, external-store links, feedback, and access denial.
+- Run end-to-end tests for browsing, Google sign-in, top-up, point purchase,
+  library access, downloads, external-store links, feedback, refunds,
+  chargebacks, and access denial.
 - Test current major browsers and agreed mobile devices.
 - Complete accessibility and performance reviews.
 - Verify analytics and conversion events against the privacy policy.
@@ -36,7 +40,7 @@ Launch a platform that is secure, measurable, recoverable, and supportable.
 ## Release sequence
 
 1. Internal staging acceptance
-2. Artifact-delivery and release-withdrawal rehearsal
+2. Test payment, reconciliation, and artifact-delivery rehearsal
 3. Limited production release with selected games
 4. Monitoring and support review
 5. Public launch
@@ -46,5 +50,6 @@ Launch a platform that is secure, measurable, recoverable, and supportable.
 
 - Critical customer journeys pass in production-like staging.
 - Backups, rollback, and incident response have been rehearsed.
-- Owners exist for alerts, support, releases, and security incidents.
+- Owners exist for alerts, payments, reconciliation, refunds, support, releases,
+  and security incidents.
 - No unresolved critical security or data-loss issue remains.
