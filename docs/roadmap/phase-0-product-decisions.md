@@ -25,7 +25,8 @@ payments, points accounting, release delivery, or deployment.
 
 ## Technical decisions
 
-- Select the frontend, backend, database, and hosting stack.
+- Select the frontend, backend, and hosting stack around the approved MongoDB
+  database.
 - Select the Google OAuth implementation.
 - Select an Indian payment gateway supporting hosted checkout and signed
   webhooks.
@@ -41,13 +42,16 @@ payments, points accounting, release delivery, or deployment.
 
 - TypeScript across the frontend and backend.
 - A React framework with server rendering for discoverability and SEO.
-- PostgreSQL for customers, products, payments, the points ledger, purchases,
+- MongoDB for customers, products, payments, the points ledger, purchases,
   entitlements, downloads, and feedback.
+- MongoDB Atlas or an equivalent replica-set deployment; financial workflows
+  must never depend on a standalone MongoDB server.
 - Points are closed-loop: usable only for products sold by Neo Game Labs, not
   transferable, and not withdrawable as cash.
 - INR is stored in minor units and points are stored as integers; floating
   point numbers are never used for monetary accounting.
-- A double-entry, append-only ledger is the source of truth for point balances.
+- A double-entry, append-only MongoDB ledger is the source of truth for point
+  balances.
 - Hosted payment checkout; card or UPI credentials never pass through Neo Game
   Labs servers.
 - Private object storage with short-lived signed download URLs.

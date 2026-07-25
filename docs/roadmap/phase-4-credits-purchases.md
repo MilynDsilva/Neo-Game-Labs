@@ -21,6 +21,8 @@ Labs products, and securely access purchased games.
 - Create a server-side top-up order before hosted checkout.
 - Verify the gateway's signed webhook and authoritative payment status.
 - Process every webhook idempotently.
+- Store Stripe event IDs behind a unique MongoDB index so concurrent or retried
+  delivery cannot process the same event twice.
 - Credit points exactly once after confirmed payment.
 - Never credit points based only on the browser redirect or client response.
 - Provide pending, successful, failed, and reversed top-up states.
@@ -31,6 +33,10 @@ Labs products, and securely access purchased games.
 - Use balanced debit and credit entries in an append-only ledger.
 - Derive or reconcile displayed balances against the ledger.
 - Require idempotency keys for every balance-changing operation.
+- Execute ledger entries, cached balance changes, purchases, and entitlements
+  in MongoDB multi-document transactions.
+- Use transaction-level snapshot reads and majority, journaled writes for
+  financial changes.
 - Never edit or delete financial entries; post compensating transactions.
 - Prevent negative available balances inside the database transaction.
 - Record actor, reason, correlation ID, and related payment or purchase.

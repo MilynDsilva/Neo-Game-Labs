@@ -11,7 +11,8 @@ are added.
   packages.
 - Add formatting, linting, type checking, unit tests, and build commands.
 - Add environment-variable validation and committed example configuration.
-- Create local PostgreSQL setup and a versioned migration workflow.
+- Create local MongoDB replica-set setup and a versioned data migration
+  workflow.
 - Establish API conventions, validation, error responses, and request IDs.
 - Add continuous integration for every merge request.
 - Create isolated development, staging, and production configurations.
@@ -19,7 +20,7 @@ are added.
 - Add error tracking, structured logs, uptime checks, and basic metrics.
 - Add dependency and secret scanning.
 
-## Initial data model
+## Initial collections
 
 - `users`
 - `auth_accounts`
@@ -41,7 +42,8 @@ are added.
 - `admin_roles`
 - `audit_events`
 
-Exact fields and constraints should be designed before migrations are written.
+Exact fields, schema validation, indexes, and transaction boundaries should be
+designed before migrations are written.
 
 ## Exit criteria
 

@@ -30,6 +30,9 @@ The applications should remain independently deployable. The separate admin
 repository should consume versioned API contracts and must not share customer
 frontend code directly.
 
+See [Architecture decisions](architecture-decisions.md) for the selected
+database and financial consistency requirements.
+
 ## Delivery phases
 
 | Phase | Outcome | Depends on |
