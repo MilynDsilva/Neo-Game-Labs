@@ -18,8 +18,7 @@ platform for `neogamelabs.com`.
 ## Local setup
 
 ```bash
-corepack enable
-corepack prepare pnpm@10.17.0 --activate
+npm install --global pnpm@10.17.0
 pnpm install
 cp .env.example apps/api/.env
 cp .env.example apps/web/.env.local
