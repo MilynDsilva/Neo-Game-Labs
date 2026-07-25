@@ -35,15 +35,15 @@ database and financial consistency requirements.
 
 ## Delivery phases
 
-| Phase | Outcome | Depends on |
-| --- | --- | --- |
-| [0. Product decisions](phase-0-product-decisions.md) | Scope and technical decisions are approved | None |
-| [1. Foundation](phase-1-foundation.md) | Deployable frontend and API skeleton | Phase 0 |
-| [2. Catalog](phase-2-catalog.md) | Visitors can discover games and platforms | Phase 1 |
-| [3. Identity](phase-3-identity.md) | Customers can securely sign in with Google | Phase 1 |
+| Phase                                                              | Outcome                                                     | Depends on |
+| ------------------------------------------------------------------ | ----------------------------------------------------------- | ---------- |
+| [0. Product decisions](phase-0-product-decisions.md)               | Scope and technical decisions are approved                  | None       |
+| [1. Foundation](phase-1-foundation.md)                             | Deployable frontend and API skeleton                        | Phase 0    |
+| [2. Catalog](phase-2-catalog.md)                                   | Visitors can discover games and platforms                   | Phase 1    |
+| [3. Identity](phase-3-identity.md)                                 | Customers can securely sign in with Google                  | Phase 1    |
 | [4. Credits, purchases, and library](phase-4-credits-purchases.md) | Customers can top up points, buy products, and access games | Phases 2–3 |
-| [5. Feedback](phase-5-feedback.md) | Customers can submit moderated game feedback | Phases 2–3 |
-| [6. Launch](phase-6-launch.md) | Production is secure, observable, and supportable | Phases 2–5 |
+| [5. Feedback](phase-5-feedback.md)                                 | Customers can submit moderated game feedback                | Phases 2–3 |
+| [6. Launch](phase-6-launch.md)                                     | Production is secure, observable, and supportable           | Phases 2–5 |
 
 Phases 2 and 3 can be developed in parallel once the foundation is stable.
 Feedback can be postponed until after the first public launch if schedule
