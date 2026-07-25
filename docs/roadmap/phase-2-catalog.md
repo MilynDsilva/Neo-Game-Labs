@@ -11,14 +11,13 @@ available.
 - Games listing with platform and availability filters
 - Search by title
 - Game detail page with description, media, requirements, supported platforms,
-  price, and release status
+  free availability, and release status
 - Correct calls to action for:
-  - Purchasing directly
   - Downloading a free game
   - Opening the Apple App Store
   - Opening Google Play
   - Opening another external store
-- About, support, privacy, terms, refund, and contact pages
+- About, support, privacy, terms, and contact pages
 - Responsive navigation and accessible interaction
 - Search-engine metadata, sitemap, robots configuration, and social preview
   metadata

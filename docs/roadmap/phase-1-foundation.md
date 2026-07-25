@@ -27,9 +27,8 @@ are added.
 - `games`
 - `game_platforms`
 - `game_releases`
-- `orders`
-- `order_items`
-- `entitlements`
+- `customer_games`
+- `download_events`
 - `feedback`
 - `admin_roles`
 - `audit_events`

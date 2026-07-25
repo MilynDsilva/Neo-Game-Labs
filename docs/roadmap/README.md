@@ -3,8 +3,8 @@
 ## Product goal
 
 Build `neogamelabs.com` as the customer-facing home for Neo Game Labs. Visitors
-can discover games and platform availability. Signed-in customers can purchase
-games, access owned downloads, and submit feedback.
+can discover free games and platform availability. Customers can download
+games, sign in with Google to maintain a library, and submit feedback.
 
 The admin dashboard will be built in a separate repository. It will use
 authenticated admin endpoints exposed by the same backend API.
@@ -37,12 +37,12 @@ frontend code directly.
 | [1. Foundation](phase-1-foundation.md) | Deployable frontend and API skeleton | Phase 0 |
 | [2. Catalog](phase-2-catalog.md) | Visitors can discover games and platforms | Phase 1 |
 | [3. Identity](phase-3-identity.md) | Customers can securely sign in with Google | Phase 1 |
-| [4. Commerce and library](phase-4-commerce-library.md) | Customers can purchase and access owned games | Phases 2–3 |
+| [4. Distribution and library](phase-4-distribution-library.md) | Customers can securely download and save free games | Phases 2–3 |
 | [5. Feedback](phase-5-feedback.md) | Customers can submit moderated game feedback | Phases 2–3 |
 | [6. Launch](phase-6-launch.md) | Production is secure, observable, and supportable | Phases 2–5 |
 
 Phases 2 and 3 can be developed in parallel once the foundation is stable.
-Feedback can be postponed until after the first commercial launch if schedule
+Feedback can be postponed until after the first public launch if schedule
 pressure requires it.
 
 ## Initial release boundary
@@ -50,14 +50,13 @@ pressure requires it.
 The first production release should include:
 
 - Responsive public home page and game catalog
-- Game detail pages with Windows/macOS/Linux downloads where applicable
+- Game detail pages with free Windows/macOS/Linux downloads where applicable
 - iOS App Store and Google Play links where applicable
 - Google sign-in and a customer profile
-- Checkout through a hosted payment provider
-- Customer library with secure access to purchased downloads
+- Customer library containing saved games and download history
 - Basic feedback submission
-- Separate, protected admin API capabilities for catalog, releases, orders, and
-  feedback
+- Separate, protected admin API capabilities for catalog, releases, downloads,
+  and feedback
 - Legal pages, monitoring, backups, and support procedures
 
 The first release should not include social networking, chat, achievements,
@@ -79,5 +78,6 @@ Every phase must include:
 ## Open decisions
 
 Phase 0 contains the questions that must be answered before implementation.
-Work can begin with documented assumptions, but payments, tax handling, download
-delivery, and supported regions must be confirmed before commerce development.
+Work can begin with documented assumptions, but download delivery, account
+requirements, and supported regions must be confirmed before distribution
+development.
