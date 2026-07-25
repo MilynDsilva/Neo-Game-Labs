@@ -24,12 +24,13 @@ cp .env.example apps/api/.env
 cp .env.example apps/web/.env.local
 docker compose up -d
 pnpm --filter @neogamelabs/api seed:catalog
+pnpm --filter @neogamelabs/api seed:wallet
 pnpm dev
 ```
 
 The web application runs at `http://localhost:3000` and the API health endpoint
-is available at `http://localhost:4000/v1/health`. The catalog seed is
-idempotent and can be rerun safely.
+is available at `http://localhost:4000/v1/health`. The catalog and wallet seeds
+are idempotent and can be rerun safely.
 
 ## Google sign-in
 

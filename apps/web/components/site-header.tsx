@@ -9,6 +9,7 @@ export function SiteHeader() {
       </Link>
       <nav aria-label="Main navigation">
         <Link href="/games">Games</Link>
+        <Link href="/wallet">Wallet</Link>
         <span className="nav-muted">Library</span>
         <Link href="/account">Sign in</Link>
       </nav>
