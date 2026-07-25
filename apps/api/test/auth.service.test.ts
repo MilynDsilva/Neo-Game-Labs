@@ -6,6 +6,7 @@ import { AuthService } from '../src/auth/auth.service.js';
 import type { CustomerDocument } from '../src/auth/customer.schema.js';
 import type { PointsAccountDocument } from '../src/auth/points-account.schema.js';
 import type { CustomerSessionDocument } from '../src/auth/session.schema.js';
+import type { SecurityEventDocument } from '../src/auth/security-event.schema.js';
 
 function createService() {
   const config = new ConfigService({
@@ -19,6 +20,7 @@ function createService() {
     {} as Model<CustomerDocument>,
     {} as Model<PointsAccountDocument>,
     {} as Model<CustomerSessionDocument>,
+    {} as Model<SecurityEventDocument>,
   );
 }
 

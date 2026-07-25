@@ -1,7 +1,10 @@
 import {
   Controller,
+  Delete,
   Get,
+  HttpCode,
   Inject,
+  Param,
   Post,
   Query,
   Req,
@@ -9,6 +12,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { Throttle } from '@nestjs/throttler';
 import type { Request, Response } from 'express';
 
 import {
@@ -27,6 +31,7 @@ export class AuthController {
   ) {}
 
   @Get('google')
+  @Throttle({ default: { limit: 10, ttl: 60_000 } })
   startGoogleSignIn(@Res() response: Response) {
     const authorization = this.authService.createAuthorizationRequest();
     response.cookie(oauthStateCookieName, authorization.state, {
@@ -51,7 +56,10 @@ export class AuthController {
     );
     if (!code) throw new UnauthorizedException('Missing authorization code');
 
-    const token = await this.authService.completeGoogleSignIn(code);
+    const token = await this.authService.completeGoogleSignIn(code, {
+      ipAddress: request.ip,
+      userAgent: request.headers['user-agent'],
+    });
     response.clearCookie(oauthStateCookieName);
     response.cookie(sessionCookieName, token, {
       httpOnly: true,
@@ -70,12 +78,45 @@ export class AuthController {
   }
 
   @Post('sign-out')
+  @HttpCode(204)
   async signOut(@Req() request: Request, @Res() response: Response) {
-    if (request.headers.origin !== this.webOrigin) {
-      throw new UnauthorizedException('Invalid request origin');
-    }
+    this.assertTrustedOrigin(request);
     await this.authService.revokeSession(
       request.cookies[sessionCookieName] as string | undefined,
+    );
+    response.clearCookie(sessionCookieName);
+    return response.status(204).send();
+  }
+
+  @Get('sessions')
+  listSessions(@Req() request: Request) {
+    return this.authService.listSessions(this.readSessionCookie(request));
+  }
+
+  @Delete('sessions/:id')
+  @HttpCode(204)
+  async revokeSession(@Param('id') sessionId: string, @Req() request: Request) {
+    this.assertTrustedOrigin(request);
+    await this.authService.revokeSessionById(
+      this.readSessionCookie(request),
+      sessionId,
+    );
+  }
+
+  @Get('export')
+  exportCustomerData(@Req() request: Request) {
+    return this.authService.exportCustomerData(this.readSessionCookie(request));
+  }
+
+  @Post('deletion-request')
+  @HttpCode(204)
+  async requestAccountDeletion(
+    @Req() request: Request,
+    @Res() response: Response,
+  ) {
+    this.assertTrustedOrigin(request);
+    await this.authService.requestAccountDeletion(
+      this.readSessionCookie(request),
     );
     response.clearCookie(sessionCookieName);
     return response.status(204).send();
@@ -87,5 +128,15 @@ export class AuthController {
 
   private get webOrigin(): string {
     return this.configService.getOrThrow('WEB_ORIGIN');
+  }
+
+  private assertTrustedOrigin(request: Request): void {
+    if (request.headers.origin !== this.webOrigin) {
+      throw new UnauthorizedException('Invalid request origin');
+    }
+  }
+
+  private readSessionCookie(request: Request): string | undefined {
+    return request.cookies[sessionCookieName] as string | undefined;
   }
 }

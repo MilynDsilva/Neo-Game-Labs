@@ -14,6 +14,9 @@ export class Customer {
 
   @Prop({ type: String })
   pictureUrl?: string;
+
+  @Prop({ index: true, type: Date })
+  deletionRequestedAt?: Date;
 }
 
 export type CustomerDocument = HydratedDocument<Customer>;
