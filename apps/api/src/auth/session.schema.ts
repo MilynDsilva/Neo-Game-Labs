@@ -12,6 +12,15 @@ export class CustomerSession {
 
   @Prop({ expires: 0, required: true, type: Date })
   expiresAt!: Date;
+
+  @Prop({ type: Date })
+  lastUsedAt?: Date;
+
+  @Prop({ type: String })
+  ipAddress?: string;
+
+  @Prop({ type: String })
+  userAgent?: string;
 }
 
 export type CustomerSessionDocument = HydratedDocument<CustomerSession>;

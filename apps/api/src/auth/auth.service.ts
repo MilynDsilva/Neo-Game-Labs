@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Inject,
   Injectable,
   ServiceUnavailableException,
@@ -7,6 +8,7 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
 import { createHash, randomBytes, timingSafeEqual } from 'node:crypto';
+import { isValidObjectId } from 'mongoose';
 import type { Connection, Model } from 'mongoose';
 import { z } from 'zod';
 
@@ -16,6 +18,8 @@ import { PointsAccount } from './points-account.schema.js';
 import type { PointsAccountDocument } from './points-account.schema.js';
 import { CustomerSession } from './session.schema.js';
 import type { CustomerSessionDocument } from './session.schema.js';
+import { SecurityEvent } from './security-event.schema.js';
+import type { SecurityEventDocument } from './security-event.schema.js';
 
 const googleTokenSchema = z.object({ access_token: z.string().min(1) });
 const googleProfileSchema = z.object({
@@ -42,6 +46,8 @@ export class AuthService {
     private readonly pointsAccountModel: Model<PointsAccountDocument>,
     @InjectModel(CustomerSession.name)
     private readonly sessionModel: Model<CustomerSessionDocument>,
+    @InjectModel(SecurityEvent.name)
+    private readonly securityEventModel: Model<SecurityEventDocument>,
   ) {}
 
   createAuthorizationRequest(): { state: string; url: string } {
@@ -83,7 +89,10 @@ export class AuthService {
     }
   }
 
-  async completeGoogleSignIn(code: string): Promise<string> {
+  async completeGoogleSignIn(
+    code: string,
+    context: { ipAddress?: string; userAgent?: string },
+  ): Promise<string> {
     const clientId = this.configService.get<string>('GOOGLE_CLIENT_ID');
     const clientSecret = this.configService.get<string>('GOOGLE_CLIENT_SECRET');
     if (!clientId || !clientSecret) {
@@ -132,6 +141,9 @@ export class AuthService {
         },
         { new: true, session: databaseSession, upsert: true },
       );
+      if (customer.deletionRequestedAt) {
+        throw new UnauthorizedException('Account deletion is pending');
+      }
       await this.pointsAccountModel.updateOne(
         { customerId: customer._id },
         { $setOnInsert: { balance: 0, customerId: customer._id } },
@@ -142,7 +154,21 @@ export class AuthService {
           {
             customerId: customer._id,
             expiresAt,
+            ipAddress: context.ipAddress,
+            lastUsedAt: new Date(),
             tokenHash: this.hashToken(rawSessionToken),
+            userAgent: context.userAgent,
+          },
+        ],
+        { session: databaseSession },
+      );
+      await this.securityEventModel.create(
+        [
+          {
+            customerId: customer._id,
+            ipAddress: context.ipAddress,
+            type: 'sign-in',
+            userAgent: context.userAgent,
           },
         ],
         { session: databaseSession },
@@ -190,11 +216,112 @@ export class AuthService {
     }
   }
 
+  async listSessions(rawToken?: string) {
+    const current = await this.requireSession(rawToken);
+    const sessions = await this.sessionModel
+      .find({
+        customerId: current.customerId,
+        expiresAt: { $gt: new Date() },
+      })
+      .sort({ lastUsedAt: -1 })
+      .lean();
+
+    return {
+      sessions: sessions.map((session) => ({
+        current: session._id.equals(current._id),
+        expiresAt: session.expiresAt.toISOString(),
+        id: session._id.toString(),
+        lastUsedAt: session.lastUsedAt?.toISOString(),
+        userAgent: session.userAgent ?? 'Unknown device',
+      })),
+    };
+  }
+
+  async revokeSessionById(
+    rawToken: string | undefined,
+    sessionId: string,
+  ): Promise<void> {
+    const current = await this.requireSession(rawToken);
+    if (!isValidObjectId(sessionId)) {
+      throw new BadRequestException('Invalid session identifier');
+    }
+    await this.sessionModel.deleteOne({
+      _id: sessionId,
+      customerId: current.customerId,
+    });
+    await this.recordEvent(current.customerId, 'session-revoked');
+  }
+
+  async exportCustomerData(rawToken?: string) {
+    const current = await this.requireSession(rawToken);
+    const [customer, account, events] = await Promise.all([
+      this.customerModel.findById(current.customerId).lean(),
+      this.pointsAccountModel
+        .findOne({ customerId: current.customerId })
+        .lean(),
+      this.securityEventModel
+        .find({ customerId: current.customerId })
+        .select({ _id: 0, createdAt: 1, type: 1 })
+        .lean(),
+    ]);
+    if (!customer || !account) throw new UnauthorizedException();
+
+    return {
+      account: {
+        displayName: customer.displayName,
+        email: customer.email,
+        pointsBalance: account.balance,
+      },
+      generatedAt: new Date().toISOString(),
+      securityEvents: events,
+    };
+  }
+
+  async requestAccountDeletion(rawToken?: string): Promise<void> {
+    const current = await this.requireSession(rawToken);
+    await this.connection.transaction(async (databaseSession) => {
+      await this.customerModel.updateOne(
+        { _id: current.customerId },
+        { $set: { deletionRequestedAt: new Date() } },
+        { session: databaseSession },
+      );
+      await this.securityEventModel.create(
+        [{ customerId: current.customerId, type: 'deletion-requested' }],
+        { session: databaseSession },
+      );
+      await this.sessionModel.deleteMany(
+        { customerId: current.customerId },
+        { session: databaseSession },
+      );
+    });
+  }
+
   get sessionLifetime(): number {
     return sessionLifetimeMilliseconds;
   }
 
   private hashToken(token: string): string {
     return createHash('sha256').update(token).digest('hex');
+  }
+
+  private async requireSession(rawToken?: string) {
+    if (!rawToken) throw new UnauthorizedException('Sign-in required');
+    const session = await this.sessionModel.findOneAndUpdate(
+      {
+        expiresAt: { $gt: new Date() },
+        tokenHash: this.hashToken(rawToken),
+      },
+      { $set: { lastUsedAt: new Date() } },
+      { new: true },
+    );
+    if (!session) throw new UnauthorizedException('Sign-in required');
+    return session;
+  }
+
+  private async recordEvent(
+    customerId: CustomerSessionDocument['customerId'],
+    type: string,
+  ): Promise<void> {
+    await this.securityEventModel.create({ customerId, type });
   }
 }
