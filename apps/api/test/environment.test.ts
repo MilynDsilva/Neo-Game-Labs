@@ -14,4 +14,12 @@ describe('validateEnvironment', () => {
       WEB_ORIGIN: 'http://localhost:3000',
     });
   });
+
+  it('uses the local MongoDB URI when the variable is undefined', () => {
+    const environment = validateEnvironment({ MONGODB_URI: undefined });
+
+    expect(environment.MONGODB_URI).toBe(
+      'mongodb://localhost:27017/customer_dashboard?replicaSet=rs0',
+    );
+  });
 });
