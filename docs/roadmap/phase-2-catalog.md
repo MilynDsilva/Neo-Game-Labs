@@ -31,7 +31,8 @@ available.
 - Media metadata with optimized delivery
 - Protected admin endpoints for catalog and release management
 
-The separate admin dashboard will provide the UI for protected endpoints.
+The independently deployable `apps/admin` dashboard provides the UI for
+protected endpoints.
 
 ## Exit criteria
 

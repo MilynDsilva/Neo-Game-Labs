@@ -1,8 +1,9 @@
 # Staging Deployment
 
-The repository produces vendor-neutral OCI images for the web application and
-API. Choose a hosting provider only after confirming its region, cost, managed
-TLS, private networking, health-probe, secret-management, and rollback support.
+The repository produces vendor-neutral OCI images for the customer web
+application, admin dashboard, and API. Choose a hosting provider only after
+confirming its region, cost, managed TLS, private networking, health-probe,
+secret-management, and rollback support.
 
 ## Images
 
@@ -10,6 +11,7 @@ Build from the repository root:
 
 ```bash
 docker build -f apps/api/Dockerfile -t neogamelabs-api:staging .
+docker build -f apps/admin/Dockerfile -t neogamelabs-admin:staging .
 docker build \
   -f apps/web/Dockerfile \
   --build-arg API_URL=https://api-staging.neogamelabs.com \
@@ -18,8 +20,8 @@ docker build \
   -t neogamelabs-web:staging .
 ```
 
-Both containers run as non-root users and expose Docker health checks. The web
-image is a minimal Next.js standalone runtime.
+All containers run as non-root users and expose Docker health checks. The web
+and admin images are minimal Next.js standalone runtimes.
 
 ## Required staging services
 
@@ -38,6 +40,8 @@ Required:
 - `NODE_ENV=production`
 - `PORT=4000` unless the host injects another value
 - `WEB_ORIGIN=https://staging.neogamelabs.com`
+- `ADMIN_ORIGIN=https://admin-staging.neogamelabs.com`
+- `ADMIN_API_KEY=<staging-only-random-secret>`
 - `MONGODB_URI=<staging replica-set URI>`
 - `GOOGLE_CLIENT_ID=<staging client>`
 - `GOOGLE_CLIENT_SECRET=<secret>`
@@ -61,6 +65,17 @@ content security policy are compiled into the image:
 - `NEXT_PUBLIC_SITE_URL`
 
 Rebuild the web image when any hostname changes.
+
+## Admin runtime environment
+
+- `API_URL=https://api-staging.neogamelabs.com`
+- `ADMIN_API_KEY=<same-staging-only-random-secret-as-api>`
+- `ADMIN_DASHBOARD_USERNAME=<staging-operator>`
+- `ADMIN_DASHBOARD_PASSWORD=<strong-staging-only-password>`
+- `ADMIN_ACTOR=<operator-or-service-name>`
+
+Keep the admin hostname private or access-controlled at the hosting layer in
+addition to the dashboard's built-in authentication.
 
 ## Acceptance
 

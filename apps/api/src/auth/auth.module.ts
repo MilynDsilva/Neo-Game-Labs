@@ -7,6 +7,14 @@ import { Customer, CustomerSchema } from './customer.schema.js';
 import { PointsAccount, PointsAccountSchema } from './points-account.schema.js';
 import { CustomerSession, CustomerSessionSchema } from './session.schema.js';
 import { SecurityEvent, SecurityEventSchema } from './security-event.schema.js';
+import {
+  LedgerTransaction,
+  LedgerTransactionSchema,
+} from '../wallet/ledger-transaction.schema.js';
+import {
+  LedgerEntry,
+  LedgerEntrySchema,
+} from '../wallet/ledger-entry.schema.js';
 
 @Module({
   controllers: [AuthController],
@@ -16,6 +24,8 @@ import { SecurityEvent, SecurityEventSchema } from './security-event.schema.js';
       { name: PointsAccount.name, schema: PointsAccountSchema },
       { name: CustomerSession.name, schema: CustomerSessionSchema },
       { name: SecurityEvent.name, schema: SecurityEventSchema },
+      { name: LedgerTransaction.name, schema: LedgerTransactionSchema },
+      { name: LedgerEntry.name, schema: LedgerEntrySchema },
     ]),
   ],
   providers: [AuthService],
