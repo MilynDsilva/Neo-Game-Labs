@@ -86,9 +86,14 @@ export function LibraryPanel() {
                 </dd>
               </div>
             </dl>
-            <Link className="text-link" href={`/games/${game.slug}`}>
-              View game →
-            </Link>
+            <div className="library-links">
+              <Link className="text-link" href={`/games/${game.slug}`}>
+                View game →
+              </Link>
+              <Link className="text-link" href={`/feedback?game=${game.slug}`}>
+                Send feedback
+              </Link>
+            </div>
             <DownloadActions gameSlug={game.slug} />
           </div>
         </article>

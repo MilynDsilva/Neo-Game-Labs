@@ -5,7 +5,13 @@ export const metadata = {
   title: 'Feedback | Neo Game Labs',
 };
 
-export default function FeedbackPage() {
+export default async function FeedbackPage({
+  searchParams,
+}: Readonly<{ searchParams: Promise<{ game?: string }> }>) {
+  const { game } = await searchParams;
+  const initialGameSlug =
+    game && /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(game) ? game : '';
+
   return (
     <main>
       <section className="page-heading">
@@ -17,7 +23,7 @@ export default function FeedbackPage() {
         </p>
       </section>
       <section className="feedback-layout">
-        <FeedbackForm />
+        <FeedbackForm initialGameSlug={initialGameSlug} />
       </section>
     </main>
   );

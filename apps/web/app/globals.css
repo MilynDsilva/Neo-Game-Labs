@@ -141,6 +141,30 @@ textarea {
   margin-bottom: 0;
 }
 
+.feedback-message-meta,
+.feedback-confirmation-actions,
+.library-links {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.25rem;
+  justify-content: space-between;
+}
+
+.feedback-confirmation-actions button {
+  background: var(--accent);
+  border: 0;
+  border-radius: 0.5rem;
+  color: var(--foreground);
+  cursor: pointer;
+  font-weight: 700;
+  padding: 0.75rem 1rem;
+}
+
+.library-links {
+  justify-content: flex-start;
+}
+
 .site-header {
   align-items: center;
   backdrop-filter: blur(18px);
