@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 
 import { getGame } from '../../../lib/catalog-api';
 import { PurchaseButton } from '../../../components/purchase-button';
+import { GameComments } from '../../../components/game-comments';
 
 const platformLabels = {
   android: 'Android',
@@ -114,6 +115,7 @@ export default async function GamePage({ params }: GamePageProperties) {
           </ul>
         </aside>
       </section>
+      <GameComments gameSlug={game.slug} />
     </main>
   );
 }

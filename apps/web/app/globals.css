@@ -935,6 +935,130 @@ h2 {
   font-size: 0.85rem;
 }
 
+.comments-section {
+  display: grid;
+  gap: 1.5rem;
+  margin: 0 auto;
+  max-width: var(--content-width);
+  padding: 0 var(--page-gutter) 6rem;
+}
+
+.comments-heading,
+.comment-form-meta,
+.comment-author {
+  align-items: center;
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+}
+
+.comments-heading h2,
+.comments-heading p,
+.comment-form-meta p {
+  margin: 0;
+}
+
+.comments-heading > span,
+.comment-form-meta,
+.comment-author time {
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.comment-form {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  display: grid;
+  gap: 0.9rem;
+  max-width: 52rem;
+  padding: clamp(1.25rem, 3vw, 2rem);
+}
+
+.comment-form label {
+  font-weight: 800;
+}
+
+.comment-form textarea {
+  background: var(--background);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  color: var(--foreground);
+  line-height: 1.5;
+  padding: 0.8rem;
+  resize: vertical;
+}
+
+.comment-form button {
+  background: var(--accent);
+  border: 0;
+  border-radius: var(--radius-sm);
+  color: var(--foreground);
+  cursor: pointer;
+  font-weight: 800;
+  justify-self: start;
+  padding: 0.8rem 1.1rem;
+}
+
+.comment-form button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.comment-auth-state {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  color: var(--muted);
+  margin: 0;
+  max-width: 52rem;
+  padding: 1.25rem;
+}
+
+.comment-list {
+  display: grid;
+  gap: 1rem;
+  list-style: none;
+  margin: 0;
+  max-width: 52rem;
+  padding: 0;
+}
+
+.comment-list li {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+}
+
+.comment-list li > p {
+  line-height: 1.7;
+  margin: 1rem 0 0;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.comment-author {
+  justify-content: flex-start;
+}
+
+.comment-author img,
+.comment-author > span {
+  align-items: center;
+  background: linear-gradient(145deg, var(--accent), #5eead4);
+  border-radius: 50%;
+  display: flex;
+  height: 2.5rem;
+  justify-content: center;
+  object-fit: cover;
+  width: 2.5rem;
+}
+
+.comment-author > div {
+  display: grid;
+  gap: 0.2rem;
+}
+
 .site-footer {
   align-items: start;
   border-top: 1px solid var(--line);
@@ -1752,7 +1876,8 @@ h2 {
   .game-card-footer,
   .download-build,
   .feedback-message-meta,
-  .feedback-confirmation-actions {
+  .feedback-confirmation-actions,
+  .comment-form-meta {
     align-items: flex-start;
     flex-direction: column;
   }
@@ -1787,6 +1912,10 @@ h2 {
   .account-balance {
     align-items: flex-start;
     gap: 1rem;
+  }
+
+  .comment-form button {
+    width: 100%;
   }
 }
 
