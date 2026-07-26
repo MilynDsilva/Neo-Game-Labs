@@ -89,6 +89,7 @@ export const topUpPackageSchema = z.object({
 
 export const topUpPackagesResponseSchema = z.object({
   packages: z.array(topUpPackageSchema),
+  topUpsEnabled: z.boolean(),
 });
 
 export const walletResponseSchema = z.object({
