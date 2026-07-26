@@ -263,6 +263,35 @@ textarea {
   padding: 0.75rem;
 }
 
+.select-control {
+  display: block;
+  position: relative;
+}
+
+.select-control::after {
+  border-bottom: 2px solid var(--muted);
+  border-right: 2px solid var(--muted);
+  content: '';
+  height: 0.42rem;
+  pointer-events: none;
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-65%) rotate(45deg);
+  width: 0.42rem;
+}
+
+.select-control:focus-within::after {
+  border-color: var(--mint);
+}
+
+.select-control select {
+  -webkit-appearance: none;
+  appearance: none;
+  padding-right: 2.75rem;
+  width: 100%;
+}
+
 textarea {
   resize: vertical;
 }
@@ -437,5 +466,17 @@ th {
   .feedback-grid,
   .game-row {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (forced-colors: active) {
+  .select-control::after {
+    display: none;
+  }
+
+  .select-control select {
+    -webkit-appearance: auto;
+    appearance: auto;
+    padding-right: 0.75rem;
   }
 }

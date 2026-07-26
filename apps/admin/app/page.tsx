@@ -114,11 +114,13 @@ export default async function Dashboard() {
                   </div>
                   <label>
                     Status
-                    <select defaultValue={game.status} name="status">
-                      {statuses.map((status) => (
-                        <option key={status}>{status}</option>
-                      ))}
-                    </select>
+                    <span className="select-control">
+                      <select defaultValue={game.status} name="status">
+                        {statuses.map((status) => (
+                          <option key={status}>{status}</option>
+                        ))}
+                      </select>
+                    </span>
                   </label>
                   <label>
                     Points
@@ -165,11 +167,13 @@ export default async function Dashboard() {
                   <p>{feedback.message}</p>
                   <label>
                     Status
-                    <select defaultValue={feedback.status} name="status">
-                      {feedbackStatuses.map((status) => (
-                        <option key={status}>{status}</option>
-                      ))}
-                    </select>
+                    <span className="select-control">
+                      <select defaultValue={feedback.status} name="status">
+                        {feedbackStatuses.map((status) => (
+                          <option key={status}>{status}</option>
+                        ))}
+                      </select>
+                    </span>
                   </label>
                   <label>
                     Internal notes
