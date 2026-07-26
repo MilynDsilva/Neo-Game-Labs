@@ -25,7 +25,7 @@ Game Labs products, and securely access purchased games.
   server-side top-up order.
 - Verify the gateway's signed webhook and authoritative payment status.
 - Process every webhook idempotently.
-- Store Stripe event IDs behind a unique MongoDB index so concurrent or retried
+- Store Razorpay event IDs behind a unique MongoDB index so concurrent or retried
   delivery cannot process the same event twice.
 - Credit points exactly once after confirmed payment.
 - Never credit points based only on the browser redirect or client response.

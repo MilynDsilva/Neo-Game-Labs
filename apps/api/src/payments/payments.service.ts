@@ -3,12 +3,14 @@ import {
   Inject,
   Injectable,
   ServiceUnavailableException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectModel } from '@nestjs/mongoose';
+import { createHmac, timingSafeEqual } from 'node:crypto';
 import type { Model } from 'mongoose';
 import { Types } from 'mongoose';
-import Stripe from 'stripe';
+import { z } from 'zod';
 
 import { TopUpPackage } from '../wallet/top-up-package.schema.js';
 import type { TopUpPackageDocument } from '../wallet/top-up-package.schema.js';
@@ -17,6 +19,37 @@ import { Payment } from './payment.schema.js';
 import type { PaymentDocument } from './payment.schema.js';
 import { ProcessedWebhookEvent } from './processed-event.schema.js';
 import type { ProcessedWebhookEventDocument } from './processed-event.schema.js';
+
+const razorpayOrderSchema = z.object({
+  amount: z.number().int().positive(),
+  currency: z.string().length(3),
+  id: z.string().min(1),
+  status: z.enum(['created', 'attempted', 'paid']),
+});
+
+const razorpayPaymentSchema = z.object({
+  amount: z.number().int().positive(),
+  captured: z.boolean(),
+  currency: z.string().length(3),
+  id: z.string().min(1),
+  order_id: z.string().min(1),
+  status: z.enum(['created', 'authorized', 'captured', 'refunded', 'failed']),
+});
+
+const razorpayWebhookSchema = z.object({
+  event: z.string().min(1),
+  payload: z
+    .object({
+      payment: z
+        .object({
+          entity: razorpayPaymentSchema,
+        })
+        .optional(),
+    })
+    .passthrough(),
+});
+
+export type RazorpayWebhook = z.infer<typeof razorpayWebhookSchema>;
 
 @Injectable()
 export class PaymentsService {
@@ -58,138 +91,220 @@ export class PaymentsService {
       },
       { new: true, upsert: true },
     );
-    if (payment.checkoutUrl) return { url: payment.checkoutUrl };
     if (payment.packageCode !== packageCode) {
       throw new BadRequestException('Checkout key already used');
     }
-
-    const session = await this.stripe.checkout.sessions.create(
-      {
-        line_items: [
-          {
-            price_data: {
-              currency: payment.currency.toLowerCase(),
-              product_data: {
-                name: `${payment.points} Neo Game Labs points`,
-              },
-              unit_amount: payment.amountMinor,
+    if (!payment.razorpayOrderId) {
+      const order = await this.razorpayRequest(
+        '/orders',
+        {
+          body: JSON.stringify({
+            amount: payment.amountMinor,
+            currency: payment.currency,
+            notes: {
+              customerId,
+              packageCode: payment.packageCode,
+              paymentId: payment._id.toString(),
             },
-            quantity: 1,
-          },
-        ],
-        metadata: {
-          customerId,
-          packageCode: payment.packageCode,
-          paymentId: payment._id.toString(),
+            receipt: `ngl_${payment._id.toString()}`,
+          }),
+          method: 'POST',
         },
-        mode: 'payment',
-        payment_intent_data: {
-          metadata: { paymentId: payment._id.toString() },
-        },
-        success_url: `${this.webOrigin}/wallet?checkout=success`,
-        cancel_url: `${this.webOrigin}/wallet?checkout=cancelled`,
-      },
-      { idempotencyKey: `checkout:${checkoutRequestKey}` },
-    );
-    if (!session.url) {
-      throw new ServiceUnavailableException('Stripe did not return checkout');
+        razorpayOrderSchema,
+      );
+      payment.razorpayOrderId = order.id;
+      await payment.save();
     }
 
-    payment.checkoutUrl = session.url;
-    payment.stripeCheckoutSessionId = session.id;
-    await payment.save();
-    return { url: session.url };
+    return {
+      amount: payment.amountMinor,
+      currency: payment.currency,
+      description: `${payment.points} Neo Game Labs points`,
+      keyId: this.keyId,
+      name: 'Neo Game Labs',
+      orderId: payment.razorpayOrderId,
+    };
   }
 
-  constructEvent(rawBody: Buffer, signature: string): Stripe.Event {
+  async verifyCheckout(
+    customerId: string,
+    input: {
+      orderId: string;
+      paymentId: string;
+      signature: string;
+    },
+  ) {
+    const payment = await this.paymentModel.findOne({
+      customerId: new Types.ObjectId(customerId),
+      razorpayOrderId: input.orderId,
+    });
+    if (!payment) throw new BadRequestException('Payment order not found');
+
+    this.assertSignature(
+      `${payment.razorpayOrderId}|${input.paymentId}`,
+      input.signature,
+      this.keySecret,
+    );
+    const providerPayment = await this.razorpayRequest(
+      `/payments/${encodeURIComponent(input.paymentId)}`,
+      undefined,
+      razorpayPaymentSchema,
+    );
+    await this.completeCapturedPayment(payment, providerPayment);
+    const wallet = await this.walletService.getWallet(customerId);
+    return {
+      balance: wallet.balance,
+      credited: true,
+      points: payment.points,
+    };
+  }
+
+  constructWebhook(rawBody: Buffer, signature: string): RazorpayWebhook {
     const webhookSecret = this.configService.get<string>(
-      'STRIPE_WEBHOOK_SECRET',
+      'RAZORPAY_WEBHOOK_SECRET',
     );
     if (!webhookSecret) {
-      throw new ServiceUnavailableException('Stripe is not configured');
+      throw new ServiceUnavailableException(
+        'Razorpay webhook is not configured',
+      );
     }
-    return this.stripe.webhooks.constructEvent(
-      rawBody,
-      signature,
-      webhookSecret,
-    );
+    this.assertSignature(rawBody, signature, webhookSecret);
+    let body: unknown;
+    try {
+      body = JSON.parse(rawBody.toString('utf8')) as unknown;
+    } catch {
+      throw new BadRequestException('Invalid Razorpay webhook');
+    }
+    const parsed = razorpayWebhookSchema.safeParse(body);
+    if (!parsed.success) {
+      throw new BadRequestException('Invalid Razorpay webhook');
+    }
+    return parsed.data;
   }
 
-  async processEvent(event: Stripe.Event): Promise<void> {
-    if (await this.eventModel.exists({ eventId: event.id })) return;
-    if (
-      event.type !== 'checkout.session.completed' &&
-      event.type !== 'checkout.session.async_payment_succeeded' &&
-      event.type !== 'checkout.session.async_payment_failed'
-    ) {
-      await this.markEventProcessed(event);
-      return;
+  async processWebhook(
+    eventId: string,
+    webhook: RazorpayWebhook,
+  ): Promise<void> {
+    if (await this.eventModel.exists({ eventId })) return;
+
+    const providerPayment = webhook.payload.payment?.entity;
+    if (webhook.event === 'payment.captured' && providerPayment) {
+      const payment = await this.paymentModel.findOne({
+        razorpayOrderId: providerPayment.order_id,
+      });
+      if (!payment) throw new BadRequestException('Payment order not found');
+      await this.completeCapturedPayment(payment, providerPayment);
+    } else if (webhook.event === 'payment.failed' && providerPayment) {
+      await this.paymentModel.updateOne(
+        {
+          razorpayOrderId: providerPayment.order_id,
+          status: { $ne: 'succeeded' },
+        },
+        {
+          $set: {
+            razorpayPaymentId: providerPayment.id,
+            status: 'failed',
+          },
+        },
+      );
     }
 
-    const eventSession = event.data.object;
-    const session = await this.stripe.checkout.sessions.retrieve(
-      eventSession.id,
-    );
-    const paymentId = session.metadata?.paymentId;
-    if (!paymentId || !Types.ObjectId.isValid(paymentId)) {
-      throw new BadRequestException('Checkout metadata is invalid');
-    }
-    const payment = await this.paymentModel.findById(paymentId);
-    if (
-      !payment ||
-      payment.stripeCheckoutSessionId !== session.id ||
-      session.metadata?.customerId !== payment.customerId.toString() ||
-      session.metadata?.packageCode !== payment.packageCode ||
-      session.amount_total !== payment.amountMinor ||
-      session.currency?.toUpperCase() !== payment.currency
-    ) {
-      throw new BadRequestException('Checkout does not match local payment');
-    }
-
-    if (event.type === 'checkout.session.async_payment_failed') {
-      payment.status = 'failed';
-      await payment.save();
-      await this.markEventProcessed(event);
-      return;
-    }
-    if (session.payment_status !== 'paid') {
-      await this.markEventProcessed(event);
-      return;
-    }
-
-    await this.walletService.applyChange({
-      customerId: payment.customerId.toString(),
-      idempotencyKey: `stripe:${session.id}`,
-      pointsDelta: payment.points,
-      reference: session.id,
-      type: 'top-up',
-    });
-    payment.status = 'succeeded';
-    payment.stripePaymentIntentId =
-      typeof session.payment_intent === 'string'
-        ? session.payment_intent
-        : session.payment_intent?.id;
-    await payment.save();
-    await this.markEventProcessed(event);
-  }
-
-  private async markEventProcessed(event: Stripe.Event): Promise<void> {
     await this.eventModel.updateOne(
-      { eventId: event.id },
-      { $setOnInsert: { eventId: event.id, eventType: event.type } },
+      { eventId },
+      {
+        $setOnInsert: {
+          eventId,
+          eventType: webhook.event,
+        },
+      },
       { upsert: true },
     );
   }
 
-  private get stripe(): Stripe {
-    const secretKey = this.configService.get<string>('STRIPE_SECRET_KEY');
-    if (!secretKey) {
-      throw new ServiceUnavailableException('Stripe is not configured');
+  private async completeCapturedPayment(
+    payment: PaymentDocument,
+    providerPayment: z.infer<typeof razorpayPaymentSchema>,
+  ) {
+    if (
+      providerPayment.order_id !== payment.razorpayOrderId ||
+      providerPayment.amount !== payment.amountMinor ||
+      providerPayment.currency.toUpperCase() !== payment.currency ||
+      providerPayment.status !== 'captured' ||
+      !providerPayment.captured
+    ) {
+      throw new BadRequestException(
+        'Razorpay payment does not match local order',
+      );
     }
-    return new Stripe(secretKey);
+
+    await this.walletService.applyChange({
+      customerId: payment.customerId.toString(),
+      idempotencyKey: `razorpay:${providerPayment.order_id}`,
+      pointsDelta: payment.points,
+      reference: providerPayment.id,
+      type: 'top-up',
+    });
+    payment.razorpayPaymentId = providerPayment.id;
+    payment.status = 'succeeded';
+    await payment.save();
   }
 
-  private get webOrigin(): string {
-    return this.configService.getOrThrow('WEB_ORIGIN');
+  private async razorpayRequest<T>(
+    path: string,
+    init: RequestInit | undefined,
+    schema: z.ZodType<T>,
+  ): Promise<T> {
+    const authorization = Buffer.from(
+      `${this.keyId}:${this.keySecret}`,
+    ).toString('base64');
+    const response = await fetch(`https://api.razorpay.com/v1${path}`, {
+      ...init,
+      headers: {
+        authorization: `Basic ${authorization}`,
+        'content-type': 'application/json',
+        ...init?.headers,
+      },
+    });
+    if (!response.ok) {
+      throw new ServiceUnavailableException('Razorpay request failed');
+    }
+    const parsed = schema.safeParse(await response.json());
+    if (!parsed.success) {
+      throw new ServiceUnavailableException('Invalid Razorpay response');
+    }
+    return parsed.data;
+  }
+
+  private assertSignature(
+    message: Buffer | string,
+    received: string,
+    secret: string,
+  ) {
+    const expected = createHmac('sha256', secret).update(message).digest('hex');
+    const receivedBuffer = Buffer.from(received);
+    const expectedBuffer = Buffer.from(expected);
+    if (
+      receivedBuffer.length !== expectedBuffer.length ||
+      !timingSafeEqual(receivedBuffer, expectedBuffer)
+    ) {
+      throw new UnauthorizedException('Invalid Razorpay signature');
+    }
+  }
+
+  private get keyId(): string {
+    const keyId = this.configService.get<string>('RAZORPAY_KEY_ID');
+    if (!keyId) {
+      throw new ServiceUnavailableException('Razorpay is not configured');
+    }
+    return keyId;
+  }
+
+  private get keySecret(): string {
+    const secret = this.configService.get<string>('RAZORPAY_KEY_SECRET');
+    if (!secret) {
+      throw new ServiceUnavailableException('Razorpay is not configured');
+    }
+    return secret;
   }
 }

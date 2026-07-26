@@ -46,6 +46,9 @@ Required:
 - `GOOGLE_CLIENT_ID=<staging client>`
 - `GOOGLE_CLIENT_SECRET=<secret>`
 - `GOOGLE_CALLBACK_URL=https://api-staging.neogamelabs.com/v1/auth/google/callback`
+- `RAZORPAY_KEY_ID=<staging-test-key-id>` when testing top-ups
+- `RAZORPAY_KEY_SECRET=<staging-test-key-secret>` when testing top-ups
+- `RAZORPAY_WEBHOOK_SECRET=<staging-webhook-secret>` when testing top-ups
 
 Safety defaults:
 
@@ -53,7 +56,11 @@ Safety defaults:
 - `POINT_PURCHASES_ENABLED=true`
 - `DOWNLOADS_ENABLED=true` only while using approved staging artifacts
 
-Leave Stripe variables unset while payments remain paused.
+Leave Razorpay variables unset and `TOP_UPS_ENABLED=false` while payments are
+paused. When staging top-ups are approved, use test-mode credentials, enable
+automatic capture in Razorpay, and configure
+`https://api-staging.neogamelabs.com/v1/payments/razorpay/webhook` for
+`payment.captured` and `payment.failed`.
 
 ## Web build environment
 

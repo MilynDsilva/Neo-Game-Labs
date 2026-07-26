@@ -33,9 +33,9 @@ describe('validateEnvironment', () => {
     ).toThrow();
   });
 
-  it('rejects incomplete Stripe credentials', () => {
+  it('rejects incomplete Razorpay credentials', () => {
     expect(() =>
-      validateEnvironment({ STRIPE_SECRET_KEY: 'sk_test_example' }),
+      validateEnvironment({ RAZORPAY_KEY_ID: 'rzp_test_example' }),
     ).toThrow();
   });
 });

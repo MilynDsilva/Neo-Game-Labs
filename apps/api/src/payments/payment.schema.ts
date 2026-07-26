@@ -31,13 +31,10 @@ export class Payment {
   status!: string;
 
   @Prop({ sparse: true, type: String, unique: true })
-  stripeCheckoutSessionId?: string;
+  razorpayOrderId?: string;
 
   @Prop({ type: String })
-  stripePaymentIntentId?: string;
-
-  @Prop({ type: String })
-  checkoutUrl?: string;
+  razorpayPaymentId?: string;
 }
 
 export type PaymentDocument = HydratedDocument<Payment>;

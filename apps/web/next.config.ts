@@ -17,13 +17,14 @@ const nextConfig: NextConfig = {
             value: [
               "default-src 'self'",
               "base-uri 'self'",
-              `connect-src 'self' ${apiUrl}`,
+              `connect-src 'self' ${apiUrl} https://*.razorpay.com`,
               "font-src 'self'",
               "form-action 'self'",
               "frame-ancestors 'none'",
               "img-src 'self' data: https:",
               "object-src 'none'",
-              `script-src 'self' 'unsafe-inline'${
+              'frame-src https://*.razorpay.com',
+              `script-src 'self' 'unsafe-inline' https://checkout.razorpay.com${
                 process.env.NODE_ENV === 'development' ? " 'unsafe-eval'" : ''
               }`,
               "style-src 'self' 'unsafe-inline'",
