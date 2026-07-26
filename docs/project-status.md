@@ -41,12 +41,13 @@ Last updated: 2026-07-26
 | Product    | Clear account sections, action feedback, and deletion safeguards                | `feat/account-experience`        | `31d082a`         | Complete        |
 | Product    | Visual system, catalog clarity, and responsive layouts                          | `feat/visual-responsive-polish`  | `121107e`         | Complete        |
 | Product    | Accessibility semantics, keyboard focus, and automated checks                   | `fix/accessibility-quality`      | `9a4da6d`         | Complete        |
+| Product    | Public game comments with authenticated posting and pagination                  | `feat/game-comments`             | `e907b75`         | Complete        |
 
 ## Ready for review
 
-| Phase   | Deliverable                                     | Branch               | Status           |
-| ------- | ----------------------------------------------- | -------------------- | ---------------- |
-| Product | Public game comments with authenticated posting | `feat/game-comments` | Ready for review |
+| Phase   | Deliverable                                        | Branch                   | Status           |
+| ------- | -------------------------------------------------- | ------------------------ | ---------------- |
+| Product | Premium homepage showcase and discovery experience | `feat/homepage-showcase` | Ready for review |
 
 ## Paused decisions and blockers
 
@@ -97,9 +98,9 @@ Stripe code is already merged, but real payment activation is paused.
 2. Confirm `development` contains the merge commits listed above.
 3. Do not resume production payment activation without a compliant provider
    decision.
-4. Merge `feat/game-comments`. Browser automation, operations, legal review,
-   payments, hosting, and domain work are intentionally deferred by the product
-   owner.
+4. Merge `feat/homepage-showcase`. Browser automation, operations, legal
+   review, payments, hosting, and domain work are intentionally deferred by the
+   product owner.
 5. Per product-owner direction, hosting, domain, DNS, and deployment remain last
    until the customer experience is working and visually approved.
 6. Update this file in every feature branch when its status, scope, blocker, or
