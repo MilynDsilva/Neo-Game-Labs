@@ -77,6 +77,9 @@ export default async function GamePage({ params }: GamePageProperties) {
           <p className="eyebrow">About the game</p>
           <h2>Enter the world</h2>
           <p className="long-copy">{game.description}</p>
+          <Link className="text-link" href={`/feedback?game=${game.slug}`}>
+            Send feedback about {game.title} →
+          </Link>
         </article>
         <aside>
           <p className="eyebrow">Available on</p>
