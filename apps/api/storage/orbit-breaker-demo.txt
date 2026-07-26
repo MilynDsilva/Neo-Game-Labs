@@ -1,0 +1,4 @@
+Neo Game Labs local download authorization test artifact.
+
+This file verifies protected delivery for Orbit Breaker. Production game builds
+must be stored outside Git and registered through the download asset model.

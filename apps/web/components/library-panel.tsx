@@ -6,6 +6,7 @@ import {
 } from '@neogamelabs/contracts';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import { DownloadActions } from './download-actions';
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000';
 
@@ -67,6 +68,7 @@ export function LibraryPanel() {
             <Link className="text-link" href={`/games/${game.slug}`}>
               View game →
             </Link>
+            <DownloadActions gameSlug={game.slug} />
           </div>
         </article>
       ))}

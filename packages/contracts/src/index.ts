@@ -123,6 +123,21 @@ export const libraryResponseSchema = z.object({
   ),
 });
 
+export const downloadListResponseSchema = z.object({
+  downloads: z.array(
+    z.object({
+      fileName: z.string().regex(/^[a-zA-Z0-9._-]+$/),
+      platform: z.enum(['windows', 'macos', 'linux', 'android']),
+      version: z.string().trim().min(1),
+    }),
+  ),
+});
+
+export const downloadGrantResponseSchema = z.object({
+  expiresAt: z.iso.datetime(),
+  url: z.string().regex(/^\/v1\/downloads\/file\/[a-zA-Z0-9_-]+$/),
+});
+
 export type GameCatalogResponse = z.infer<typeof gameCatalogResponseSchema>;
 export type GameDetail = z.infer<typeof gameDetailSchema>;
 export type GamePlatform = z.infer<typeof gamePlatformSchema>;
@@ -133,3 +148,5 @@ export type CustomerProfile = z.infer<typeof customerProfileSchema>;
 export type TopUpPackage = z.infer<typeof topUpPackageSchema>;
 export type WalletResponse = z.infer<typeof walletResponseSchema>;
 export type LibraryResponse = z.infer<typeof libraryResponseSchema>;
+export type DownloadListResponse = z.infer<typeof downloadListResponseSchema>;
+export type DownloadGrantResponse = z.infer<typeof downloadGrantResponseSchema>;

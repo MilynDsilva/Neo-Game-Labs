@@ -24,13 +24,16 @@ cp .env.example apps/api/.env
 cp .env.example apps/web/.env.local
 docker compose up -d
 pnpm --filter @neogamelabs/api seed:catalog
+pnpm --filter @neogamelabs/api seed:downloads
 pnpm --filter @neogamelabs/api seed:wallet
 pnpm dev
 ```
 
 The web application runs at `http://localhost:3000` and the API health endpoint
-is available at `http://localhost:4000/v1/health`. The catalog and wallet seeds
-are idempotent and can be rerun safely.
+is available at `http://localhost:4000/v1/health`. The catalog, download, and
+wallet seeds are idempotent and can be rerun safely. The seeded download is a
+small test artifact; production game builds must be stored outside Git in
+private object storage.
 
 To test point purchases without a payment provider, credit one local customer
 with an idempotent development-only ledger adjustment:

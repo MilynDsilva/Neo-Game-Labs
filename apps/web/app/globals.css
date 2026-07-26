@@ -510,6 +510,32 @@ h2 {
   color: var(--muted);
 }
 
+.download-actions {
+  display: grid;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.download-actions button {
+  background: var(--ink);
+  border: 0;
+  border-radius: 0.45rem;
+  color: var(--background);
+  cursor: pointer;
+  font: inherit;
+  padding: 0.7rem 0.9rem;
+}
+
+.download-actions button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.library-grid .download-note {
+  font-size: 0.85rem;
+  margin-bottom: 0;
+}
+
 .game-details {
   display: grid;
   gap: 5rem;

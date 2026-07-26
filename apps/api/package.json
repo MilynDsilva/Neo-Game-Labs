@@ -7,6 +7,7 @@
     "dev": "nest start --watch",
     "lint": "eslint src test --max-warnings=0",
     "seed:catalog": "nest build && node dist/catalog/catalog.seed.js",
+    "seed:downloads": "nest build && node dist/downloads/downloads.seed.js",
     "seed:wallet": "nest build && node dist/wallet/wallet.seed.js",
     "seed:wallet-credit": "nest build && node dist/wallet/wallet.credit-seed.js",
     "start": "node dist/main.js",
