@@ -1,5 +1,10 @@
+'use client';
+
 import type { GameSummary } from '@neogamelabs/contracts';
 import Link from 'next/link';
+
+import { useAuth } from './auth-provider';
+import { useOwnership } from './ownership-provider';
 
 const platformLabels = {
   android: 'Android',
@@ -11,6 +16,10 @@ const platformLabels = {
 } as const;
 
 export function GameCard({ game }: Readonly<{ game: GameSummary }>) {
+  const { authenticated } = useAuth();
+  const { isOwned, loading } = useOwnership();
+  const owned = authenticated && !loading && isOwned(game.slug);
+
   return (
     <article className="game-card">
       <Link
@@ -22,6 +31,7 @@ export function GameCard({ game }: Readonly<{ game: GameSummary }>) {
         {game.featured ? (
           <span className="featured-label">Featured</span>
         ) : null}
+        {owned ? <span className="owned-label">In your library</span> : null}
       </Link>
       <div className="game-card-body">
         <div>
@@ -37,7 +47,11 @@ export function GameCard({ game }: Readonly<{ game: GameSummary }>) {
             ))}
           </ul>
           <strong>
-            {game.pointPrice === 0 ? 'Free' : `${game.pointPrice} pts`}
+            {owned
+              ? 'Owned'
+              : game.pointPrice === 0
+                ? 'Free'
+                : `${game.pointPrice} pts`}
           </strong>
         </div>
       </div>
