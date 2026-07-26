@@ -31,12 +31,13 @@ Last updated: 2026-07-26
 | 4          | Entitlement-protected game downloads                                            | `feat/game-downloads`      | `bdb21df`         | Complete        |
 | 5          | Private feedback and moderation-ready data storage                              | `feat/game-feedback`       | `3aacd3d`         | Complete        |
 | 6          | Security headers, kill switches, readiness, and launch runbook                  | `chore/launch-readiness`   | `6da133d`         | Complete        |
+| 6          | Vendor-neutral staging containers and deployment CI                             | `chore/staging-containers` | `d7e429a`         | Complete        |
 
 ## Ready for review
 
-| Phase | Deliverable                                         | Branch                     | Status           |
-| ----- | --------------------------------------------------- | -------------------------- | ---------------- |
-| 6     | Vendor-neutral staging containers and deployment CI | `chore/staging-containers` | Ready for review |
+| Phase   | Deliverable                                    | Branch                           | Status           |
+| ------- | ---------------------------------------------- | -------------------------------- | ---------------- |
+| Product | Customer-experience audit and polish work plan | `docs/customer-experience-audit` | Ready for review |
 
 ## Paused decisions and blockers
 
@@ -57,13 +58,15 @@ Stripe code is already merged, but real payment activation is paused.
 
 ## Remaining roadmap
 
-| Priority | Phase | Work                                                           | Suggested branch           | Status                                |
-| -------- | ----- | -------------------------------------------------------------- | -------------------------- | ------------------------------------- |
-| 1        | 6     | Select host and deploy staging web, API, MongoDB, DNS, and TLS | Host-specific chore branch | Not started                           |
-| 2        | 6     | Configure monitoring, backups, and restoration rehearsal       | Focused chore branches     | Not started                           |
-| 3        | 6     | Accessibility, performance, browser, device, and load testing  | Focused chore branches     | Not started                           |
-| 4        | 6     | Legal, tax, privacy, refunds, and acceptable-use review        | External review            | Not started                           |
-| Paused   | 4     | Production payment-provider activation and live top-ups        | To be decided              | Blocked on compliant provider account |
+| Priority | Phase   | Work                                                           | Suggested branch           | Status                                |
+| -------- | ------- | -------------------------------------------------------------- | -------------------------- | ------------------------------------- |
+| 1        | Product | Shared authentication state, signed-in header, and mobile menu | `feat/authenticated-shell` | Not started                           |
+| 2        | Product | Customer journey and visual/responsive polish                  | Focused feature branches   | Not started                           |
+| 3        | Product | Accessibility and automated browser quality                    | Focused fix/chore branches | Not started                           |
+| 4        | 6       | Configure monitoring, backups, and restoration rehearsal       | Focused chore branches     | Not started                           |
+| 5        | 6       | Legal, tax, privacy, refunds, and acceptable-use review        | External review            | Not started                           |
+| Last     | 6       | Select host, deploy staging, then configure domain/DNS/TLS     | Host-specific chore branch | Deferred until product polish         |
+| Paused   | 4       | Production payment-provider activation and live top-ups        | To be decided              | Blocked on compliant provider account |
 
 ## Current local-development behavior
 
@@ -86,7 +89,9 @@ Stripe code is already merged, but real payment activation is paused.
 2. Confirm `development` contains the merge commits listed above.
 3. Do not resume production payment activation without a compliant provider
    decision.
-4. Merge `chore/staging-containers`; next select a hosting platform and deploy
-   the tested images to an isolated staging environment.
-5. Update this file in every feature branch when its status, scope, blocker, or
+4. Merge `docs/customer-experience-audit`; then implement
+   `feat/authenticated-shell`.
+5. Per product-owner direction, hosting, domain, DNS, and deployment remain last
+   until the customer experience is working and visually approved.
+6. Update this file in every feature branch when its status, scope, blocker, or
    next action changes.
