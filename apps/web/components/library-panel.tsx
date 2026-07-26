@@ -1,34 +1,28 @@
 'use client';
 
-import {
-  libraryResponseSchema,
-  type LibraryResponse,
-} from '@neogamelabs/contracts';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
-import { DownloadActions } from './download-actions';
 
-const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000';
+import { useAuth } from './auth-provider';
+import { DownloadActions } from './download-actions';
+import { useOwnership } from './ownership-provider';
+
+const platformLabels = {
+  android: 'Android',
+  ios: 'iOS',
+  linux: 'Linux',
+  macos: 'macOS',
+  web: 'Web',
+  windows: 'Windows',
+} as const;
 
 export function LibraryPanel() {
-  const [library, setLibrary] = useState<LibraryResponse>();
-  const [requiresSignIn, setRequiresSignIn] = useState(false);
-  const [failed, setFailed] = useState(false);
+  const { authenticated, loading: authLoading } = useAuth();
+  const { error, games, loading, refreshOwnership } = useOwnership();
 
-  useEffect(() => {
-    void fetch(`${apiUrl}/v1/purchases/library`, { credentials: 'include' })
-      .then(async (response) => {
-        if (response.status === 401) {
-          setRequiresSignIn(true);
-          return;
-        }
-        if (!response.ok) throw new Error('Library request failed');
-        setLibrary(libraryResponseSchema.parse(await response.json()));
-      })
-      .catch(() => setFailed(true));
-  }, []);
-
-  if (requiresSignIn) {
+  if (authLoading) {
+    return <p className="empty-state">Checking your account…</p>;
+  }
+  if (!authenticated) {
     return (
       <p className="empty-state">
         <Link className="text-link" href="/account">
@@ -38,10 +32,18 @@ export function LibraryPanel() {
       </p>
     );
   }
-  if (failed)
-    return <p className="empty-state">Your library is unavailable.</p>;
-  if (!library) return <p className="empty-state">Loading your library…</p>;
-  if (library.games.length === 0) {
+  if (loading) return <p className="empty-state">Loading your library…</p>;
+  if (error) {
+    return (
+      <div className="empty-state" role="alert">
+        <p>{error}</p>
+        <button onClick={() => void refreshOwnership()} type="button">
+          Try again
+        </button>
+      </div>
+    );
+  }
+  if (games.length === 0) {
     return (
       <p className="empty-state">
         Your library is empty.{' '}
@@ -55,16 +57,35 @@ export function LibraryPanel() {
 
   return (
     <div className="library-grid">
-      {library.games.map((game) => (
+      {games.map((game) => (
         <article key={game.entitlementId}>
           <img alt="" src={game.coverImageUrl} />
           <div>
             <h2>{game.title}</h2>
-            <p>
-              {game.pointsPaid === 0
-                ? 'Added free'
-                : `${game.pointsPaid} points paid`}
-            </p>
+            <dl className="library-metadata">
+              <div>
+                <dt>Added</dt>
+                <dd>
+                  {new Intl.DateTimeFormat('en', {
+                    dateStyle: 'medium',
+                  }).format(new Date(game.acquiredAt))}
+                </dd>
+              </div>
+              <div>
+                <dt>Price</dt>
+                <dd>
+                  {game.pointsPaid === 0 ? 'Free' : `${game.pointsPaid} points`}
+                </dd>
+              </div>
+              <div>
+                <dt>Platforms</dt>
+                <dd>
+                  {game.platforms
+                    .map((platform) => platformLabels[platform.kind])
+                    .join(', ')}
+                </dd>
+              </div>
+            </dl>
             <Link className="text-link" href={`/games/${game.slug}`}>
               View game →
             </Link>

@@ -1,6 +1,9 @@
 'use client';
 
-import { libraryResponseSchema } from '@neogamelabs/contracts';
+import {
+  libraryResponseSchema,
+  type LibraryResponse,
+} from '@neogamelabs/contracts';
 import {
   createContext,
   type ReactNode,
@@ -17,6 +20,7 @@ const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000';
 
 type OwnershipContextValue = {
   error?: string;
+  games: LibraryResponse['games'];
   isOwned: (gameSlug: string) => boolean;
   loading: boolean;
   refreshOwnership: () => Promise<void>;
@@ -31,12 +35,14 @@ export function OwnershipProvider({
 }: Readonly<{ children: ReactNode }>) {
   const { authenticated, loading: authLoading } = useAuth();
   const [ownedSlugs, setOwnedSlugs] = useState<Set<string>>(new Set());
+  const [games, setGames] = useState<LibraryResponse['games']>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string>();
 
   const refreshOwnership = useCallback(async () => {
     if (!authenticated) {
       setOwnedSlugs(new Set());
+      setGames([]);
       setError(undefined);
       setLoading(false);
       return;
@@ -49,6 +55,7 @@ export function OwnershipProvider({
       });
       if (!response.ok) throw new Error('Ownership request failed');
       const library = libraryResponseSchema.parse(await response.json());
+      setGames(library.games);
       setOwnedSlugs(new Set(library.games.map((game) => game.slug)));
     } catch {
       setError('Ownership status is temporarily unavailable.');
@@ -64,11 +71,12 @@ export function OwnershipProvider({
   const value = useMemo<OwnershipContextValue>(
     () => ({
       ...(error ? { error } : {}),
+      games,
       isOwned: (gameSlug) => ownedSlugs.has(gameSlug),
       loading: authLoading || loading,
       refreshOwnership,
     }),
-    [authLoading, error, loading, ownedSlugs, refreshOwnership],
+    [authLoading, error, games, loading, ownedSlugs, refreshOwnership],
   );
 
   return (

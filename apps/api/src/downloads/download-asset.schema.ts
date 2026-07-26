@@ -23,6 +23,9 @@ export class DownloadAsset {
   @Prop({ match: /^[a-zA-Z0-9/_-]+$/, required: true, type: String })
   storageKey!: string;
 
+  @Prop({ default: 0, min: 0, required: true, type: Number })
+  sizeBytes!: number;
+
   @Prop({ default: true, index: true, type: Boolean })
   active!: boolean;
 }

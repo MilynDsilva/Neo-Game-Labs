@@ -35,12 +35,13 @@ Last updated: 2026-07-26
 | Product    | Customer-experience audit and polish work plan                                  | `docs/customer-experience-audit` | `4efeacf`         | Complete        |
 | Product    | Shared authentication, profile navigation, and sign-out                         | `feat/authenticated-shell`       | `fc80880`         | Complete        |
 | Product    | Shared ownership, purchase states, and confirmations                            | `feat/ownership-ui`              | `ecbeb9c`         | Complete        |
+| Product    | Explicit wallet, top-up, retry, and empty states                                | `fix/wallet-states`              | `0c6e1b5`         | Complete        |
 
 ## Ready for review
 
-| Phase   | Deliverable                                      | Branch              | Status           |
-| ------- | ------------------------------------------------ | ------------------- | ---------------- |
-| Product | Explicit wallet, top-up, retry, and empty states | `fix/wallet-states` | Ready for review |
+| Phase   | Deliverable                                          | Branch                    | Status           |
+| ------- | ---------------------------------------------------- | ------------------------- | ---------------- |
+| Product | Shared library data and detailed download experience | `feat/library-experience` | Ready for review |
 
 ## Paused decisions and blockers
 
@@ -91,8 +92,8 @@ Stripe code is already merged, but real payment activation is paused.
 2. Confirm `development` contains the merge commits listed above.
 3. Do not resume production payment activation without a compliant provider
    decision.
-4. Merge `fix/wallet-states`; then continue with library and download polish in
-   `feat/library-experience`.
+4. Merge `feat/library-experience`; then continue with feedback form polish in
+   `feat/feedback-polish`.
 5. Per product-owner direction, hosting, domain, DNS, and deployment remain last
    until the customer experience is working and visually approved.
 6. Update this file in every feature branch when its status, scope, blocker, or
