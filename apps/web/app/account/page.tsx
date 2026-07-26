@@ -11,7 +11,9 @@ export default function AccountPage() {
       <section className="page-heading">
         <p className="eyebrow">Your account</p>
         <h1>Player profile</h1>
-        <p>Manage your identity and view your points balance.</p>
+        <p>
+          Manage your profile, points, signed-in devices, and personal data.
+        </p>
       </section>
       <section className="account-layout">
         <AccountPanel />
