@@ -16,28 +16,29 @@ Last updated: 2026-07-26
 
 ## Merged work
 
-| Phase      | Deliverable                                                                     | Source branch              | Development merge | Status          |
-| ---------- | ------------------------------------------------------------------------------- | -------------------------- | ----------------- | --------------- |
-| Repository | Agent contribution workflow                                                     | `docs/agent-workflow`      | `fdb1fb4`         | Complete        |
-| 0          | Product roadmap and architecture decisions                                      | `docs/product-roadmap`     | `c86ea79`         | Complete        |
-| 1          | pnpm/Turbo monorepo, Next.js web, NestJS API, MongoDB replica set, CI           | `chore/project-foundation` | `66db3fe`         | Complete        |
-| 2          | Public game catalog, seed data, search, filters, detail pages, SEO              | `feat/game-catalog`        | `5c803b0`         | Complete        |
-| 2          | About, support, legal pages, and catalog loading/error states                   | `feat/site-content`        | `fd1392c`         | Complete        |
-| 3          | Google OAuth, customer records, secure server sessions, points-account creation | `feat/google-auth`         | `776a792`         | Complete        |
-| 3          | Session controls, audit events, data export, deletion requests, rate limits     | `feat/account-security`    | `daefa9f`         | Complete        |
-| 4          | Immutable points ledger, INR/USD packages, wallet APIs and UI                   | `feat/points-ledger`       | `52621ee`         | Complete        |
-| 4          | Stripe Checkout, signed webhooks, payment deduplication, ledger crediting       | `feat/stripe-topups`       | `8268a25`         | Merged / paused |
-| 4          | Points-based purchases, entitlements, and customer library                      | `feat/game-purchases`      | `bc5a28d`         | Complete        |
-| 4          | Entitlement-protected game downloads                                            | `feat/game-downloads`      | `bdb21df`         | Complete        |
-| 5          | Private feedback and moderation-ready data storage                              | `feat/game-feedback`       | `3aacd3d`         | Complete        |
-| 6          | Security headers, kill switches, readiness, and launch runbook                  | `chore/launch-readiness`   | `6da133d`         | Complete        |
-| 6          | Vendor-neutral staging containers and deployment CI                             | `chore/staging-containers` | `d7e429a`         | Complete        |
+| Phase      | Deliverable                                                                     | Source branch                    | Development merge | Status          |
+| ---------- | ------------------------------------------------------------------------------- | -------------------------------- | ----------------- | --------------- |
+| Repository | Agent contribution workflow                                                     | `docs/agent-workflow`            | `fdb1fb4`         | Complete        |
+| 0          | Product roadmap and architecture decisions                                      | `docs/product-roadmap`           | `c86ea79`         | Complete        |
+| 1          | pnpm/Turbo monorepo, Next.js web, NestJS API, MongoDB replica set, CI           | `chore/project-foundation`       | `66db3fe`         | Complete        |
+| 2          | Public game catalog, seed data, search, filters, detail pages, SEO              | `feat/game-catalog`              | `5c803b0`         | Complete        |
+| 2          | About, support, legal pages, and catalog loading/error states                   | `feat/site-content`              | `fd1392c`         | Complete        |
+| 3          | Google OAuth, customer records, secure server sessions, points-account creation | `feat/google-auth`               | `776a792`         | Complete        |
+| 3          | Session controls, audit events, data export, deletion requests, rate limits     | `feat/account-security`          | `daefa9f`         | Complete        |
+| 4          | Immutable points ledger, INR/USD packages, wallet APIs and UI                   | `feat/points-ledger`             | `52621ee`         | Complete        |
+| 4          | Stripe Checkout, signed webhooks, payment deduplication, ledger crediting       | `feat/stripe-topups`             | `8268a25`         | Merged / paused |
+| 4          | Points-based purchases, entitlements, and customer library                      | `feat/game-purchases`            | `bc5a28d`         | Complete        |
+| 4          | Entitlement-protected game downloads                                            | `feat/game-downloads`            | `bdb21df`         | Complete        |
+| 5          | Private feedback and moderation-ready data storage                              | `feat/game-feedback`             | `3aacd3d`         | Complete        |
+| 6          | Security headers, kill switches, readiness, and launch runbook                  | `chore/launch-readiness`         | `6da133d`         | Complete        |
+| 6          | Vendor-neutral staging containers and deployment CI                             | `chore/staging-containers`       | `d7e429a`         | Complete        |
+| Product    | Customer-experience audit and polish work plan                                  | `docs/customer-experience-audit` | `4efeacf`         | Complete        |
 
 ## Ready for review
 
-| Phase   | Deliverable                                    | Branch                           | Status           |
-| ------- | ---------------------------------------------- | -------------------------------- | ---------------- |
-| Product | Customer-experience audit and polish work plan | `docs/customer-experience-audit` | Ready for review |
+| Phase   | Deliverable                                             | Branch                     | Status           |
+| ------- | ------------------------------------------------------- | -------------------------- | ---------------- |
+| Product | Shared authentication, profile navigation, and sign-out | `feat/authenticated-shell` | Ready for review |
 
 ## Paused decisions and blockers
 
@@ -58,15 +59,14 @@ Stripe code is already merged, but real payment activation is paused.
 
 ## Remaining roadmap
 
-| Priority | Phase   | Work                                                           | Suggested branch           | Status                                |
-| -------- | ------- | -------------------------------------------------------------- | -------------------------- | ------------------------------------- |
-| 1        | Product | Shared authentication state, signed-in header, and mobile menu | `feat/authenticated-shell` | Not started                           |
-| 2        | Product | Customer journey and visual/responsive polish                  | Focused feature branches   | Not started                           |
-| 3        | Product | Accessibility and automated browser quality                    | Focused fix/chore branches | Not started                           |
-| 4        | 6       | Configure monitoring, backups, and restoration rehearsal       | Focused chore branches     | Not started                           |
-| 5        | 6       | Legal, tax, privacy, refunds, and acceptable-use review        | External review            | Not started                           |
-| Last     | 6       | Select host, deploy staging, then configure domain/DNS/TLS     | Host-specific chore branch | Deferred until product polish         |
-| Paused   | 4       | Production payment-provider activation and live top-ups        | To be decided              | Blocked on compliant provider account |
+| Priority | Phase   | Work                                                       | Suggested branch           | Status                                |
+| -------- | ------- | ---------------------------------------------------------- | -------------------------- | ------------------------------------- |
+| 1        | Product | Customer journey and visual/responsive polish              | Focused feature branches   | Not started                           |
+| 2        | Product | Accessibility and automated browser quality                | Focused fix/chore branches | Not started                           |
+| 4        | 6       | Configure monitoring, backups, and restoration rehearsal   | Focused chore branches     | Not started                           |
+| 5        | 6       | Legal, tax, privacy, refunds, and acceptable-use review    | External review            | Not started                           |
+| Last     | 6       | Select host, deploy staging, then configure domain/DNS/TLS | Host-specific chore branch | Deferred until product polish         |
+| Paused   | 4       | Production payment-provider activation and live top-ups    | To be decided              | Blocked on compliant provider account |
 
 ## Current local-development behavior
 
@@ -89,8 +89,8 @@ Stripe code is already merged, but real payment activation is paused.
 2. Confirm `development` contains the merge commits listed above.
 3. Do not resume production payment activation without a compliant provider
    decision.
-4. Merge `docs/customer-experience-audit`; then implement
-   `feat/authenticated-shell`.
+4. Merge `feat/authenticated-shell`; then continue with ownership and purchase
+   experience in `feat/ownership-ui`.
 5. Per product-owner direction, hosting, domain, DNS, and deployment remain last
    until the customer experience is working and visually approved.
 6. Update this file in every feature branch when its status, scope, blocker, or

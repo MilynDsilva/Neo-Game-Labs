@@ -1,7 +1,8 @@
 'use client';
 
-import { authStatusSchema, type AuthStatus } from '@neogamelabs/contracts';
 import { useEffect, useState } from 'react';
+
+import { useAuth } from './auth-provider';
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000';
 
@@ -14,38 +15,26 @@ type CustomerSession = {
 };
 
 export function AccountPanel() {
-  const [status, setStatus] = useState<AuthStatus>();
+  const { authenticated, customer, error, loading, refresh, signOut } =
+    useAuth();
   const [sessions, setSessions] = useState<CustomerSession[]>([]);
   const [failed, setFailed] = useState(false);
 
   useEffect(() => {
-    void fetch(`${apiUrl}/v1/auth/me`, { credentials: 'include' })
+    if (!authenticated) {
+      setSessions([]);
+      return;
+    }
+    void fetch(`${apiUrl}/v1/auth/sessions`, { credentials: 'include' })
       .then(async (response) => {
-        if (!response.ok) throw new Error('Account request failed');
-        const nextStatus = authStatusSchema.parse(await response.json());
-        setStatus(nextStatus);
-        if (nextStatus.authenticated) {
-          const sessionResponse = await fetch(`${apiUrl}/v1/auth/sessions`, {
-            credentials: 'include',
-          });
-          if (sessionResponse.ok) {
-            const data = (await sessionResponse.json()) as {
-              sessions: CustomerSession[];
-            };
-            setSessions(data.sessions);
-          }
-        }
+        if (!response.ok) throw new Error('Session request failed');
+        const data = (await response.json()) as {
+          sessions: CustomerSession[];
+        };
+        setSessions(data.sessions);
       })
       .catch(() => setFailed(true));
-  }, []);
-
-  async function signOut() {
-    const response = await fetch(`${apiUrl}/v1/auth/sign-out`, {
-      credentials: 'include',
-      method: 'POST',
-    });
-    if (response.ok) setStatus({ authenticated: false });
-  }
+  }, [authenticated]);
 
   async function revokeSession(session: CustomerSession) {
     const response = await fetch(
@@ -54,7 +43,7 @@ export function AccountPanel() {
     );
     if (!response.ok) return;
     if (session.current) {
-      setStatus({ authenticated: false });
+      await refresh();
     } else {
       setSessions((current) =>
         current.filter((item) => item.id !== session.id),
@@ -89,16 +78,16 @@ export function AccountPanel() {
       credentials: 'include',
       method: 'POST',
     });
-    if (response.ok) setStatus({ authenticated: false });
+    if (response.ok) await refresh();
   }
 
-  if (failed) {
+  if (failed || error) {
     return <p className="empty-state">Account services are unavailable.</p>;
   }
-  if (!status) {
+  if (loading) {
     return <p className="empty-state">Loading your account…</p>;
   }
-  if (!status.authenticated) {
+  if (!authenticated || !customer) {
     return (
       <div className="account-card">
         <h2>Sign in to continue</h2>
@@ -115,17 +104,15 @@ export function AccountPanel() {
   return (
     <div className="account-card">
       <div className="account-identity">
-        {status.customer.pictureUrl ? (
-          <img alt="" src={status.customer.pictureUrl} />
-        ) : null}
+        {customer.pictureUrl ? <img alt="" src={customer.pictureUrl} /> : null}
         <div>
-          <h2>{status.customer.displayName}</h2>
-          <p>{status.customer.email}</p>
+          <h2>{customer.displayName}</h2>
+          <p>{customer.email}</p>
         </div>
       </div>
       <div className="account-balance">
         <span>Points balance</span>
-        <strong>{status.customer.pointsBalance}</strong>
+        <strong>{customer.pointsBalance}</strong>
       </div>
       <section className="session-section">
         <h3>Active sessions</h3>
