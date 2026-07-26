@@ -1,4 +1,4 @@
-# Neo Game Labs Customer Dashboard
+# Neo Game Labs Platform
 
 Customer-facing game catalog, points wallet, purchase library, and feedback
 platform for `neogamelabs.com`.
@@ -6,6 +6,7 @@ platform for `neogamelabs.com`.
 ## Applications
 
 - `apps/web`: Next.js customer website
+- `apps/admin`: independently deployable Next.js operations dashboard
 - `apps/api`: NestJS API
 - `packages/contracts`: Shared API schemas and TypeScript types
 
@@ -22,6 +23,7 @@ npm install --global pnpm@10.17.0
 pnpm install
 cp .env.example apps/api/.env
 cp .env.example apps/web/.env.local
+cp .env.example apps/admin/.env.local
 docker compose up -d
 pnpm --filter @neogamelabs/api seed:catalog
 pnpm --filter @neogamelabs/api seed:downloads
@@ -29,12 +31,27 @@ pnpm --filter @neogamelabs/api seed:wallet
 pnpm dev
 ```
 
-The web application runs at `http://localhost:3000`. API liveness is available
+The customer application runs at `http://localhost:3000`, and the protected
+admin dashboard runs at `http://localhost:3100`. API liveness is available
 at `http://localhost:4000/v1/health`, and MongoDB readiness at
 `http://localhost:4000/v1/health/ready`. The catalog, download, and wallet seeds
 are idempotent and can be rerun safely. The seeded download is a small test
 artifact; production game builds must be stored outside Git in private object
 storage.
+
+## Admin dashboard
+
+Set the same long random `ADMIN_API_KEY` in `apps/api/.env` and
+`apps/admin/.env.local`. Set `ADMIN_DASHBOARD_USERNAME` and
+`ADMIN_DASHBOARD_PASSWORD` only in the admin app environment. The browser
+receives neither the admin API key nor database credentials.
+
+The dashboard provides catalog publishing, point-price and featured controls,
+private-feedback triage with internal notes, read-only customer wallet
+visibility, controlled point credits, platform metrics, and an immutable admin
+action trail. New customers receive a one-time 150-point welcome credit when
+their points account is first created. See
+[the admin operations guide](docs/operations/admin-dashboard.md).
 
 Operational kill switches are configured with `TOP_UPS_ENABLED`,
 `POINT_PURCHASES_ENABLED`, and `DOWNLOADS_ENABLED`. Top-ups default to disabled;
@@ -62,19 +79,25 @@ application in Google Cloud, add
 and set `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` in `apps/api/.env`.
 Production and staging must use separate OAuth clients and HTTPS callback URLs.
 
-## Stripe test checkout
+## Razorpay test checkout
 
-Set `STRIPE_SECRET_KEY` and `STRIPE_WEBHOOK_SECRET` in `apps/api/.env`. For
-local webhook forwarding, run:
+Set `RAZORPAY_KEY_ID`, `RAZORPAY_KEY_SECRET`, and
+`RAZORPAY_WEBHOOK_SECRET` in `apps/api/.env`, then enable test top-ups with
+`TOP_UPS_ENABLED=true`. Configure Razorpay Standard Checkout for automatic
+capture and create a test-mode webhook for:
 
-```bash
-stripe listen --forward-to localhost:4000/v1/payments/stripe/webhook
+```text
+payment.captured
+payment.failed
 ```
 
-Use the `whsec_...` value printed by the Stripe CLI as
-`STRIPE_WEBHOOK_SECRET`, restart the API, and use Stripe test card
-`4242 4242 4242 4242` with any future expiry and any three-digit CVC. Never
-commit Stripe keys or webhook secrets.
+The webhook URL is
+`https://<public-api-host>/v1/payments/razorpay/webhook`. Razorpay webhooks
+require a public HTTPS endpoint; local checkout confirmation still performs
+server-side signature and captured-payment verification. Never commit Razorpay
+keys or webhook secrets. See the
+[Razorpay operations guide](docs/operations/razorpay.md) for test setup,
+webhooks, rotation, and launch requirements.
 
 ## Validation
 

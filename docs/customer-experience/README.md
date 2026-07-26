@@ -23,7 +23,7 @@ The highest-impact gap is global identity:
 Other important gaps:
 
 - Wallet authentication failures and service failures share one vague state.
-- Disabled top-ups are still presented as purchasable Stripe packages.
+- Disabled top-ups are still presented as purchasable payment packages.
 - Game pages do not show whether the signed-in customer already owns a game.
 - Purchase completion jumps to the library without an explicit confirmation.
 - Library, wallet, account, feedback, and downloads use inconsistent loading,

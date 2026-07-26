@@ -19,11 +19,13 @@ const environmentSchema = z
       .default('mongodb://localhost:27017/customer_dashboard?replicaSet=rs0'),
     GOOGLE_CLIENT_ID: optionalSecret,
     GOOGLE_CLIENT_SECRET: optionalSecret,
+    ADMIN_API_KEY: optionalSecret,
     GOOGLE_CALLBACK_URL: z
       .url()
       .default('http://localhost:4000/v1/auth/google/callback'),
-    STRIPE_SECRET_KEY: optionalSecret,
-    STRIPE_WEBHOOK_SECRET: optionalSecret,
+    RAZORPAY_KEY_ID: optionalSecret,
+    RAZORPAY_KEY_SECRET: optionalSecret,
+    RAZORPAY_WEBHOOK_SECRET: optionalSecret,
     DOWNLOADS_ENABLED: booleanFlag(true),
     POINT_PURCHASES_ENABLED: booleanFlag(true),
     TOP_UPS_ENABLED: booleanFlag(false),
@@ -31,6 +33,7 @@ const environmentSchema = z
       .enum(['development', 'test', 'production'])
       .default('development'),
     PORT: z.coerce.number().int().positive().default(4000),
+    ADMIN_ORIGIN: z.url().default('http://localhost:3100'),
     WEB_ORIGIN: z.url().default('http://localhost:3000'),
   })
   .refine(
@@ -45,12 +48,12 @@ const environmentSchema = z
   )
   .refine(
     (environment) =>
-      Boolean(environment.STRIPE_SECRET_KEY) ===
-      Boolean(environment.STRIPE_WEBHOOK_SECRET),
+      Boolean(environment.RAZORPAY_KEY_ID) ===
+      Boolean(environment.RAZORPAY_KEY_SECRET),
     {
       message:
-        'STRIPE_SECRET_KEY and STRIPE_WEBHOOK_SECRET must be configured together',
-      path: ['STRIPE_SECRET_KEY'],
+        'RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET must be configured together',
+      path: ['RAZORPAY_KEY_ID'],
     },
   );
 

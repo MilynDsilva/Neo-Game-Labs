@@ -32,7 +32,7 @@ export default function PrivacyPage() {
       <section>
         <h2>Future account and payment features</h2>
         <p>
-          Before Google sign-in, customer profiles, points, or Stripe payments
+          Before Google sign-in, customer profiles, points, or Razorpay payments
           become available, this notice will describe the relevant providers,
           information, purposes, retention periods, and customer choices.
         </p>

@@ -23,6 +23,12 @@ const checkoutRequestSchema = z.object({
   packageCode: z.string().min(1).max(80),
 });
 
+const verificationSchema = z.object({
+  orderId: z.string().min(1).max(80),
+  paymentId: z.string().min(1).max(80),
+  signature: z.string().min(1).max(256),
+});
+
 @Controller('payments')
 export class PaymentsController {
   constructor(
@@ -52,20 +58,39 @@ export class PaymentsController {
     );
   }
 
-  @Post('stripe/webhook')
+  @Post('razorpay/verify')
+  async verifyRazorpayPayment(@Body() body: unknown, @Req() request: Request) {
+    if (!this.configService.getOrThrow<boolean>('TOP_UPS_ENABLED')) {
+      throw new ServiceUnavailableException('Point top-ups are paused');
+    }
+    this.assertTrustedOrigin(request);
+    const parsed = verificationSchema.safeParse(body);
+    if (!parsed.success) {
+      throw new BadRequestException('Invalid payment verification');
+    }
+    const customerId = await this.authService.getAuthenticatedCustomerId(
+      request.cookies[sessionCookieName] as string | undefined,
+    );
+    return this.paymentsService.verifyCheckout(customerId, parsed.data);
+  }
+
+  @Post('razorpay/webhook')
   @HttpCode(200)
-  async handleStripeWebhook(
-    @Headers('stripe-signature') signature: string | undefined,
+  async handleRazorpayWebhook(
+    @Headers('x-razorpay-signature') signature: string | undefined,
+    @Headers('x-razorpay-event-id') eventId: string | undefined,
     @Req() request: RawBodyRequest<Request>,
   ) {
-    if (!signature || !request.rawBody) {
-      throw new BadRequestException('Missing Stripe signature or raw body');
+    if (!signature || !eventId || !request.rawBody) {
+      throw new BadRequestException(
+        'Missing Razorpay signature, event ID, or raw body',
+      );
     }
-    const event = this.paymentsService.constructEvent(
+    const event = this.paymentsService.constructWebhook(
       request.rawBody,
       signature,
     );
-    await this.paymentsService.processEvent(event);
+    await this.paymentsService.processWebhook(eventId, event);
     return { received: true };
   }
 

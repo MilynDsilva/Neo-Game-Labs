@@ -10,8 +10,9 @@ can discover games and platform availability. Customers can sign in with
 Google, top up Neo Game Labs points using INR or USD, spend points on games and
 products, access purchases in a library, and submit feedback.
 
-The admin dashboard will be built in a separate repository. It will use
-authenticated admin endpoints exposed by the same backend API.
+The admin dashboard is an independently deployable application in this
+monorepo. It uses authenticated admin endpoints exposed by the same backend
+API, but does not import or expose customer frontend code.
 
 ## Recommended repository shape
 
@@ -21,6 +22,7 @@ infrastructure evolve together:
 ```text
 apps/
   web/          Customer website
+  admin/        Protected operations dashboard
   api/          Customer and protected admin API
 packages/
   contracts/    Shared API schemas and types
@@ -29,9 +31,9 @@ infrastructure/
 docs/
 ```
 
-The applications should remain independently deployable. The separate admin
-repository should consume versioned API contracts and must not share customer
-frontend code directly.
+The applications must remain independently deployable. The admin application
+must consume protected API endpoints and must not share customer frontend code
+directly.
 
 See [Architecture decisions](architecture-decisions.md) for the selected
 database and financial consistency requirements.

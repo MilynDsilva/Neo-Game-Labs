@@ -13,9 +13,9 @@ must exercise replica-set transactions.
 
 ## Financial consistency requirements
 
-Stripe is the source of truth for whether an INR or USD payment succeeded.
+Razorpay is the source of truth for whether an INR or USD payment succeeded.
 MongoDB is the source of truth for internal points, purchases, and
-entitlements. Stripe does not replace the internal ledger.
+entitlements. Razorpay does not replace the internal ledger.
 
 Every balance-changing operation must:
 
@@ -30,7 +30,7 @@ Every balance-changing operation must:
   entries.
 - Prevent a debit when the available balance is insufficient.
 
-Stripe webhook handlers must verify the signature against the raw request body,
+Razorpay webhook handlers must verify the signature against the raw request body,
 deduplicate event processing, and credit points only after checking the
 authoritative payment state.
 
@@ -73,4 +73,4 @@ transaction behavior before migration.
 - [MongoDB read concern](https://www.mongodb.com/docs/manual/reference/read-concern/)
 - [MongoDB write concern](https://www.mongodb.com/docs/manual/reference/write-concern/)
 - [MongoDB monetary data](https://www.mongodb.com/docs/manual/tutorial/model-monetary-data/)
-- [Stripe webhook handling](https://docs.stripe.com/webhooks)
+- [Razorpay webhook handling](https://razorpay.com/docs/webhooks/)
