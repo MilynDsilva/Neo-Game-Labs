@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" role="img" aria-labelledby="title description">
+  <title id="title">Neon Drift abstract game artwork</title>
+  <desc id="description">A neon road running through a blue and pink futuristic city.</desc>
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop stop-color="#071128"/>
+      <stop offset="1" stop-color="#30124f"/>
+    </linearGradient>
+    <linearGradient id="road" x1="0" x2="1">
+      <stop stop-color="#22d3ee"/><stop offset=".5" stop-color="#fff"/><stop offset="1" stop-color="#f472b6"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="800" fill="url(#sky)"/>
+  <circle cx="600" cy="255" r="150" fill="#fb7185" opacity=".9"/>
+  <g fill="#101a3c">
+    <path d="M0 180h150v360H0zM180 90h165v450H180zM885 130h130v410H885zM1040 220h160v320h-160z"/>
+  </g>
+  <g stroke="#22d3ee" stroke-width="5" opacity=".8">
+    <path d="M205 130h110M205 190h110M915 180h70M915 240h70"/>
+  </g>
+  <path d="m490 800 75-320h70l85 320z" fill="#090b18"/>
+  <path d="M525 800 590 480M690 800 610 480" stroke="url(#road)" stroke-width="9"/>
+  <path d="m510 560 170-10 70 70-295 8z" fill="#f8fafc"/>
+  <text x="70" y="710" fill="#fff" font-family="sans-serif" font-size="72" font-style="italic" font-weight="800" letter-spacing="7">NEON DRIFT</text>
+</svg>

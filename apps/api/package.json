@@ -1,0 +1,40 @@
+{
+  "name": "@neogamelabs/api",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "nest build",
+    "dev": "nest start --watch",
+    "lint": "eslint src test --max-warnings=0",
+    "seed:catalog": "nest build && node dist/catalog/catalog.seed.js",
+    "seed:downloads": "nest build && node dist/downloads/downloads.seed.js",
+    "seed:wallet": "nest build && node dist/wallet/wallet.seed.js",
+    "seed:wallet-credit": "nest build && node dist/wallet/wallet.credit-seed.js",
+    "start": "node dist/main.js",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@neogamelabs/contracts": "workspace:*",
+    "@nestjs/common": "^11.1.6",
+    "@nestjs/config": "^4.0.2",
+    "@nestjs/core": "^11.1.6",
+    "@nestjs/mongoose": "^11.0.3",
+    "@nestjs/platform-express": "^11.1.6",
+    "@nestjs/throttler": "^6.5.0",
+    "cookie-parser": "^1.4.7",
+    "mongoose": "^9.0.0",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.2",
+    "stripe": "^22.3.2",
+    "zod": "^4.1.10"
+  },
+  "devDependencies": {
+    "@nestjs/cli": "^11.0.10",
+    "@types/cookie-parser": "^1.4.10",
+    "@types/express": "^5.0.3",
+    "@types/node": "^22.18.6",
+    "vite": "^6.4.3",
+    "vitest": "^3.2.4"
+  }
+}

@@ -1,0 +1,11 @@
+.git
+.gitlab
+.next
+.pnpm-store
+**/.env
+**/.env.*
+**/.next
+**/dist
+**/node_modules
+node_modules
+npm-debug.log

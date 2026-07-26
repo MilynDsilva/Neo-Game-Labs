@@ -1,0 +1,72 @@
+include:
+  - template: Jobs/SAST.gitlab-ci.yml
+  - template: Jobs/Secret-Detection.gitlab-ci.yml
+
+stages:
+  - validate
+  - test
+  - build
+
+variables:
+  PNPM_STORE_DIR: .pnpm-store
+
+.node_job:
+  image: node:22
+  cache:
+    key:
+      files:
+        - pnpm-lock.yaml
+    paths:
+      - .pnpm-store
+  before_script:
+    - npm install --global pnpm@10.17.0
+    - pnpm config set store-dir "$PNPM_STORE_DIR"
+    - pnpm install --frozen-lockfile
+
+quality:
+  extends: .node_job
+  stage: validate
+  script:
+    - pnpm format:check
+    - pnpm lint
+    - pnpm typecheck
+    - pnpm test
+
+dependency_audit:
+  extends: .node_job
+  stage: test
+  script:
+    - pnpm audit --prod --audit-level high
+
+build:
+  extends: .node_job
+  stage: build
+  script:
+    - pnpm build
+
+.container_build:
+  image: docker:27.5-cli
+  stage: build
+  services:
+    - name: docker:27.5-dind
+      command: ['--tls=false']
+  variables:
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_TLS_CERTDIR: ''
+
+container_api:
+  extends: .container_build
+  script:
+    - docker build --file apps/api/Dockerfile --tag neogamelabs-api:$CI_COMMIT_SHA .
+
+container_web:
+  extends: .container_build
+  script:
+    - >
+      docker build
+      --file apps/web/Dockerfile
+      --build-arg API_URL=http://api.staging.invalid
+      --build-arg NEXT_PUBLIC_API_URL=https://api.staging.invalid
+      --build-arg NEXT_PUBLIC_SITE_URL=https://staging.invalid
+      --tag neogamelabs-web:$CI_COMMIT_SHA
+      .
