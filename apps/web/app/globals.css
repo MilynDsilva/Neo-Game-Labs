@@ -556,14 +556,18 @@ h2 {
 }
 
 .featured-label {
-  background: rgb(7 8 13 / 76%);
-  border: 1px solid rgb(255 255 255 / 20%);
+  backdrop-filter: blur(0.65rem);
+  background: rgb(155 124 255 / 88%);
+  border: 1px solid rgb(255 255 255 / 30%);
   border-radius: 999px;
+  box-shadow: 0 0.5rem 1.5rem rgb(0 0 0 / 28%);
+  color: white;
   font-size: 0.68rem;
-  left: 1rem;
+  font-weight: 800;
   letter-spacing: 0.12em;
-  padding: 0.45rem 0.65rem;
+  padding: 0.5rem 0.75rem;
   position: absolute;
+  right: 1rem;
   text-transform: uppercase;
   top: 1rem;
 }
@@ -618,11 +622,25 @@ h2 {
 }
 
 .platform-list li {
-  background: var(--surface-raised);
-  border-radius: 0.35rem;
-  color: var(--muted);
-  font-size: 0.7rem;
-  padding: 0.35rem 0.45rem;
+  align-items: center;
+  background: rgb(255 255 255 / 4%);
+  border: 1px solid rgb(255 255 255 / 9%);
+  border-radius: 999px;
+  color: #c4cad7;
+  display: inline-flex;
+  font-size: 0.68rem;
+  font-weight: 700;
+  gap: 0.4rem;
+  letter-spacing: 0.025em;
+  padding: 0.42rem 0.65rem;
+}
+
+.platform-list li > span {
+  background: var(--accent-bright);
+  border-radius: 50%;
+  box-shadow: 0 0 0.5rem rgb(196 181 253 / 55%);
+  height: 0.35rem;
+  width: 0.35rem;
 }
 
 .notice,
@@ -645,24 +663,47 @@ h2 {
 
 .catalog-layout {
   display: grid;
-  gap: 2rem;
-  grid-template-columns: 14rem minmax(0, 1fr);
+  gap: 2.25rem;
+  grid-template-columns: minmax(0, 1fr);
   padding: 1rem clamp(1.25rem, 7vw, 7rem) 6rem;
 }
 
 .catalog-filters {
-  align-self: start;
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: 0.9rem;
+  align-items: end;
+  background:
+    radial-gradient(circle at 5% 0%, rgb(155 124 255 / 14%), transparent 18rem),
+    var(--surface);
+  border: 1px solid rgb(255 255 255 / 12%);
+  border-radius: 1rem;
+  box-shadow: 0 1rem 3rem rgb(0 0 0 / 18%);
   display: grid;
   gap: 1rem;
-  padding: 1.2rem;
-  position: sticky;
-  top: 6rem;
+  grid-template-columns:
+    minmax(11rem, 0.62fr) minmax(17rem, 1.15fr)
+    minmax(12rem, 0.7fr) auto;
+  padding: 1.25rem;
+  position: relative;
 }
 
-.catalog-filters label {
+.catalog-filter-intro {
+  align-self: center;
+  display: grid;
+  gap: 0.25rem;
+  padding-left: 0.35rem;
+}
+
+.catalog-filter-intro .eyebrow {
+  font-size: 0.64rem;
+  margin: 0;
+}
+
+.catalog-filter-intro strong {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  letter-spacing: -0.025em;
+}
+
+.filter-control {
   display: grid;
   font-size: 0.76rem;
   font-weight: 700;
@@ -673,23 +714,42 @@ h2 {
 
 .catalog-filters input,
 .catalog-filters select {
-  background: var(--background);
-  border: 1px solid var(--line);
-  border-radius: 0.55rem;
+  background-color: rgb(7 8 13 / 82%);
+  border: 1px solid rgb(255 255 255 / 12%);
+  border-radius: 0.65rem;
   color: var(--foreground);
+  height: 3rem;
   min-width: 0;
-  padding: 0.8rem;
+  padding: 0.8rem 0.9rem;
   text-transform: none;
 }
 
+.catalog-filters input:hover,
+.catalog-filters select:hover {
+  border-color: rgb(196 181 253 / 38%);
+}
+
+.catalog-filters input:focus,
+.catalog-filters select:focus {
+  border-color: var(--accent);
+}
+
 .catalog-filters button {
+  background: linear-gradient(110deg, var(--accent), #7559da);
+  color: white;
+  height: 3rem;
   justify-content: center;
   margin-top: 0;
+  min-width: 9rem;
 }
 
 .result-count {
-  color: var(--muted);
+  color: #d9dce5;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
   margin-bottom: 1rem;
+  text-transform: uppercase;
 }
 
 .game-hero {
@@ -2097,8 +2157,13 @@ select:focus {
   }
 
   .catalog-filters {
-    grid-template-columns: 1fr 1fr auto;
+    grid-template-columns: 1fr 1fr;
     position: static;
+  }
+
+  .catalog-filter-intro,
+  .catalog-filter-actions {
+    grid-column: 1 / -1;
   }
 
   .site-header {

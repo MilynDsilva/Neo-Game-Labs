@@ -20,7 +20,7 @@ describe('GamesPage', () => {
     );
 
     expect(screen.getByText('Search: “orbit”')).toBeInTheDocument();
-    expect(screen.getByText('Platform: windows')).toBeInTheDocument();
+    expect(screen.getByText('Platform: Windows')).toBeInTheDocument();
     expect(screen.getByText('Featured')).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Clear all' })).toHaveAttribute(
       'href',

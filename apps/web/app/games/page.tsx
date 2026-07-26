@@ -12,6 +12,14 @@ const supportedPlatforms = new Set([
   'android',
   'web',
 ]);
+const platformLabels: Partial<Record<GamePlatform, string>> = {
+  android: 'Android',
+  ios: 'iOS',
+  linux: 'Linux',
+  macos: 'macOS',
+  web: 'Web',
+  windows: 'Windows',
+};
 
 type GamesPageProperties = {
   searchParams: Promise<{
@@ -59,7 +67,11 @@ export default async function GamesPage({ searchParams }: GamesPageProperties) {
       </section>
       <section className="catalog-layout">
         <form action="/games" className="catalog-filters">
-          <label>
+          <div className="catalog-filter-intro">
+            <span className="eyebrow">Refine the signal</span>
+            <strong>Find your game</strong>
+          </div>
+          <label className="filter-control filter-search">
             <span>Search</span>
             <input
               defaultValue={search}
@@ -68,7 +80,7 @@ export default async function GamesPage({ searchParams }: GamesPageProperties) {
               type="search"
             />
           </label>
-          <label>
+          <label className="filter-control">
             <span>Platform</span>
             <select defaultValue={platform ?? ''} name="platform">
               <option value="">All platforms</option>
@@ -99,7 +111,9 @@ export default async function GamesPage({ searchParams }: GamesPageProperties) {
             {filtersActive ? (
               <div aria-label="Active filters" className="active-filters">
                 {search ? <span>Search: “{search}”</span> : null}
-                {platform ? <span>Platform: {platform}</span> : null}
+                {platform ? (
+                  <span>Platform: {platformLabels[platform]}</span>
+                ) : null}
                 {featured ? <span>Featured</span> : null}
               </div>
             ) : null}

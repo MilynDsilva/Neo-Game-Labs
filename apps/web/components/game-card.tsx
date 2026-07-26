@@ -43,7 +43,10 @@ export function GameCard({ game }: Readonly<{ game: GameSummary }>) {
         <div className="game-card-footer">
           <ul aria-label="Available platforms" className="platform-list">
             {game.platforms.map((platform) => (
-              <li key={platform.kind}>{platformLabels[platform.kind]}</li>
+              <li key={platform.kind}>
+                <span aria-hidden="true" />
+                {platformLabels[platform.kind]}
+              </li>
             ))}
           </ul>
           <strong>
