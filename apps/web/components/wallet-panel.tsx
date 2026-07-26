@@ -61,7 +61,11 @@ function loadRazorpayCheckout(): Promise<void> {
 }
 
 export function WalletPanel() {
-  const { authenticated, loading: authLoading } = useAuth();
+  const {
+    authenticated,
+    loading: authLoading,
+    refresh: refreshAccount,
+  } = useAuth();
   const [wallet, setWallet] = useState<WalletResponse>();
   const [packages, setPackages] = useState<TopUpPackage[]>([]);
   const [topUpsEnabled, setTopUpsEnabled] = useState(false);
@@ -183,7 +187,7 @@ export function WalletPanel() {
       };
       setReward(confirmation);
       setCheckoutNotice(undefined);
-      await loadWallet();
+      await Promise.all([loadWallet(), refreshAccount()]);
     } catch {
       setCheckoutError(
         'Payment was received but confirmation is pending. Do not retry yet.',
@@ -305,15 +309,23 @@ export function WalletPanel() {
                 )}
               </span>
               <button
+                className="checkout-action"
                 disabled={!topUpsEnabled || checkoutPackage !== undefined}
                 onClick={() => void beginCheckout(item.code)}
                 type="button"
               >
-                {!topUpsEnabled
-                  ? 'Currently unavailable'
-                  : checkoutPackage === item.code
-                    ? 'Checkout in progress…'
-                    : 'Continue to checkout'}
+                <span>
+                  {!topUpsEnabled
+                    ? 'Currently unavailable'
+                    : checkoutPackage === item.code
+                      ? 'Opening checkout…'
+                      : 'Continue to checkout'}
+                </span>
+                {topUpsEnabled && checkoutPackage !== item.code ? (
+                  <span aria-hidden="true" className="checkout-action-icon">
+                    →
+                  </span>
+                ) : null}
               </button>
             </article>
           ))}

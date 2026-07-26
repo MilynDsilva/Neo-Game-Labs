@@ -1716,7 +1716,73 @@ h2 {
   color: var(--muted);
 }
 
-.package-grid button:disabled {
+.checkout-action {
+  align-items: center;
+  background: linear-gradient(110deg, #f4f1ff 0%, #d9ceff 52%, #f4f1ff 100%);
+  background-size: 180% 100%;
+  border: 1px solid rgb(255 255 255 / 72%);
+  border-radius: 0.65rem;
+  box-shadow:
+    0 0.65rem 1.5rem rgb(72 51 145 / 20%),
+    inset 0 1px 0 rgb(255 255 255 / 80%);
+  color: #171126;
+  display: flex;
+  font-size: 0.83rem;
+  font-weight: 850;
+  justify-content: space-between;
+  letter-spacing: 0.015em;
+  min-height: 3rem;
+  padding: 0 0.65rem 0 1rem;
+  transition:
+    background-position 180ms ease,
+    box-shadow 180ms ease,
+    transform 180ms ease;
+  width: 100%;
+}
+
+.checkout-action > span:first-child {
+  color: inherit;
+}
+
+.checkout-action-icon {
+  align-items: center;
+  background: #1d1730;
+  border-radius: 0.45rem;
+  color: #fff !important;
+  display: flex;
+  font-size: 1rem;
+  height: 2rem;
+  justify-content: center;
+  transition: transform 180ms ease;
+  width: 2rem;
+}
+
+.checkout-action:not(:disabled):hover {
+  background-position: 100% 0;
+  box-shadow:
+    0 0.9rem 2rem rgb(112 80 232 / 28%),
+    inset 0 1px 0 #fff;
+  transform: translateY(-2px);
+}
+
+.checkout-action:not(:disabled):hover .checkout-action-icon {
+  transform: translateX(2px);
+}
+
+.checkout-action:not(:disabled):active {
+  box-shadow: 0 0.35rem 0.9rem rgb(72 51 145 / 18%);
+  transform: translateY(0);
+}
+
+.checkout-action:focus-visible {
+  outline: 3px solid rgb(167 132 255 / 55%);
+  outline-offset: 3px;
+}
+
+.checkout-action:disabled {
+  background: rgb(255 255 255 / 6%);
+  border-color: var(--line);
+  box-shadow: none;
   color: var(--muted);
   cursor: not-allowed;
 }
