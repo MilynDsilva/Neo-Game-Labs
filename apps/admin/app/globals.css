@@ -72,7 +72,7 @@ textarea {
   text-decoration: none;
 }
 
-.brand > span {
+.brand-mark {
   align-items: center;
   background: linear-gradient(135deg, var(--accent), var(--mint));
   border-radius: 0.65rem;
@@ -82,7 +82,23 @@ textarea {
   width: 2.25rem;
 }
 
-.sidebar > p,
+.brand-copy {
+  display: grid;
+  gap: 0.2rem;
+  min-width: 0;
+}
+
+.brand-copy strong {
+  line-height: 1.1;
+  white-space: nowrap;
+}
+
+.brand-copy small {
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 500;
+}
+
 .sidebar small {
   color: var(--muted);
 }
@@ -445,8 +461,7 @@ th {
     width: auto;
   }
 
-  .sidebar > p,
-  .sidebar small {
+  .sidebar > small {
     display: none;
   }
 

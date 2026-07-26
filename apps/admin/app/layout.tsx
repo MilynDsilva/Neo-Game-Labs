@@ -20,10 +20,12 @@ export default function RootLayout({
         </a>
         <aside className="sidebar">
           <a className="brand" href="#overview">
-            <span>N</span>
-            <strong>Neo Game Labs</strong>
+            <span className="brand-mark">N</span>
+            <span className="brand-copy">
+              <strong>Neo Game Labs</strong>
+              <small>Operations console</small>
+            </span>
           </a>
-          <p>Operations console</p>
           <nav aria-label="Admin sections">
             <a href="#overview">Overview</a>
             <a href="#catalog">Catalog</a>
