@@ -65,7 +65,11 @@ export function PurchaseButton({
   }
 
   if (ownershipLoading && authenticated) {
-    return <span className="purchase-status">Checking your library…</span>;
+    return (
+      <span className="purchase-status" role="status">
+        Checking your library…
+      </span>
+    );
   }
 
   if (owned) {

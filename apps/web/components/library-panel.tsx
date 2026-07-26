@@ -20,7 +20,11 @@ export function LibraryPanel() {
   const { error, games, loading, refreshOwnership } = useOwnership();
 
   if (authLoading) {
-    return <p className="empty-state">Checking your account…</p>;
+    return (
+      <p className="empty-state" role="status">
+        Checking your account…
+      </p>
+    );
   }
   if (!authenticated) {
     return (
@@ -32,7 +36,12 @@ export function LibraryPanel() {
       </p>
     );
   }
-  if (loading) return <p className="empty-state">Loading your library…</p>;
+  if (loading)
+    return (
+      <p className="empty-state" role="status">
+        Loading your library…
+      </p>
+    );
   if (error) {
     return (
       <div className="empty-state" role="alert">

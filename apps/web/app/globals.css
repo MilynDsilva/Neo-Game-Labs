@@ -1804,3 +1804,25 @@ h2 {
     transition-duration: 0.01ms !important;
   }
 }
+
+@media (forced-colors: active) {
+  :where(a, button, input, select, textarea):focus-visible {
+    outline: 3px solid Highlight;
+  }
+
+  .brand-mark,
+  .profile-initials,
+  .owned-label,
+  .active-filters span {
+    border: 1px solid CanvasText;
+    forced-color-adjust: none;
+  }
+
+  .form-error,
+  .danger-button,
+  .feature-paused,
+  .account-notice,
+  .checkout-notice {
+    border: 2px solid currentColor;
+  }
+}

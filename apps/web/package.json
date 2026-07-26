@@ -23,6 +23,7 @@
     "@types/node": "^22.18.6",
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
+    "axe-core": "^4.12.1",
     "jsdom": "^26.1.0",
     "vite": "^6.4.3",
     "vitest": "^3.2.4"

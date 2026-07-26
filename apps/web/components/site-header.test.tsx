@@ -46,12 +46,14 @@ describe('SiteHeader', () => {
     fireEvent.click(
       screen.getByRole('button', { name: /Neo Player 420 points/i }),
     );
-    expect(
-      screen.getByRole('menuitem', { name: 'Account' }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole('menuitem', { name: 'Account' })).toHaveFocus();
     expect(
       screen.getByRole('menuitem', { name: 'Sign out' }),
     ).toBeInTheDocument();
+    fireEvent.keyDown(document, { key: 'Escape' });
+    expect(
+      screen.getByRole('button', { name: /Neo Player 420 points/i }),
+    ).toHaveFocus();
   });
 
   it('shows guest sign-in and opens mobile navigation', () => {
@@ -63,5 +65,10 @@ describe('SiteHeader', () => {
     expect(
       screen.getByRole('navigation', { name: 'Mobile navigation' }),
     ).toBeInTheDocument();
+    expect(screen.getAllByRole('link', { name: 'Games' })[1]).toHaveFocus();
+    fireEvent.keyDown(document, { key: 'Escape' });
+    expect(
+      screen.getByRole('button', { name: 'Open navigation' }),
+    ).toHaveFocus();
   });
 });

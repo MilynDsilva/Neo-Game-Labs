@@ -181,7 +181,11 @@ export function AccountPanel() {
     );
   }
   if (loading) {
-    return <p className="empty-state">Loading your account…</p>;
+    return (
+      <p className="empty-state" role="status">
+        Loading your account…
+      </p>
+    );
   }
   if (!authenticated || !customer) {
     return (
@@ -254,7 +258,7 @@ export function AccountPanel() {
             recognise.
           </p>
         </div>
-        {sessionsLoading ? <p>Loading active sessions…</p> : null}
+        {sessionsLoading ? <p role="status">Loading active sessions…</p> : null}
         {sessionsError ? (
           <div className="inline-error" role="alert">
             <p>{sessionsError}</p>
@@ -323,9 +327,15 @@ export function AccountPanel() {
           </p>
         </div>
         {deletionOpen ? (
-          <div className="deletion-confirmation">
+          <div
+            aria-label="Account deletion confirmation"
+            className="deletion-confirmation"
+            role="group"
+          >
             <label htmlFor="deletion-confirmation">
-              Type <strong>DELETE</strong> to confirm
+              <span>
+                Type <strong>DELETE</strong> to confirm
+              </span>
             </label>
             <input
               autoComplete="off"

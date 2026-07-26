@@ -97,7 +97,12 @@ export function DownloadActions({ gameSlug }: { gameSlug: string }) {
       </div>
     );
   }
-  if (!assets) return <p className="download-note">Checking downloads…</p>;
+  if (!assets)
+    return (
+      <p className="download-note" role="status">
+        Checking downloads…
+      </p>
+    );
   if (assets.length === 0) {
     return (
       <p className="download-note">No direct download is available yet.</p>

@@ -27,6 +27,9 @@ export function SiteHeader() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [signingOut, setSigningOut] = useState(false);
   const accountContainer = useRef<HTMLDivElement>(null);
+  const accountTrigger = useRef<HTMLButtonElement>(null);
+  const mobileNavigation = useRef<HTMLElement>(null);
+  const mobileTrigger = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     setAccountOpen(false);
@@ -43,6 +46,12 @@ export function SiteHeader() {
   useEffect(() => {
     function closeMenus(event: KeyboardEvent) {
       if (event.key === 'Escape') {
+        if (accountContainer.current?.contains(document.activeElement)) {
+          accountTrigger.current?.focus();
+        }
+        if (mobileNavigation.current?.contains(document.activeElement)) {
+          mobileTrigger.current?.focus();
+        }
         setAccountOpen(false);
         setMobileOpen(false);
       }
@@ -59,6 +68,22 @@ export function SiteHeader() {
       document.removeEventListener('mousedown', closeAccount);
     };
   }, []);
+
+  useEffect(() => {
+    if (accountOpen) {
+      accountContainer.current
+        ?.querySelector<HTMLElement>('[role="menuitem"]')
+        ?.focus();
+    }
+  }, [accountOpen]);
+
+  useEffect(() => {
+    if (mobileOpen) {
+      mobileNavigation.current
+        ?.querySelector<HTMLElement>('a, button')
+        ?.focus();
+    }
+  }, [mobileOpen]);
 
   async function handleSignOut() {
     setSigningOut(true);
@@ -109,6 +134,7 @@ export function SiteHeader() {
               aria-haspopup="menu"
               className="profile-trigger"
               onClick={() => setAccountOpen((open) => !open)}
+              ref={accountTrigger}
               type="button"
             >
               {customer.pictureUrl ? (
@@ -154,6 +180,7 @@ export function SiteHeader() {
           aria-label={mobileOpen ? 'Close navigation' : 'Open navigation'}
           className="mobile-menu-trigger"
           onClick={() => setMobileOpen((open) => !open)}
+          ref={mobileTrigger}
           type="button"
         >
           <span />
@@ -166,6 +193,7 @@ export function SiteHeader() {
           aria-label="Mobile navigation"
           className="mobile-navigation"
           id="mobile-navigation"
+          ref={mobileNavigation}
         >
           {[
             ...(authenticated

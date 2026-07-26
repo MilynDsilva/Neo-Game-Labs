@@ -6,7 +6,7 @@ import {
   type GameSummary,
 } from '@neogamelabs/contracts';
 import Link from 'next/link';
-import { type FormEvent, useEffect, useState } from 'react';
+import { type FormEvent, useEffect, useRef, useState } from 'react';
 
 import { useAuth } from './auth-provider';
 
@@ -27,6 +27,8 @@ export function FeedbackForm({
   const [error, setError] = useState<string>();
   const [submitting, setSubmitting] = useState(false);
   const [copied, setCopied] = useState(false);
+  const errorReference = useRef<HTMLParagraphElement>(null);
+  const confirmationReference = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!authenticated) return;
@@ -42,6 +44,14 @@ export function FeedbackForm({
         ),
       );
   }, [authenticated]);
+
+  useEffect(() => {
+    if (error) errorReference.current?.focus();
+  }, [error]);
+
+  useEffect(() => {
+    if (reference) confirmationReference.current?.focus();
+  }, [reference]);
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -98,7 +108,11 @@ export function FeedbackForm({
   }
 
   if (loading) {
-    return <p className="empty-state">Checking your account…</p>;
+    return (
+      <p className="empty-state" role="status">
+        Checking your account…
+      </p>
+    );
   }
 
   if (authError) {
@@ -125,7 +139,12 @@ export function FeedbackForm({
 
   if (reference) {
     return (
-      <div className="feedback-confirmation" role="status">
+      <div
+        className="feedback-confirmation"
+        ref={confirmationReference}
+        role="status"
+        tabIndex={-1}
+      >
         <p className="eyebrow">Feedback received</p>
         <h2>Thank you for helping us improve.</h2>
         <p>
@@ -196,7 +215,9 @@ export function FeedbackForm({
       <label>
         Your feedback
         <textarea
-          aria-describedby="feedback-message-guidance feedback-message-count"
+          aria-describedby={`feedback-message-guidance feedback-message-count${
+            error ? ' feedback-error' : ''
+          }`}
           maxLength={maximumMessageLength}
           minLength={20}
           name="message"
@@ -220,7 +241,17 @@ export function FeedbackForm({
           {maximumMessageLength - message.length} characters remaining
         </p>
       </div>
-      {error ? <p className="form-error">{error}</p> : null}
+      {error ? (
+        <p
+          className="form-error"
+          id="feedback-error"
+          ref={errorReference}
+          role="alert"
+          tabIndex={-1}
+        >
+          {error}
+        </p>
+      ) : null}
       <button disabled={submitting} type="submit">
         {submitting ? 'Sending…' : 'Send feedback'}
       </button>

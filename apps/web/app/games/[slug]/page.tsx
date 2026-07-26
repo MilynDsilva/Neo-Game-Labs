@@ -97,7 +97,12 @@ export default async function GamePage({ params }: GamePageProperties) {
                   </span>
                 </div>
                 {platform.storeUrl ? (
-                  <a href={platform.storeUrl} rel="noreferrer" target="_blank">
+                  <a
+                    aria-label={`Open ${platformLabels[platform.kind]} store in a new tab`}
+                    href={platform.storeUrl}
+                    rel="noreferrer"
+                    target="_blank"
+                  >
                     Open store ↗
                   </a>
                 ) : null}

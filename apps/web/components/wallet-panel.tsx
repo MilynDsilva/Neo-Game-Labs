@@ -102,7 +102,11 @@ export function WalletPanel() {
   }
 
   if (authLoading) {
-    return <p className="empty-state">Checking your account…</p>;
+    return (
+      <p className="empty-state" role="status">
+        Checking your account…
+      </p>
+    );
   }
   if (!authenticated) {
     return (
@@ -115,7 +119,11 @@ export function WalletPanel() {
     );
   }
   if (loading && !wallet) {
-    return <p className="empty-state">Loading your wallet…</p>;
+    return (
+      <p className="empty-state" role="status">
+        Loading your wallet…
+      </p>
+    );
   }
   if (serviceError || !wallet) {
     return (
