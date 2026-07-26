@@ -41,6 +41,9 @@ Operational kill switches are configured with `TOP_UPS_ENABLED`,
 see [the launch runbook](docs/operations/launch-runbook.md) before changing
 production flags.
 
+Production-style API and standalone web containers are documented in
+[the staging deployment guide](docs/operations/staging-deployment.md).
+
 To test point purchases without a payment provider, credit one local customer
 with an idempotent development-only ledger adjustment:
 
