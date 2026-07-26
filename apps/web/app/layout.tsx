@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import type { ReactNode } from 'react';
 
 import { SiteHeader } from '../components/site-header';
@@ -18,8 +19,18 @@ export default function RootLayout({
         <SiteHeader />
         {children}
         <footer className="site-footer">
+          <div>
+            <strong>Neo Game Labs</strong>
+            <p>Games built for players everywhere.</p>
+          </div>
+          <nav aria-label="Footer navigation">
+            <Link href="/about">About</Link>
+            <Link href="/support">Support</Link>
+            <Link href="/contact">Contact</Link>
+            <Link href="/privacy">Privacy</Link>
+            <Link href="/terms">Terms</Link>
+          </nav>
           <p>© {new Date().getFullYear()} Neo Game Labs</p>
-          <p>Built for players everywhere.</p>
         </footer>
       </body>
     </html>
