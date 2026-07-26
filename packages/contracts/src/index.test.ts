@@ -3,12 +3,25 @@ import { describe, expect, it } from 'vitest';
 import {
   downloadGrantResponseSchema,
   downloadListResponseSchema,
+  feedbackSubmissionResponseSchema,
   topUpPackagesResponseSchema,
   gameDetailSchema,
   gamePlatformDetailsSchema,
   healthResponseSchema,
   libraryResponseSchema,
 } from './index.js';
+
+describe('feedbackSubmissionResponseSchema', () => {
+  it('accepts a private support reference', () => {
+    expect(
+      feedbackSubmissionResponseSchema.safeParse({
+        createdAt: new Date().toISOString(),
+        reference: 'NGL-A1B2C3D4E5F6',
+        status: 'new',
+      }).success,
+    ).toBe(true);
+  });
+});
 
 describe('download contracts', () => {
   it('accepts available assets and an expiring grant', () => {

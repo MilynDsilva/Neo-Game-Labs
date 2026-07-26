@@ -28,12 +28,13 @@ Last updated: 2026-07-26
 | 4          | Immutable points ledger, INR/USD packages, wallet APIs and UI                   | `feat/points-ledger`       | `52621ee`         | Complete        |
 | 4          | Stripe Checkout, signed webhooks, payment deduplication, ledger crediting       | `feat/stripe-topups`       | `8268a25`         | Merged / paused |
 | 4          | Points-based purchases, entitlements, and customer library                      | `feat/game-purchases`      | `bc5a28d`         | Complete        |
+| 4          | Entitlement-protected game downloads                                            | `feat/game-downloads`      | `bdb21df`         | Complete        |
 
 ## Ready for review
 
-| Phase | Deliverable                          | Branch                | Status           |
-| ----- | ------------------------------------ | --------------------- | ---------------- |
-| 4     | Entitlement-protected game downloads | `feat/game-downloads` | Ready for review |
+| Phase | Deliverable                                        | Branch               | Status           |
+| ----- | -------------------------------------------------- | -------------------- | ---------------- |
+| 5     | Private feedback and moderation-ready data storage | `feat/game-feedback` | Ready for review |
 
 ## Paused decisions and blockers
 
@@ -56,7 +57,6 @@ Stripe code is already merged, but real payment activation is paused.
 
 | Priority | Phase | Work                                                                 | Suggested branch               | Status                                |
 | -------- | ----- | -------------------------------------------------------------------- | ------------------------------ | ------------------------------------- |
-| 1        | 5     | Customer feedback submission and moderation-ready API                | `feat/game-feedback`           | Not started                           |
 | 3        | 6     | Security, observability, accessibility, legal review, and deployment | Focused feature/chore branches | Not started                           |
 | Paused   | 4     | Production payment-provider activation and live top-ups              | To be decided                  | Blocked on compliant provider account |
 
@@ -81,7 +81,7 @@ Stripe code is already merged, but real payment activation is paused.
 2. Confirm `development` contains the merge commits listed above.
 3. Do not resume production payment activation without a compliant provider
    decision.
-4. Merge `feat/game-downloads`; the recommended next implementation is
-   `feat/game-feedback`.
+4. Merge `feat/game-feedback`; then begin Phase 6 with a focused
+   launch-readiness audit and implementation branch.
 5. Update this file in every feature branch when its status, scope, blocker, or
    next action changes.

@@ -138,6 +138,12 @@ export const downloadGrantResponseSchema = z.object({
   url: z.string().regex(/^\/v1\/downloads\/file\/[a-zA-Z0-9_-]+$/),
 });
 
+export const feedbackSubmissionResponseSchema = z.object({
+  createdAt: z.iso.datetime(),
+  reference: z.string().regex(/^NGL-[A-F0-9]{12}$/),
+  status: z.enum(['new', 'triaged', 'in-progress', 'resolved', 'closed']),
+});
+
 export type GameCatalogResponse = z.infer<typeof gameCatalogResponseSchema>;
 export type GameDetail = z.infer<typeof gameDetailSchema>;
 export type GamePlatform = z.infer<typeof gamePlatformSchema>;
@@ -150,3 +156,6 @@ export type WalletResponse = z.infer<typeof walletResponseSchema>;
 export type LibraryResponse = z.infer<typeof libraryResponseSchema>;
 export type DownloadListResponse = z.infer<typeof downloadListResponseSchema>;
 export type DownloadGrantResponse = z.infer<typeof downloadGrantResponseSchema>;
+export type FeedbackSubmissionResponse = z.infer<
+  typeof feedbackSubmissionResponseSchema
+>;

@@ -9,6 +9,7 @@ import { AuthModule } from './auth/auth.module.js';
 import { validateEnvironment } from './config/environment.js';
 import { HealthController } from './health/health.controller.js';
 import { DownloadsModule } from './downloads/downloads.module.js';
+import { FeedbackModule } from './feedback/feedback.module.js';
 import { PaymentsModule } from './payments/payments.module.js';
 import { PurchasesModule } from './purchases/purchases.module.js';
 import { WalletModule } from './wallet/wallet.module.js';
@@ -30,6 +31,7 @@ import { WalletModule } from './wallet/wallet.module.js';
     AuthModule,
     CatalogModule,
     DownloadsModule,
+    FeedbackModule,
     PaymentsModule,
     PurchasesModule,
     WalletModule,

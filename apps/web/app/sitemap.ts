@@ -7,6 +7,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticRoutes: MetadataRoute.Sitemap = [
     { url: siteUrl },
     { url: `${siteUrl}/games` },
+    { url: `${siteUrl}/feedback` },
     { url: `${siteUrl}/about` },
     { url: `${siteUrl}/support` },
     { url: `${siteUrl}/contact` },

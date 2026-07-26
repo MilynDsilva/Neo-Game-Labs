@@ -40,8 +40,86 @@ a {
 
 button,
 input,
-select {
+select,
+textarea {
   font: inherit;
+}
+
+.feedback-layout {
+  max-width: 52rem;
+  padding: 0 clamp(1.25rem, 7vw, 7rem) 6rem;
+}
+
+.feedback-form,
+.feedback-confirmation {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+  display: grid;
+  gap: 1.25rem;
+  padding: clamp(1.25rem, 4vw, 2.5rem);
+}
+
+.feedback-form label {
+  display: grid;
+  font-weight: 700;
+  gap: 0.5rem;
+}
+
+.feedback-fields {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 1fr 1fr;
+}
+
+.feedback-form input,
+.feedback-form select,
+.feedback-form textarea {
+  background: var(--background);
+  border: 1px solid var(--line);
+  border-radius: 0.5rem;
+  color: var(--foreground);
+  padding: 0.8rem;
+}
+
+.feedback-form textarea {
+  line-height: 1.5;
+  resize: vertical;
+}
+
+.feedback-form button {
+  background: var(--accent);
+  border: 0;
+  border-radius: 0.5rem;
+  color: var(--foreground);
+  cursor: pointer;
+  font-weight: 700;
+  padding: 0.9rem 1.25rem;
+}
+
+.feedback-form button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.feedback-honeypot {
+  left: -10000px;
+  position: absolute;
+}
+
+.form-note,
+.form-error {
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.form-error {
+  color: #fda4af;
+}
+
+.feedback-confirmation h2 {
+  margin-bottom: 0;
 }
 
 .site-header {
