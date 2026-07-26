@@ -1,4 +1,5 @@
 import type { GamePlatform, GameSummary } from '@neogamelabs/contracts';
+import Link from 'next/link';
 
 import { CatalogGrid } from '../../components/catalog-grid';
 import { getCatalog } from '../../lib/catalog-api';
@@ -30,6 +31,9 @@ export default async function GamesPage({ searchParams }: GamesPageProperties) {
   const platform = supportedPlatforms.has(parameters.platform ?? '')
     ? (parameters.platform as GamePlatform)
     : undefined;
+  const search = parameters.search?.trim() || undefined;
+  const featured = parameters.featured === 'true';
+  const filtersActive = Boolean(platform || search || featured);
   let games: GameSummary[] = [];
   let total = 0;
   let unavailable = false;
@@ -38,7 +42,7 @@ export default async function GamesPage({ searchParams }: GamesPageProperties) {
     const catalog = await getCatalog({
       featured: parameters.featured === 'true' ? true : undefined,
       platform,
-      search: parameters.search,
+      search,
     });
     games = catalog.games;
     total = catalog.total;
@@ -58,7 +62,7 @@ export default async function GamesPage({ searchParams }: GamesPageProperties) {
           <label>
             <span>Search</span>
             <input
-              defaultValue={parameters.search}
+              defaultValue={search}
               name="search"
               placeholder="Search games"
               type="search"
@@ -76,14 +80,30 @@ export default async function GamesPage({ searchParams }: GamesPageProperties) {
               <option value="web">Web</option>
             </select>
           </label>
-          <button type="submit">Apply filters</button>
+          <div className="catalog-filter-actions">
+            <button type="submit">Apply filters</button>
+            {filtersActive ? (
+              <Link className="filter-reset" href="/games">
+                Clear all
+              </Link>
+            ) : null}
+          </div>
         </form>
         <div className="catalog-results">
-          <p className="result-count">
-            {unavailable
-              ? 'Catalog unavailable'
-              : `${total} ${total === 1 ? 'game' : 'games'}`}
-          </p>
+          <div className="catalog-result-heading">
+            <p className="result-count">
+              {unavailable
+                ? 'Catalog unavailable'
+                : `${total} ${total === 1 ? 'game' : 'games'}`}
+            </p>
+            {filtersActive ? (
+              <div aria-label="Active filters" className="active-filters">
+                {search ? <span>Search: “{search}”</span> : null}
+                {platform ? <span>Platform: {platform}</span> : null}
+                {featured ? <span>Featured</span> : null}
+              </div>
+            ) : null}
+          </div>
           <CatalogGrid
             emptyMessage={
               unavailable

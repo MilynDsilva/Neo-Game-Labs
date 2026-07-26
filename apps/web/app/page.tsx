@@ -39,6 +39,23 @@ export default async function Home() {
           <span className="hero-moon" />
         </div>
       </section>
+      <section aria-label="Why Neo Game Labs" className="home-values">
+        <article>
+          <span>01</span>
+          <h2>Play your way</h2>
+          <p>Find games for desktop, mobile, and the web in one catalog.</p>
+        </article>
+        <article>
+          <span>02</span>
+          <h2>Keep your library</h2>
+          <p>Sign in once to manage owned games and protected downloads.</p>
+        </article>
+        <article>
+          <span>03</span>
+          <h2>Shape the worlds</h2>
+          <p>Send private feedback directly to the team building each game.</p>
+        </article>
+      </section>
       {!catalogAvailable ? (
         <section className="content-section">
           <p className="notice">

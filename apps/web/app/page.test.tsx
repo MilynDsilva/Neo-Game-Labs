@@ -17,5 +17,8 @@ describe('Home', () => {
     expect(
       screen.getByRole('link', { name: 'Explore all games' }),
     ).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { name: 'Keep your library' }),
+    ).toBeInTheDocument();
   });
 });
