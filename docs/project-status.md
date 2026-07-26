@@ -27,12 +27,13 @@ Last updated: 2026-07-26
 | 3          | Session controls, audit events, data export, deletion requests, rate limits     | `feat/account-security`    | `daefa9f`         | Complete        |
 | 4          | Immutable points ledger, INR/USD packages, wallet APIs and UI                   | `feat/points-ledger`       | `52621ee`         | Complete        |
 | 4          | Stripe Checkout, signed webhooks, payment deduplication, ledger crediting       | `feat/stripe-topups`       | `8268a25`         | Merged / paused |
+| 4          | Points-based purchases, entitlements, and customer library                      | `feat/game-purchases`      | `bc5a28d`         | Complete        |
 
 ## Ready for review
 
-| Phase | Deliverable                                                | Branch                | Status           |
-| ----- | ---------------------------------------------------------- | --------------------- | ---------------- |
-| 4     | Points-based purchases, entitlements, and customer library | `feat/game-purchases` | Ready for review |
+| Phase | Deliverable                          | Branch                | Status           |
+| ----- | ------------------------------------ | --------------------- | ---------------- |
+| 4     | Entitlement-protected game downloads | `feat/game-downloads` | Ready for review |
 
 ## Paused decisions and blockers
 
@@ -55,10 +56,8 @@ Stripe code is already merged, but real payment activation is paused.
 
 | Priority | Phase | Work                                                                 | Suggested branch               | Status                                |
 | -------- | ----- | -------------------------------------------------------------------- | ------------------------------ | ------------------------------------- |
-| 1        | 4     | Points-based game purchases, entitlements, and customer library      | `feat/game-purchases`          | Ready for review                      |
-| 2        | 4     | Protected download authorization and delivery                        | `feat/game-downloads`          | Not started                           |
-| 3        | 5     | Customer feedback submission and moderation-ready API                | `feat/game-feedback`           | Not started                           |
-| 4        | 6     | Security, observability, accessibility, legal review, and deployment | Focused feature/chore branches | Not started                           |
+| 1        | 5     | Customer feedback submission and moderation-ready API                | `feat/game-feedback`           | Not started                           |
+| 3        | 6     | Security, observability, accessibility, legal review, and deployment | Focused feature/chore branches | Not started                           |
 | Paused   | 4     | Production payment-provider activation and live top-ups              | To be decided                  | Blocked on compliant provider account |
 
 ## Current local-development behavior
@@ -69,6 +68,8 @@ Stripe code is already merged, but real payment activation is paused.
 - Google sign-in: implemented; requires ignored values in `apps/api/.env`
 - Catalog seed:
   `pnpm --filter @neogamelabs/api seed:catalog`
+- Local download seed:
+  `pnpm --filter @neogamelabs/api seed:downloads`
 - Wallet package seed:
   `pnpm --filter @neogamelabs/api seed:wallet`
 - Supported initial currencies: `INR` and `USD`
@@ -80,7 +81,7 @@ Stripe code is already merged, but real payment activation is paused.
 2. Confirm `development` contains the merge commits listed above.
 3. Do not resume production payment activation without a compliant provider
    decision.
-4. Merge `feat/game-purchases`; after it is merged, the recommended next
-   implementation is `feat/game-downloads`.
+4. Merge `feat/game-downloads`; the recommended next implementation is
+   `feat/game-feedback`.
 5. Update this file in every feature branch when its status, scope, blocker, or
    next action changes.

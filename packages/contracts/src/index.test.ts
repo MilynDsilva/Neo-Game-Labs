@@ -1,12 +1,36 @@
 import { describe, expect, it } from 'vitest';
 
 import {
+  downloadGrantResponseSchema,
+  downloadListResponseSchema,
   topUpPackagesResponseSchema,
   gameDetailSchema,
   gamePlatformDetailsSchema,
   healthResponseSchema,
   libraryResponseSchema,
 } from './index.js';
+
+describe('download contracts', () => {
+  it('accepts available assets and an expiring grant', () => {
+    expect(
+      downloadListResponseSchema.parse({
+        downloads: [
+          {
+            fileName: 'orbit-breaker-demo.txt',
+            platform: 'windows',
+            version: '0.1.0-demo',
+          },
+        ],
+      }).downloads,
+    ).toHaveLength(1);
+    expect(
+      downloadGrantResponseSchema.safeParse({
+        expiresAt: new Date().toISOString(),
+        url: `/v1/downloads/file/${'a'.repeat(43)}`,
+      }).success,
+    ).toBe(true);
+  });
+});
 
 describe('healthResponseSchema', () => {
   it('accepts the API health response', () => {
