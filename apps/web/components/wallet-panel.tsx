@@ -253,10 +253,12 @@ export function WalletPanel() {
             </p>
             <button
               autoFocus
+              className="reward-continue"
               onClick={() => setReward(undefined)}
               type="button"
             >
-              Continue
+              <span>Continue</span>
+              <span aria-hidden="true">→</span>
             </button>
           </div>
         </div>
