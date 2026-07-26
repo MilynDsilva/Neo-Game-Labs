@@ -7,11 +7,20 @@
 - platform metrics;
 - catalog publication, featured placement, and point-price changes;
 - private-feedback triage and internal notes;
-- read-only customer and wallet visibility; and
+- customer and wallet visibility with controlled point credits; and
 - an audit trail for every catalog or feedback mutation.
 
-It intentionally does not support direct balance editing, deleting customers,
-or deleting ledger entries.
+It intentionally does not support arbitrary balance replacement, deleting
+customers, or deleting ledger entries. Admin credits require a positive point
+amount and a reason. Each credit creates an immutable ledger transaction and a
+separate admin audit event.
+
+## Welcome credit
+
+When Google sign-in creates a customer's points account for the first time, the
+same database transaction grants 150 welcome points and records corresponding
+ledger transaction and entry documents. Repeated sign-ins do not grant the
+credit again. Existing accounts are not changed retroactively.
 
 ## Local configuration
 
@@ -43,6 +52,8 @@ Start MongoDB and the workspace, then open `http://localhost:3100`.
 - Customer Google sessions cannot authorize `/v1/admin/*`.
 - Mutation requests record the configured actor, action, target, timestamp,
   and a non-sensitive change summary.
+- Admin point credits record their reason, amount, customer, operator, and
+  ledger transaction identifier.
 - Production must use HTTPS and separate secrets for each environment.
 - Rotate both credentials immediately if either is disclosed.
 

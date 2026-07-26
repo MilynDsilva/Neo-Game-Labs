@@ -45,10 +45,10 @@ Last updated: 2026-07-26
 
 ## Ready for review
 
-| Phase   | Deliverable                                        | Branch                   | Status           |
-| ------- | -------------------------------------------------- | ------------------------ | ---------------- |
-| Product | Premium homepage showcase and discovery experience | `feat/homepage-showcase` | Ready for review |
-| Admin   | Protected API and operations dashboard             | `feat/admin-dashboard`   | Ready for review |
+| Phase   | Deliverable                                                    | Branch                   | Status           |
+| ------- | -------------------------------------------------------------- | ------------------------ | ---------------- |
+| Product | Premium homepage showcase and discovery experience             | `feat/homepage-showcase` | Ready for review |
+| Admin   | Protected API, operations dashboard, welcome and admin credits | `feat/admin-dashboard`   | Ready for review |
 
 ## Paused decisions and blockers
 

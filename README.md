@@ -48,7 +48,9 @@ receives neither the admin API key nor database credentials.
 
 The dashboard provides catalog publishing, point-price and featured controls,
 private-feedback triage with internal notes, read-only customer wallet
-visibility, platform metrics, and an immutable admin action trail. See
+visibility, controlled point credits, platform metrics, and an immutable admin
+action trail. New customers receive a one-time 150-point welcome credit when
+their points account is first created. See
 [the admin operations guide](docs/operations/admin-dashboard.md).
 
 Operational kill switches are configured with `TOP_UPS_ENABLED`,
