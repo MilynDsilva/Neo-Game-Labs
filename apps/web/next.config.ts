@@ -7,6 +7,7 @@ const workspaceRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000';
 
 const nextConfig: NextConfig = {
+  output: 'standalone',
   async headers() {
     return [
       {

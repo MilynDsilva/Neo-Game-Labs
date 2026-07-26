@@ -43,3 +43,30 @@ build:
   stage: build
   script:
     - pnpm build
+
+.container_build:
+  image: docker:27.5-cli
+  stage: build
+  services:
+    - name: docker:27.5-dind
+      command: ['--tls=false']
+  variables:
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_TLS_CERTDIR: ''
+
+container_api:
+  extends: .container_build
+  script:
+    - docker build --file apps/api/Dockerfile --tag neogamelabs-api:$CI_COMMIT_SHA .
+
+container_web:
+  extends: .container_build
+  script:
+    - >
+      docker build
+      --file apps/web/Dockerfile
+      --build-arg API_URL=http://api.staging.invalid
+      --build-arg NEXT_PUBLIC_API_URL=https://api.staging.invalid
+      --build-arg NEXT_PUBLIC_SITE_URL=https://staging.invalid
+      --tag neogamelabs-web:$CI_COMMIT_SHA
+      .
