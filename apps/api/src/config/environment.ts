@@ -5,6 +5,12 @@ const optionalSecret = z.preprocess(
   z.string().min(1).optional(),
 );
 
+const booleanFlag = (defaultValue: boolean) =>
+  z
+    .enum(['true', 'false'])
+    .default(defaultValue ? 'true' : 'false')
+    .transform((value) => value === 'true');
+
 const environmentSchema = z
   .object({
     MONGODB_URI: z
@@ -18,6 +24,9 @@ const environmentSchema = z
       .default('http://localhost:4000/v1/auth/google/callback'),
     STRIPE_SECRET_KEY: optionalSecret,
     STRIPE_WEBHOOK_SECRET: optionalSecret,
+    DOWNLOADS_ENABLED: booleanFlag(true),
+    POINT_PURCHASES_ENABLED: booleanFlag(true),
+    TOP_UPS_ENABLED: booleanFlag(false),
     NODE_ENV: z
       .enum(['development', 'test', 'production'])
       .default('development'),

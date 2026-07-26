@@ -9,8 +9,11 @@ describe('validateEnvironment', () => {
     expect(environment).toMatchObject({
       MONGODB_URI:
         'mongodb://localhost:27017/customer_dashboard?replicaSet=rs0',
+      DOWNLOADS_ENABLED: true,
       NODE_ENV: 'development',
+      POINT_PURCHASES_ENABLED: true,
       PORT: 4000,
+      TOP_UPS_ENABLED: false,
       WEB_ORIGIN: 'http://localhost:3000',
     });
   });

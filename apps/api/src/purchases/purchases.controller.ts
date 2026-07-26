@@ -6,6 +6,7 @@ import {
   Inject,
   Post,
   Req,
+  ServiceUnavailableException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -30,6 +31,9 @@ export class PurchasesController {
 
   @Post()
   async purchaseGame(@Body() body: unknown, @Req() request: Request) {
+    if (!this.configService.getOrThrow<boolean>('POINT_PURCHASES_ENABLED')) {
+      throw new ServiceUnavailableException('Point purchases are paused');
+    }
     this.assertTrustedOrigin(request);
     const parsed = purchaseRequestSchema.safeParse(body);
     if (!parsed.success) throw new BadRequestException('Invalid game purchase');

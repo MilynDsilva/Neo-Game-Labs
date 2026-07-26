@@ -6,6 +6,7 @@ import {
   Post,
   Req,
   Res,
+  ServiceUnavailableException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -28,6 +29,7 @@ export class DownloadsController {
     @Param('gameSlug') gameSlug: string,
     @Req() request: Request,
   ) {
+    this.assertDownloadsEnabled();
     return this.downloadsService.listDownloads(
       await this.getCustomerId(request),
       gameSlug,
@@ -40,6 +42,7 @@ export class DownloadsController {
     @Param('platform') platform: string,
     @Req() request: Request,
   ) {
+    this.assertDownloadsEnabled();
     this.assertTrustedOrigin(request);
     return this.downloadsService.createGrant(
       await this.getCustomerId(request),
@@ -50,6 +53,7 @@ export class DownloadsController {
 
   @Get('file/:token')
   async downloadFile(@Param('token') token: string, @Res() response: Response) {
+    this.assertDownloadsEnabled();
     const download = await this.downloadsService.consumeGrant(token);
     return response.download(download.filePath, download.fileName);
   }
@@ -66,6 +70,12 @@ export class DownloadsController {
       this.configService.getOrThrow<string>('WEB_ORIGIN')
     ) {
       throw new UnauthorizedException('Invalid request origin');
+    }
+  }
+
+  private assertDownloadsEnabled(): void {
+    if (!this.configService.getOrThrow<boolean>('DOWNLOADS_ENABLED')) {
+      throw new ServiceUnavailableException('Game downloads are paused');
     }
   }
 }

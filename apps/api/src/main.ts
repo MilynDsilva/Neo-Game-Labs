@@ -4,6 +4,7 @@ import cookieParser from 'cookie-parser';
 
 import { AppModule } from './app.module.js';
 import { requestIdMiddleware } from './common/request-id.middleware.js';
+import { securityHeadersMiddleware } from './common/security-headers.middleware.js';
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule, { rawBody: true });
@@ -12,6 +13,7 @@ async function bootstrap(): Promise<void> {
   app.setGlobalPrefix('v1');
   app.use(cookieParser());
   app.use(requestIdMiddleware);
+  app.use(securityHeadersMiddleware);
   app.enableCors({
     credentials: true,
     origin: configService.getOrThrow<string>('WEB_ORIGIN'),

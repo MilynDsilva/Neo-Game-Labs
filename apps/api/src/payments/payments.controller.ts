@@ -7,6 +7,7 @@ import {
   Inject,
   Post,
   Req,
+  ServiceUnavailableException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -32,6 +33,9 @@ export class PaymentsController {
 
   @Post('checkout')
   async createCheckout(@Body() body: unknown, @Req() request: Request) {
+    if (!this.configService.getOrThrow<boolean>('TOP_UPS_ENABLED')) {
+      throw new ServiceUnavailableException('Point top-ups are paused');
+    }
     this.assertTrustedOrigin(request);
     const parsed = checkoutRequestSchema.safeParse(body);
     if (!parsed.success) {
