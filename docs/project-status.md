@@ -48,6 +48,7 @@ Last updated: 2026-07-26
 | Phase   | Deliverable                                        | Branch                   | Status           |
 | ------- | -------------------------------------------------- | ------------------------ | ---------------- |
 | Product | Premium homepage showcase and discovery experience | `feat/homepage-showcase` | Ready for review |
+| Admin   | Protected API and operations dashboard             | `feat/admin-dashboard`   | Ready for review |
 
 ## Paused decisions and blockers
 
@@ -98,10 +99,11 @@ Stripe code is already merged, but real payment activation is paused.
 2. Confirm `development` contains the merge commits listed above.
 3. Do not resume production payment activation without a compliant provider
    decision.
-4. Merge `feat/homepage-showcase`. Browser automation, operations, legal
+4. Review `feat/admin-dashboard`, including production credential handling.
+5. Merge `feat/homepage-showcase`. Browser automation, operations, legal
    review, payments, hosting, and domain work are intentionally deferred by the
    product owner.
-5. Per product-owner direction, hosting, domain, DNS, and deployment remain last
+6. Per product-owner direction, hosting, domain, DNS, and deployment remain last
    until the customer experience is working and visually approved.
-6. Update this file in every feature branch when its status, scope, blocker, or
+7. Update this file in every feature branch when its status, scope, blocker, or
    next action changes.

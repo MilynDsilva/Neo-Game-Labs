@@ -34,9 +34,9 @@ handling, edit history, and appeal rules before publishing customer content.
   moderation status plus non-customer-visible internal notes.
 - Feedback expires automatically after 730 days. Account-deletion processing
   must remove or irreversibly anonymize associated feedback sooner.
-- Moderation endpoints, staff authorization, audit actions, and support-channel
-  notifications belong to the separate admin-dashboard repository. They must
-  never be exposed through customer session authorization.
+- Moderation endpoints, staff authorization, and audit actions belong to the
+  independently deployable `apps/admin` application and protected API module.
+  They must never be exposed through customer session authorization.
 - No attachments are accepted. Public reviews remain out of scope.
 
 ## Exit criteria
