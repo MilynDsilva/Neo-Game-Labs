@@ -1045,13 +1045,19 @@ h2 {
   padding: 0 clamp(1.25rem, 7vw, 7rem) 6rem;
 }
 
+.account-sections {
+  display: grid;
+  gap: 1.25rem;
+  max-width: 46rem;
+}
+
 .account-card {
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: 1rem;
   display: grid;
   gap: 1.5rem;
-  max-width: 42rem;
+  max-width: 46rem;
   padding: 2rem;
 }
 
@@ -1060,9 +1066,23 @@ h2 {
   margin: 0;
 }
 
+.account-card h2 {
+  margin-top: 0.25rem;
+}
+
 .account-card p,
-.account-balance span {
+.account-balance span,
+.account-card small {
   color: var(--muted);
+}
+
+.account-notice {
+  background: rgb(89 220 174 / 10%);
+  border: 1px solid rgb(89 220 174 / 35%);
+  border-radius: 0.7rem;
+  color: #8cf0ce;
+  margin: 0;
+  padding: 1rem;
 }
 
 .account-identity {
@@ -1078,11 +1098,9 @@ h2 {
 }
 
 .account-balance {
-  border-bottom: 1px solid var(--line);
-  border-top: 1px solid var(--line);
+  align-items: center;
   display: flex;
   justify-content: space-between;
-  padding: 1.5rem 0;
 }
 
 .account-balance strong {
@@ -1122,15 +1140,71 @@ h2 {
   white-space: nowrap;
 }
 
+.inline-error {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: space-between;
+}
+
 .account-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 0.75rem;
 }
 
+.account-card button,
+.account-sign-out {
+  align-self: start;
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 0.5rem;
+  color: var(--foreground);
+  cursor: pointer;
+  font-weight: 700;
+  padding: 0.75rem 1rem;
+}
+
+.account-card button:disabled,
+.account-sign-out:disabled {
+  cursor: wait;
+  opacity: 0.6;
+}
+
 .danger-button {
   border-color: #e45b68;
   color: #ff8994;
+}
+
+.danger-zone {
+  border-color: rgb(228 91 104 / 50%);
+}
+
+.deletion-confirmation {
+  background: rgb(228 91 104 / 7%);
+  border: 1px solid rgb(228 91 104 / 35%);
+  border-radius: 0.7rem;
+  display: grid;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.deletion-confirmation label {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.deletion-confirmation input {
+  background: var(--background);
+  border: 1px solid var(--line);
+  border-radius: 0.5rem;
+  color: var(--foreground);
+  padding: 0.75rem;
+}
+
+.account-sign-out {
+  justify-self: start;
 }
 
 .wallet-layout {
