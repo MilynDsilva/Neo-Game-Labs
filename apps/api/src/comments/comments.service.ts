@@ -12,6 +12,7 @@ import { Game } from '../catalog/game.schema.js';
 import { GameComment } from './comment.schema.js';
 
 type CommentRecord = GameComment & { _id: Types.ObjectId };
+const pageSize = 10;
 
 @Injectable()
 export class CommentsService {
@@ -22,16 +23,27 @@ export class CommentsService {
     @InjectModel(Customer.name) private readonly customerModel: Model<Customer>,
   ) {}
 
-  async findForGame(slug: string): Promise<GameCommentsResponse> {
+  async findForGame(slug: string, page: number): Promise<GameCommentsResponse> {
     const game = await this.findPublishedGame(slug);
-    const comments = await this.commentModel
-      .find({ gameId: game._id, status: 'published' })
-      .sort({ createdAt: -1 })
-      .limit(50)
-      .lean<CommentRecord[]>()
-      .exec();
+    const filter = { gameId: game._id, status: 'published' };
+    const [comments, total] = await Promise.all([
+      this.commentModel
+        .find(filter)
+        .sort({ createdAt: -1 })
+        .skip((page - 1) * pageSize)
+        .limit(pageSize)
+        .lean<CommentRecord[]>()
+        .exec(),
+      this.commentModel.countDocuments(filter).exec(),
+    ]);
 
-    return { comments: comments.map((comment) => this.toResponse(comment)) };
+    return {
+      comments: comments.map((comment) => this.toResponse(comment)),
+      page,
+      pageSize,
+      total,
+      totalPages: Math.ceil(total / pageSize),
+    };
   }
 
   async create(

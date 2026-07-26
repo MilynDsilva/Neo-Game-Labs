@@ -1024,6 +1024,45 @@ h2 {
   padding: 0;
 }
 
+.comment-group {
+  display: grid;
+  gap: 1rem;
+  max-width: 52rem;
+}
+
+.comment-group h3 {
+  font-size: 1rem;
+  margin: 0;
+}
+
+.comment-pagination {
+  align-items: center;
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+}
+
+.comment-pagination button {
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  color: var(--foreground);
+  cursor: pointer;
+  min-width: 6.5rem;
+  padding: 0.7rem 1rem;
+}
+
+.comment-pagination button:disabled {
+  color: var(--muted);
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.comment-pagination span {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
 .comment-list li {
   background: var(--surface);
   border: 1px solid var(--line);
