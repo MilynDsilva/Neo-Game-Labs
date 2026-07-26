@@ -2025,6 +2025,26 @@ h2 {
   min-width: 13rem;
 }
 
+select {
+  -webkit-appearance: none;
+  appearance: none;
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--muted) 50%),
+    linear-gradient(135deg, var(--muted) 50%, transparent 50%);
+  background-position:
+    calc(100% - 1.15rem) calc(50% - 0.1rem),
+    calc(100% - 0.85rem) calc(50% - 0.1rem);
+  background-repeat: no-repeat;
+  background-size: 0.32rem 0.32rem;
+  padding-right: 2.75rem !important;
+}
+
+select:focus {
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--accent-bright) 50%),
+    linear-gradient(135deg, var(--accent-bright) 50%, transparent 50%);
+}
+
 @media (max-width: 900px) {
   .profile-summary {
     display: none;
@@ -2398,6 +2418,13 @@ h2 {
 }
 
 @media (forced-colors: active) {
+  select {
+    -webkit-appearance: auto;
+    appearance: auto;
+    background-image: none;
+    padding-right: 0.8rem !important;
+  }
+
   :where(a, button, input, select, textarea):focus-visible {
     outline: 3px solid Highlight;
   }
