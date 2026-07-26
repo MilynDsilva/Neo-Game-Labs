@@ -14,9 +14,10 @@ repository.
 
 Before changing files:
 
-1. Check that the working tree is clean. Do not overwrite unrelated changes.
-2. Switch to `development` and update it from `origin/development`.
-3. Create a focused branch from the updated `development` branch.
+1. Read `docs/project-status.md` and the relevant roadmap phase.
+2. Check that the working tree is clean. Do not overwrite unrelated changes.
+3. Switch to `development` and update it from `origin/development`.
+4. Create a focused branch from the updated `development` branch.
 
 ```bash
 git switch development
@@ -75,6 +76,9 @@ chore/CICD: Add pipeline lint job
 
 ## Before handing off work
 
+- Update `docs/project-status.md` whenever the task changes delivery status,
+  introduces or resolves a blocker, or changes the recommended next action.
+- Never rely on chat history as the only project-status record.
 - Review the diff for unrelated or accidental changes.
 - Run the relevant tests, linting, and formatting checks.
 - Report any checks that could not be run.

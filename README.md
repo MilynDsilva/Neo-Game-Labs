@@ -24,12 +24,35 @@ cp .env.example apps/api/.env
 cp .env.example apps/web/.env.local
 docker compose up -d
 pnpm --filter @neogamelabs/api seed:catalog
+pnpm --filter @neogamelabs/api seed:wallet
 pnpm dev
 ```
 
 The web application runs at `http://localhost:3000` and the API health endpoint
-is available at `http://localhost:4000/v1/health`. The catalog seed is
-idempotent and can be rerun safely.
+is available at `http://localhost:4000/v1/health`. The catalog and wallet seeds
+are idempotent and can be rerun safely.
+
+## Google sign-in
+
+Google sign-in remains disabled until credentials are configured. Create a Web
+application in Google Cloud, add
+`http://localhost:4000/v1/auth/google/callback` as an authorized redirect URI,
+and set `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` in `apps/api/.env`.
+Production and staging must use separate OAuth clients and HTTPS callback URLs.
+
+## Stripe test checkout
+
+Set `STRIPE_SECRET_KEY` and `STRIPE_WEBHOOK_SECRET` in `apps/api/.env`. For
+local webhook forwarding, run:
+
+```bash
+stripe listen --forward-to localhost:4000/v1/payments/stripe/webhook
+```
+
+Use the `whsec_...` value printed by the Stripe CLI as
+`STRIPE_WEBHOOK_SECRET`, restart the API, and use Stripe test card
+`4242 4242 4242 4242` with any future expiry and any three-digit CVC. Never
+commit Stripe keys or webhook secrets.
 
 ## Validation
 

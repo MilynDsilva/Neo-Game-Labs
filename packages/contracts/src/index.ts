@@ -64,8 +64,52 @@ export const healthResponseSchema = z.object({
   timestamp: z.iso.datetime(),
 });
 
+export const customerProfileSchema = z.object({
+  displayName: z.string().trim().min(1),
+  email: z.email(),
+  id: z.string().min(1),
+  pictureUrl: z.url().optional(),
+  pointsBalance: z.number().int().nonnegative(),
+});
+
+export const authStatusSchema = z.discriminatedUnion('authenticated', [
+  z.object({ authenticated: z.literal(false) }),
+  z.object({
+    authenticated: z.literal(true),
+    customer: customerProfileSchema,
+  }),
+]);
+
+export const topUpPackageSchema = z.object({
+  amountMinor: z.number().int().positive(),
+  code: z.string().min(1),
+  currency: z.enum(['INR', 'USD']),
+  points: z.number().int().positive(),
+});
+
+export const topUpPackagesResponseSchema = z.object({
+  packages: z.array(topUpPackageSchema),
+});
+
+export const walletResponseSchema = z.object({
+  balance: z.number().int().nonnegative(),
+  transactions: z.array(
+    z.object({
+      createdAt: z.iso.datetime(),
+      id: z.string().min(1),
+      pointsDelta: z.number().int(),
+      reference: z.string().optional(),
+      type: z.enum(['top-up', 'purchase', 'refund', 'adjustment']),
+    }),
+  ),
+});
+
 export type GameCatalogResponse = z.infer<typeof gameCatalogResponseSchema>;
 export type GameDetail = z.infer<typeof gameDetailSchema>;
 export type GamePlatform = z.infer<typeof gamePlatformSchema>;
 export type GameSummary = z.infer<typeof gameSummarySchema>;
 export type HealthResponse = z.infer<typeof healthResponseSchema>;
+export type AuthStatus = z.infer<typeof authStatusSchema>;
+export type CustomerProfile = z.infer<typeof customerProfileSchema>;
+export type TopUpPackage = z.infer<typeof topUpPackageSchema>;
+export type WalletResponse = z.infer<typeof walletResponseSchema>;

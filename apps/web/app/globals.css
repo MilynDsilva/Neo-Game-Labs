@@ -623,6 +623,194 @@ h2 {
   }
 }
 
+.account-layout {
+  min-height: 30rem;
+  padding: 0 clamp(1.25rem, 7vw, 7rem) 6rem;
+}
+
+.account-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+  display: grid;
+  gap: 1.5rem;
+  max-width: 42rem;
+  padding: 2rem;
+}
+
+.account-card h2,
+.account-card p {
+  margin: 0;
+}
+
+.account-card p,
+.account-balance span {
+  color: var(--muted);
+}
+
+.account-identity {
+  align-items: center;
+  display: flex;
+  gap: 1rem;
+}
+
+.account-identity img {
+  border-radius: 50%;
+  height: 4rem;
+  width: 4rem;
+}
+
+.account-balance {
+  border-bottom: 1px solid var(--line);
+  border-top: 1px solid var(--line);
+  display: flex;
+  justify-content: space-between;
+  padding: 1.5rem 0;
+}
+
+.account-balance strong {
+  color: var(--accent-bright);
+  font-size: 1.5rem;
+}
+
+.session-section {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.session-section h3 {
+  margin: 0;
+}
+
+.session-row {
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 0.7rem;
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+  padding: 1rem;
+}
+
+.session-row div {
+  display: grid;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.session-row small {
+  color: var(--muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.account-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.danger-button {
+  border-color: #e45b68;
+  color: #ff8994;
+}
+
+.wallet-layout {
+  display: grid;
+  gap: 4rem;
+  padding: 0 clamp(1.25rem, 7vw, 7rem) 6rem;
+}
+
+.checkout-notice {
+  background: rgb(89 220 174 / 10%);
+  border: 1px solid rgb(89 220 174 / 35%);
+  border-radius: 0.7rem;
+  color: #8cf0ce;
+  margin: 0;
+  padding: 1rem;
+}
+
+.form-error {
+  color: #ff8994;
+}
+
+.wallet-balance {
+  background: linear-gradient(135deg, var(--surface), #181238);
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+  display: grid;
+  gap: 0.5rem;
+  max-width: 38rem;
+  padding: 2rem;
+}
+
+.wallet-balance span {
+  color: var(--muted);
+}
+
+.wallet-balance strong {
+  color: var(--accent-bright);
+  font-size: clamp(2.2rem, 6vw, 4rem);
+}
+
+.package-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.package-grid article {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 0.8rem;
+  display: grid;
+  gap: 0.75rem;
+  padding: 1.25rem;
+}
+
+.package-grid article > strong {
+  font-size: 1.35rem;
+}
+
+.package-grid span {
+  color: var(--muted);
+}
+
+.package-grid button:disabled {
+  color: var(--muted);
+  cursor: not-allowed;
+}
+
+.transaction-list {
+  display: grid;
+  gap: 0.75rem;
+  list-style: none;
+  margin: 1.5rem 0 0;
+  max-width: 50rem;
+  padding: 0;
+}
+
+.transaction-list li {
+  align-items: center;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 0.7rem;
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem;
+}
+
+.transaction-list li div {
+  display: grid;
+  gap: 0.25rem;
+  text-transform: capitalize;
+}
+
+.transaction-list small {
+  color: var(--muted);
+}
+
 @media (max-width: 900px) {
   .home-hero,
   .game-details {
@@ -640,7 +828,8 @@ h2 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .loading-grid {
+  .loading-grid,
+  .package-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -674,7 +863,8 @@ h2 {
 
   .game-grid,
   .catalog-filters,
-  .loading-grid {
+  .loading-grid,
+  .package-grid {
     grid-template-columns: 1fr;
   }
 
