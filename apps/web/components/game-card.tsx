@@ -35,6 +35,7 @@ export function GameCard({ game }: Readonly<{ game: GameSummary }>) {
       </Link>
       <div className="game-card-body">
         <div>
+          <p className="game-type">Base game</p>
           <h3>
             <Link href={`/games/${game.slug}`}>{game.title}</Link>
           </h3>
@@ -43,7 +44,10 @@ export function GameCard({ game }: Readonly<{ game: GameSummary }>) {
         <div className="game-card-footer">
           <ul aria-label="Available platforms" className="platform-list">
             {game.platforms.map((platform) => (
-              <li key={platform.kind}>{platformLabels[platform.kind]}</li>
+              <li key={platform.kind}>
+                <span aria-hidden="true" />
+                {platformLabels[platform.kind]}
+              </li>
             ))}
           </ul>
           <strong>
