@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
 import { getGame } from '../../../lib/catalog-api';
+import { PurchaseButton } from '../../../components/purchase-button';
 
 const platformLabels = {
   android: 'Android',
@@ -67,9 +68,7 @@ export default async function GamePage({ params }: GamePageProperties) {
             <strong>
               {game.pointPrice === 0 ? 'Free' : `${game.pointPrice} points`}
             </strong>
-            <button disabled type="button">
-              Purchasing coming soon
-            </button>
+            <PurchaseButton gameSlug={game.slug} pointPrice={game.pointPrice} />
           </div>
         </div>
       </section>

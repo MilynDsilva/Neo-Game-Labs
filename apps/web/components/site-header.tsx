@@ -11,7 +11,7 @@ export function SiteHeader() {
         <Link href="/games">Games</Link>
         <Link href="/support">Support</Link>
         <Link href="/wallet">Wallet</Link>
-        <span className="nav-muted">Library</span>
+        <Link href="/library">Library</Link>
         <Link href="/account">Sign in</Link>
       </nav>
     </header>

@@ -457,6 +457,59 @@ h2 {
   padding: 0.8rem 1.1rem;
 }
 
+.purchase-action {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.purchase-action button {
+  background: var(--accent);
+  border-color: transparent;
+  color: white;
+  cursor: pointer;
+}
+
+.purchase-action button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.library-layout {
+  min-height: 30rem;
+  padding: 0 clamp(1.25rem, 7vw, 7rem) 6rem;
+}
+
+.library-grid {
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.library-grid article {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 0.9rem;
+  overflow: hidden;
+}
+
+.library-grid img {
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  width: 100%;
+}
+
+.library-grid article > div {
+  padding: 1.25rem;
+}
+
+.library-grid h2 {
+  margin: 0;
+}
+
+.library-grid p {
+  color: var(--muted);
+}
+
 .game-details {
   display: grid;
   gap: 5rem;
@@ -828,6 +881,7 @@ h2 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .library-grid,
   .loading-grid,
   .package-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -863,6 +917,7 @@ h2 {
 
   .game-grid,
   .catalog-filters,
+  .library-grid,
   .loading-grid,
   .package-grid {
     grid-template-columns: 1fr;

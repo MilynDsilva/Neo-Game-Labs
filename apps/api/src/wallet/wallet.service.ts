@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
-import type { Connection, Model } from 'mongoose';
+import type { ClientSession, Connection, Model } from 'mongoose';
 import { Types } from 'mongoose';
 
 import { PointsAccount } from '../auth/points-account.schema.js';
@@ -88,46 +88,10 @@ export class WalletService {
     try {
       await this.connection.transaction(
         async (databaseSession) => {
-          const [transaction] = await this.transactionModel.create(
-            [
-              {
-                customerId: new Types.ObjectId(change.customerId),
-                idempotencyKey: change.idempotencyKey,
-                pointsDelta: change.pointsDelta,
-                reference: change.reference,
-                type: change.type,
-              },
-            ],
-            { session: databaseSession },
+          result = await this.applyChangeWithinTransaction(
+            change,
+            databaseSession,
           );
-          if (!transaction) throw new Error('Ledger transaction was not saved');
-
-          const account = await this.accountModel.findOneAndUpdate(
-            {
-              customerId: transaction.customerId,
-              ...(change.pointsDelta < 0
-                ? { balance: { $gte: -change.pointsDelta } }
-                : {}),
-            },
-            { $inc: { balance: change.pointsDelta } },
-            { new: true, session: databaseSession },
-          );
-          if (!account) {
-            throw new BadRequestException('Insufficient points balance');
-          }
-
-          await this.entryModel.create(
-            [
-              {
-                balanceAfter: account.balance,
-                customerId: transaction.customerId,
-                pointsDelta: change.pointsDelta,
-                transactionId: transaction._id,
-              },
-            ],
-            { session: databaseSession },
-          );
-          result = transaction;
         },
         {
           readConcern: { level: 'snapshot' },
@@ -144,5 +108,55 @@ export class WalletService {
 
     if (!result) throw new Error('Ledger transaction failed');
     return result;
+  }
+
+  async applyChangeWithinTransaction(
+    change: LedgerChange,
+    databaseSession: ClientSession,
+  ): Promise<LedgerTransactionDocument> {
+    if (!Number.isInteger(change.pointsDelta) || change.pointsDelta === 0) {
+      throw new BadRequestException('Points delta must be a non-zero integer');
+    }
+
+    const [transaction] = await this.transactionModel.create(
+      [
+        {
+          customerId: new Types.ObjectId(change.customerId),
+          idempotencyKey: change.idempotencyKey,
+          pointsDelta: change.pointsDelta,
+          reference: change.reference,
+          type: change.type,
+        },
+      ],
+      { session: databaseSession },
+    );
+    if (!transaction) throw new Error('Ledger transaction was not saved');
+
+    const account = await this.accountModel.findOneAndUpdate(
+      {
+        customerId: transaction.customerId,
+        ...(change.pointsDelta < 0
+          ? { balance: { $gte: -change.pointsDelta } }
+          : {}),
+      },
+      { $inc: { balance: change.pointsDelta } },
+      { new: true, session: databaseSession },
+    );
+    if (!account) {
+      throw new BadRequestException('Insufficient points balance');
+    }
+
+    await this.entryModel.create(
+      [
+        {
+          balanceAfter: account.balance,
+          customerId: transaction.customerId,
+          pointsDelta: change.pointsDelta,
+          transactionId: transaction._id,
+        },
+      ],
+      { session: databaseSession },
+    );
+    return transaction;
   }
 }
