@@ -8,6 +8,7 @@ import { CatalogModule } from './catalog/catalog.module.js';
 import { AuthModule } from './auth/auth.module.js';
 import { validateEnvironment } from './config/environment.js';
 import { HealthController } from './health/health.controller.js';
+import { ReadinessController } from './health/readiness.controller.js';
 import { DownloadsModule } from './downloads/downloads.module.js';
 import { FeedbackModule } from './feedback/feedback.module.js';
 import { PaymentsModule } from './payments/payments.module.js';
@@ -36,7 +37,7 @@ import { WalletModule } from './wallet/wallet.module.js';
     PurchasesModule,
     WalletModule,
   ],
-  controllers: [HealthController],
+  controllers: [HealthController, ReadinessController],
   providers: [{ provide: APP_GUARD, useClass: ThrottlerGuard }],
 })
 export class AppModule {}
