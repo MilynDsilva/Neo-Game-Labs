@@ -32,6 +32,16 @@ The web application runs at `http://localhost:3000` and the API health endpoint
 is available at `http://localhost:4000/v1/health`. The catalog and wallet seeds
 are idempotent and can be rerun safely.
 
+To test point purchases without a payment provider, credit one local customer
+with an idempotent development-only ledger adjustment:
+
+```bash
+CUSTOMER_EMAIL=player@example.com POINTS=1000 \
+  pnpm --filter @neogamelabs/api seed:wallet-credit
+```
+
+This command refuses to run when `NODE_ENV=production`.
+
 ## Google sign-in
 
 Google sign-in remains disabled until credentials are configured. Create a Web

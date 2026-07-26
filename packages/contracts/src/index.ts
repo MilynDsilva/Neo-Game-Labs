@@ -104,6 +104,25 @@ export const walletResponseSchema = z.object({
   ),
 });
 
+export const purchaseResponseSchema = z.object({
+  alreadyOwned: z.boolean(),
+  entitlementId: z.string().min(1),
+});
+
+export const libraryResponseSchema = z.object({
+  games: z.array(
+    z.object({
+      acquiredAt: z.iso.datetime(),
+      coverImageUrl: assetUrlSchema,
+      entitlementId: z.string().min(1),
+      platforms: z.array(gamePlatformDetailsSchema),
+      pointsPaid: z.number().int().nonnegative(),
+      slug: z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
+      title: z.string().min(1),
+    }),
+  ),
+});
+
 export type GameCatalogResponse = z.infer<typeof gameCatalogResponseSchema>;
 export type GameDetail = z.infer<typeof gameDetailSchema>;
 export type GamePlatform = z.infer<typeof gamePlatformSchema>;
@@ -113,3 +132,4 @@ export type AuthStatus = z.infer<typeof authStatusSchema>;
 export type CustomerProfile = z.infer<typeof customerProfileSchema>;
 export type TopUpPackage = z.infer<typeof topUpPackageSchema>;
 export type WalletResponse = z.infer<typeof walletResponseSchema>;
+export type LibraryResponse = z.infer<typeof libraryResponseSchema>;

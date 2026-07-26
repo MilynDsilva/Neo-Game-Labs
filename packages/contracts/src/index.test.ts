@@ -5,6 +5,7 @@ import {
   gameDetailSchema,
   gamePlatformDetailsSchema,
   healthResponseSchema,
+  libraryResponseSchema,
 } from './index.js';
 
 describe('healthResponseSchema', () => {
@@ -16,6 +17,26 @@ describe('healthResponseSchema', () => {
     });
 
     expect(result.success).toBe(true);
+  });
+});
+
+describe('libraryResponseSchema', () => {
+  it('accepts an owned game with its purchase snapshot', () => {
+    expect(
+      libraryResponseSchema.safeParse({
+        games: [
+          {
+            acquiredAt: new Date().toISOString(),
+            coverImageUrl: '/games/orbit-breaker.svg',
+            entitlementId: 'entitlement-id',
+            platforms: [{ availability: 'direct', kind: 'windows' }],
+            pointsPaid: 250,
+            slug: 'orbit-breaker',
+            title: 'Orbit Breaker',
+          },
+        ],
+      }).success,
+    ).toBe(true);
   });
 });
 

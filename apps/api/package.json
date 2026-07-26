@@ -8,6 +8,7 @@
     "lint": "eslint src test --max-warnings=0",
     "seed:catalog": "nest build && node dist/catalog/catalog.seed.js",
     "seed:wallet": "nest build && node dist/wallet/wallet.seed.js",
+    "seed:wallet-credit": "nest build && node dist/wallet/wallet.credit-seed.js",
     "start": "node dist/main.js",
     "test": "vitest run",
     "typecheck": "tsc -p tsconfig.json --noEmit"

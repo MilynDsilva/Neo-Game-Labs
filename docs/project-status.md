@@ -22,6 +22,7 @@ Last updated: 2026-07-26
 | 0          | Product roadmap and architecture decisions                                      | `docs/product-roadmap`     | `c86ea79`         | Complete        |
 | 1          | pnpm/Turbo monorepo, Next.js web, NestJS API, MongoDB replica set, CI           | `chore/project-foundation` | `66db3fe`         | Complete        |
 | 2          | Public game catalog, seed data, search, filters, detail pages, SEO              | `feat/game-catalog`        | `5c803b0`         | Complete        |
+| 2          | About, support, legal pages, and catalog loading/error states                   | `feat/site-content`        | `fd1392c`         | Complete        |
 | 3          | Google OAuth, customer records, secure server sessions, points-account creation | `feat/google-auth`         | `776a792`         | Complete        |
 | 3          | Session controls, audit events, data export, deletion requests, rate limits     | `feat/account-security`    | `daefa9f`         | Complete        |
 | 4          | Immutable points ledger, INR/USD packages, wallet APIs and UI                   | `feat/points-ledger`       | `52621ee`         | Complete        |
@@ -29,9 +30,9 @@ Last updated: 2026-07-26
 
 ## Ready for review
 
-| Phase | Deliverable                                                    | Branch              | Action needed                                                                                  |
-| ----- | -------------------------------------------------------------- | ------------------- | ---------------------------------------------------------------------------------------------- |
-| 2     | About, support, contact, privacy, terms, and catalog UI states | `feat/site-content` | Review and merge into `development`; resolve small header/CSS conflicts if GitLab reports them |
+| Phase | Deliverable                                                | Branch                | Status           |
+| ----- | ---------------------------------------------------------- | --------------------- | ---------------- |
+| 4     | Points-based purchases, entitlements, and customer library | `feat/game-purchases` | Ready for review |
 
 ## Paused decisions and blockers
 
@@ -54,11 +55,10 @@ Stripe code is already merged, but real payment activation is paused.
 
 | Priority | Phase | Work                                                                 | Suggested branch               | Status                                |
 | -------- | ----- | -------------------------------------------------------------------- | ------------------------------ | ------------------------------------- |
-| 1        | 2     | Merge the existing site-content work                                 | `feat/site-content`            | Ready for review                      |
-| 2        | 4     | Points-based game purchases, entitlements, and customer library      | `feat/game-purchases`          | Not started                           |
-| 3        | 4     | Protected download authorization and delivery                        | `feat/game-downloads`          | Not started                           |
-| 4        | 5     | Customer feedback submission and moderation-ready API                | `feat/game-feedback`           | Not started                           |
-| 5        | 6     | Security, observability, accessibility, legal review, and deployment | Focused feature/chore branches | Not started                           |
+| 1        | 4     | Points-based game purchases, entitlements, and customer library      | `feat/game-purchases`          | Ready for review                      |
+| 2        | 4     | Protected download authorization and delivery                        | `feat/game-downloads`          | Not started                           |
+| 3        | 5     | Customer feedback submission and moderation-ready API                | `feat/game-feedback`           | Not started                           |
+| 4        | 6     | Security, observability, accessibility, legal review, and deployment | Focused feature/chore branches | Not started                           |
 | Paused   | 4     | Production payment-provider activation and live top-ups              | To be decided                  | Blocked on compliant provider account |
 
 ## Current local-development behavior
@@ -78,11 +78,9 @@ Stripe code is already merged, but real payment activation is paused.
 
 1. Read `AGENTS.md`, this file, and the relevant phase document.
 2. Confirm `development` contains the merge commits listed above.
-3. Check whether `feat/site-content` has since been merged and update this
-   document if its status changed.
-4. Do not resume production payment activation without a compliant provider
+3. Do not resume production payment activation without a compliant provider
    decision.
-5. The recommended next implementation is `feat/game-purchases`, branched from
-   the latest `development`.
-6. Update this file in every feature branch when its status, scope, blocker, or
+4. Merge `feat/game-purchases`; after it is merged, the recommended next
+   implementation is `feat/game-downloads`.
+5. Update this file in every feature branch when its status, scope, blocker, or
    next action changes.
