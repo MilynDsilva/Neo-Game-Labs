@@ -22,7 +22,7 @@ describe('GamesPage', () => {
     expect(screen.getByText('Search: “orbit”')).toBeInTheDocument();
     expect(screen.getByText('Platform: Windows')).toBeInTheDocument();
     expect(screen.getByText('Featured')).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'Clear all' })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: 'Reset' })).toHaveAttribute(
       'href',
       '/games',
     );
@@ -37,7 +37,7 @@ describe('GamesPage', () => {
 
     expect(screen.queryByLabelText('Active filters')).not.toBeInTheDocument();
     expect(
-      screen.queryByRole('link', { name: 'Clear all' }),
+      screen.queryByRole('link', { name: 'Reset' }),
     ).not.toBeInTheDocument();
   });
 });

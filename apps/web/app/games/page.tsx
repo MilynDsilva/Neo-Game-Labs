@@ -59,17 +59,44 @@ export default async function GamesPage({ searchParams }: GamesPageProperties) {
   }
 
   return (
-    <main>
-      <section className="page-heading">
-        <p className="eyebrow">The catalog</p>
-        <h1>Games for every kind of player.</h1>
-        <p>Search the collection or filter by the platform you play on.</p>
+    <main className="catalog-page">
+      <section className="page-heading catalog-heading">
+        <p className="eyebrow">Discover</p>
+        <h1>Browse games</h1>
+        <p>Original worlds, built to stay with you.</p>
       </section>
+      <nav aria-label="Browse by platform" className="catalog-quick-links">
+        <Link aria-current={!platform ? 'page' : undefined} href="/games">
+          All games
+        </Link>
+        {(
+          [
+            ['windows', 'Windows'],
+            ['macos', 'macOS'],
+            ['linux', 'Linux'],
+            ['android', 'Android'],
+            ['ios', 'iOS'],
+            ['web', 'Web'],
+          ] as const
+        ).map(([value, label]) => (
+          <Link
+            aria-current={platform === value ? 'page' : undefined}
+            href={`/games?platform=${value}`}
+            key={value}
+          >
+            {label}
+          </Link>
+        ))}
+      </nav>
       <section className="catalog-layout">
         <form action="/games" className="catalog-filters">
           <div className="catalog-filter-intro">
-            <span className="eyebrow">Refine the signal</span>
-            <strong>Find your game</strong>
+            <strong>Filters</strong>
+            {filtersActive ? (
+              <Link className="filter-reset" href="/games">
+                Reset
+              </Link>
+            ) : null}
           </div>
           <label className="filter-control filter-search">
             <span>Search</span>
@@ -94,11 +121,6 @@ export default async function GamesPage({ searchParams }: GamesPageProperties) {
           </label>
           <div className="catalog-filter-actions">
             <button type="submit">Apply filters</button>
-            {filtersActive ? (
-              <Link className="filter-reset" href="/games">
-                Clear all
-              </Link>
-            ) : null}
           </div>
         </form>
         <div className="catalog-results">
@@ -108,6 +130,7 @@ export default async function GamesPage({ searchParams }: GamesPageProperties) {
                 ? 'Catalog unavailable'
                 : `${total} ${total === 1 ? 'game' : 'games'}`}
             </p>
+            <span className="catalog-sort-label">Newest releases</span>
             {filtersActive ? (
               <div aria-label="Active filters" className="active-filters">
                 {search ? <span>Search: “{search}”</span> : null}

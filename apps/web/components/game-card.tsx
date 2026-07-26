@@ -35,6 +35,7 @@ export function GameCard({ game }: Readonly<{ game: GameSummary }>) {
       </Link>
       <div className="game-card-body">
         <div>
+          <p className="game-type">Base game</p>
           <h3>
             <Link href={`/games/${game.slug}`}>{game.title}</Link>
           </h3>

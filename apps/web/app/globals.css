@@ -1732,6 +1732,188 @@ h2 {
   white-space: nowrap;
 }
 
+.catalog-heading {
+  padding-bottom: 2rem;
+  padding-top: clamp(3.5rem, 7vw, 5.5rem);
+}
+
+.catalog-heading h1 {
+  font-size: clamp(3.25rem, 7vw, 6rem);
+  margin-bottom: 1rem;
+}
+
+.catalog-heading > p:last-child {
+  font-size: 1.05rem;
+}
+
+.catalog-quick-links {
+  gap: 0.5rem;
+  margin: 0 auto;
+  max-width: var(--content-width);
+  overflow-x: auto;
+  padding: 0 var(--page-gutter) 2rem;
+  scrollbar-width: none;
+}
+
+.catalog-quick-links::-webkit-scrollbar {
+  display: none;
+}
+
+.catalog-quick-links a {
+  background: rgb(255 255 255 / 5%);
+  border: 1px solid transparent;
+  border-radius: 999px;
+  color: #c4cad7;
+  flex: 0 0 auto;
+  font-size: 0.78rem;
+  font-weight: 700;
+  min-height: 2.5rem;
+  padding: 0.72rem 1rem;
+}
+
+.catalog-quick-links a:hover {
+  background: rgb(255 255 255 / 9%);
+  color: var(--foreground);
+}
+
+.catalog-quick-links a[aria-current='page'] {
+  background: var(--foreground);
+  color: var(--background);
+}
+
+.catalog-page .catalog-layout {
+  padding-top: 0;
+}
+
+.catalog-page .catalog-filters {
+  background: transparent;
+  border: 0;
+  border-left: 1px solid var(--line);
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0 0 0 1.5rem;
+}
+
+.catalog-page .catalog-filter-intro {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  padding-inline: 0;
+}
+
+.catalog-page .catalog-filter-intro strong {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  letter-spacing: 0;
+}
+
+.catalog-page .filter-reset {
+  font-size: 0.75rem;
+  padding: 0.35rem;
+}
+
+.catalog-page .filter-control {
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 1rem;
+}
+
+.catalog-page .catalog-filters input,
+.catalog-page .catalog-filters select {
+  background-color: var(--surface);
+  border-color: transparent;
+}
+
+.catalog-page .catalog-filters button {
+  background: var(--foreground);
+  color: var(--background);
+}
+
+.catalog-sort-label {
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.catalog-results .game-grid {
+  gap: clamp(1rem, 2.2vw, 1.75rem);
+}
+
+.catalog-results .game-card {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  overflow: visible;
+}
+
+.catalog-results .game-card:hover {
+  box-shadow: none;
+  transform: none;
+}
+
+.catalog-results .game-art {
+  aspect-ratio: 3 / 4;
+  border-radius: 0.75rem;
+  box-shadow: 0 0 0 1px rgb(255 255 255 / 8%);
+}
+
+.catalog-results .game-card:hover .game-art {
+  box-shadow:
+    0 0 0 1px rgb(196 181 253 / 35%),
+    0 1.25rem 3rem rgb(0 0 0 / 30%);
+  transform: translateY(-0.2rem);
+}
+
+.catalog-results .game-card-body {
+  gap: 1rem;
+  min-height: 0;
+  padding: 1rem 0 0;
+}
+
+.catalog-results .game-card h3 {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  letter-spacing: -0.015em;
+  margin-bottom: 0.45rem;
+}
+
+.catalog-results .game-card p:not(.game-type) {
+  font-size: 0.8rem;
+  line-height: 1.45;
+}
+
+.game-type {
+  color: var(--muted);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+}
+
+.catalog-results .game-card-footer {
+  align-items: center;
+}
+
+.catalog-results .game-card-footer > strong {
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.catalog-results .platform-list li {
+  background: rgb(255 255 255 / 6%);
+  border: 0;
+  font-size: 0.62rem;
+  padding: 0.35rem 0.55rem;
+}
+
+.catalog-results .featured-label {
+  background: rgb(7 8 13 / 82%);
+  border-color: rgb(255 255 255 / 20%);
+  box-shadow: none;
+  color: white;
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+}
+
 .game-card,
 .library-grid article,
 .feedback-form,
@@ -2173,6 +2355,14 @@ select:focus {
 
   .catalog-filters {
     grid-template-columns: 1fr 1fr;
+    position: static;
+  }
+
+  .catalog-page .catalog-filters {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem;
     position: static;
   }
 
