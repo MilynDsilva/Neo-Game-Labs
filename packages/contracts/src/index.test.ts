@@ -89,6 +89,7 @@ describe('topUpPackagesResponseSchema', () => {
             points: 100,
           },
         ],
+        topUpsEnabled: false,
       }).packages[0]?.points,
     ).toBe(100);
   });

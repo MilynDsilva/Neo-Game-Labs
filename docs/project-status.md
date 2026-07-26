@@ -34,12 +34,13 @@ Last updated: 2026-07-26
 | 6          | Vendor-neutral staging containers and deployment CI                             | `chore/staging-containers`       | `d7e429a`         | Complete        |
 | Product    | Customer-experience audit and polish work plan                                  | `docs/customer-experience-audit` | `4efeacf`         | Complete        |
 | Product    | Shared authentication, profile navigation, and sign-out                         | `feat/authenticated-shell`       | `fc80880`         | Complete        |
+| Product    | Shared ownership, purchase states, and confirmations                            | `feat/ownership-ui`              | `ecbeb9c`         | Complete        |
 
 ## Ready for review
 
-| Phase   | Deliverable                                          | Branch              | Status           |
-| ------- | ---------------------------------------------------- | ------------------- | ---------------- |
-| Product | Shared ownership, purchase states, and confirmations | `feat/ownership-ui` | Ready for review |
+| Phase   | Deliverable                                      | Branch              | Status           |
+| ------- | ------------------------------------------------ | ------------------- | ---------------- |
+| Product | Explicit wallet, top-up, retry, and empty states | `fix/wallet-states` | Ready for review |
 
 ## Paused decisions and blockers
 
@@ -90,8 +91,8 @@ Stripe code is already merged, but real payment activation is paused.
 2. Confirm `development` contains the merge commits listed above.
 3. Do not resume production payment activation without a compliant provider
    decision.
-4. Merge `feat/ownership-ui`; then continue with explicit wallet states in
-   `fix/wallet-states`.
+4. Merge `fix/wallet-states`; then continue with library and download polish in
+   `feat/library-experience`.
 5. Per product-owner direction, hosting, domain, DNS, and deployment remain last
    until the customer experience is working and visually approved.
 6. Update this file in every feature branch when its status, scope, blocker, or

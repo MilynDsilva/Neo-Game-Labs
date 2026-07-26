@@ -1,4 +1,5 @@
 import { Controller, Get, Inject, Query, Req } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import type { Request } from 'express';
 
 import { AuthService, sessionCookieName } from '../auth/auth.service.js';
@@ -8,6 +9,7 @@ import { WalletService } from './wallet.service.js';
 export class WalletController {
   constructor(
     @Inject(AuthService) private readonly authService: AuthService,
+    @Inject(ConfigService) private readonly configService: ConfigService,
     @Inject(WalletService) private readonly walletService: WalletService,
   ) {}
 
@@ -20,10 +22,14 @@ export class WalletController {
   }
 
   @Get('top-up-packages')
-  listTopUpPackages(@Query('currency') currency?: string) {
-    return this.walletService.listTopUpPackages(
+  async listTopUpPackages(@Query('currency') currency?: string) {
+    const result = await this.walletService.listTopUpPackages(
       currency === 'INR' || currency === 'USD' ? currency : undefined,
     );
+    return {
+      ...result,
+      topUpsEnabled: this.configService.getOrThrow<boolean>('TOP_UPS_ENABLED'),
+    };
   }
 
   private readSessionCookie(request: Request): string | undefined {
