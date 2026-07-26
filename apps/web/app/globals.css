@@ -277,6 +277,23 @@ textarea {
   font-size: 0.7rem;
 }
 
+.profile-chevron {
+  border-bottom: 2px solid currentColor;
+  border-right: 2px solid currentColor;
+  display: block;
+  flex: 0 0 auto;
+  height: 0.45rem;
+  margin: -0.2rem 0.25rem 0 0.15rem;
+  transform: rotate(45deg);
+  transition: transform 160ms ease;
+  width: 0.45rem;
+}
+
+.profile-trigger[aria-expanded='true'] .profile-chevron {
+  margin-top: 0.2rem;
+  transform: rotate(225deg);
+}
+
 .account-menu {
   background: var(--surface-raised);
   border: 1px solid var(--line);

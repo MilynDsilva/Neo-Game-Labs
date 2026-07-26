@@ -148,7 +148,7 @@ export function SiteHeader() {
                 <strong>{customer.displayName}</strong>
                 <small>{customer.pointsBalance} points</small>
               </span>
-              <span aria-hidden="true">⌄</span>
+              <span aria-hidden="true" className="profile-chevron" />
             </button>
             {accountOpen ? (
               <div className="account-menu" role="menu">
