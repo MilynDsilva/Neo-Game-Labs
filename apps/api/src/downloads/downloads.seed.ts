@@ -24,6 +24,7 @@ async function seedDownloads(): Promise<void> {
         $set: {
           active: true,
           fileName: 'orbit-breaker-demo.txt',
+          sizeBytes: 215,
           storageKey: 'orbit-breaker-demo.txt',
           version: '0.1.0-demo',
         },

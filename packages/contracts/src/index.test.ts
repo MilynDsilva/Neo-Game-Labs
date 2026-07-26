@@ -31,6 +31,7 @@ describe('download contracts', () => {
           {
             fileName: 'orbit-breaker-demo.txt',
             platform: 'windows',
+            sizeBytes: 215,
             version: '0.1.0-demo',
           },
         ],

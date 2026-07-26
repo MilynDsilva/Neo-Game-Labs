@@ -129,6 +129,7 @@ export const downloadListResponseSchema = z.object({
     z.object({
       fileName: z.string().regex(/^[a-zA-Z0-9._-]+$/),
       platform: z.enum(['windows', 'macos', 'linux', 'android']),
+      sizeBytes: z.number().int().nonnegative(),
       version: z.string().trim().min(1),
     }),
   ),

@@ -44,6 +44,7 @@ export class DownloadsService {
       downloads: assets.map((asset) => ({
         fileName: asset.fileName,
         platform: asset.platform,
+        sizeBytes: asset.sizeBytes ?? 0,
         version: asset.version,
       })),
     };
