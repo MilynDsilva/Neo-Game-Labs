@@ -79,19 +79,25 @@ application in Google Cloud, add
 and set `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` in `apps/api/.env`.
 Production and staging must use separate OAuth clients and HTTPS callback URLs.
 
-## Stripe test checkout
+## Razorpay test checkout
 
-Set `STRIPE_SECRET_KEY` and `STRIPE_WEBHOOK_SECRET` in `apps/api/.env`. For
-local webhook forwarding, run:
+Set `RAZORPAY_KEY_ID`, `RAZORPAY_KEY_SECRET`, and
+`RAZORPAY_WEBHOOK_SECRET` in `apps/api/.env`, then enable test top-ups with
+`TOP_UPS_ENABLED=true`. Configure Razorpay Standard Checkout for automatic
+capture and create a test-mode webhook for:
 
-```bash
-stripe listen --forward-to localhost:4000/v1/payments/stripe/webhook
+```text
+payment.captured
+payment.failed
 ```
 
-Use the `whsec_...` value printed by the Stripe CLI as
-`STRIPE_WEBHOOK_SECRET`, restart the API, and use Stripe test card
-`4242 4242 4242 4242` with any future expiry and any three-digit CVC. Never
-commit Stripe keys or webhook secrets.
+The webhook URL is
+`https://<public-api-host>/v1/payments/razorpay/webhook`. Razorpay webhooks
+require a public HTTPS endpoint; local checkout confirmation still performs
+server-side signature and captured-payment verification. Never commit Razorpay
+keys or webhook secrets. See the
+[Razorpay operations guide](docs/operations/razorpay.md) for test setup,
+webhooks, rotation, and launch requirements.
 
 ## Validation
 

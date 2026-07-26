@@ -24,7 +24,7 @@
 
 - Treat `401`, API failure, and empty ledger as separate states.
 - Hide or clearly disable top-up packages while top-ups are paused.
-- Do not advertise active Stripe checkout when the kill switch is off.
+- Do not advertise active Razorpay checkout when the kill switch is off.
 - Explain INR/USD package behavior and that points are not cash.
 - Add retry behavior for wallet loading and checkout failure.
 - Refresh balance after successful provider confirmation.
