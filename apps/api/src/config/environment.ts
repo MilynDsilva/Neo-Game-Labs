@@ -19,6 +19,7 @@ const environmentSchema = z
       .default('mongodb://localhost:27017/customer_dashboard?replicaSet=rs0'),
     GOOGLE_CLIENT_ID: optionalSecret,
     GOOGLE_CLIENT_SECRET: optionalSecret,
+    ADMIN_API_KEY: optionalSecret,
     GOOGLE_CALLBACK_URL: z
       .url()
       .default('http://localhost:4000/v1/auth/google/callback'),
@@ -31,6 +32,7 @@ const environmentSchema = z
       .enum(['development', 'test', 'production'])
       .default('development'),
     PORT: z.coerce.number().int().positive().default(4000),
+    ADMIN_ORIGIN: z.url().default('http://localhost:3100'),
     WEB_ORIGIN: z.url().default('http://localhost:3000'),
   })
   .refine(

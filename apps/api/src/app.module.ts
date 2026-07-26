@@ -15,6 +15,7 @@ import { FeedbackModule } from './feedback/feedback.module.js';
 import { PaymentsModule } from './payments/payments.module.js';
 import { PurchasesModule } from './purchases/purchases.module.js';
 import { WalletModule } from './wallet/wallet.module.js';
+import { AdminModule } from './admin/admin.module.js';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { WalletModule } from './wallet/wallet.module.js';
         uri: configService.getOrThrow<string>('MONGODB_URI'),
       }),
     }),
+    AdminModule,
     AuthModule,
     CatalogModule,
     CommentsModule,

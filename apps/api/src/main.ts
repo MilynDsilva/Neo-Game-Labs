@@ -16,7 +16,10 @@ async function bootstrap(): Promise<void> {
   app.use(securityHeadersMiddleware);
   app.enableCors({
     credentials: true,
-    origin: configService.getOrThrow<string>('WEB_ORIGIN'),
+    origin: [
+      configService.getOrThrow<string>('WEB_ORIGIN'),
+      configService.getOrThrow<string>('ADMIN_ORIGIN'),
+    ],
   });
   app.enableShutdownHooks();
 
