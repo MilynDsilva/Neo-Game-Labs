@@ -10,6 +10,9 @@
 - customer and wallet visibility with controlled point credits; and
 - an audit trail for every catalog or feedback mutation.
 
+Customer results are searched and paginated server-side at 20 records per page
+so the dashboard does not load the full customer collection.
+
 It intentionally does not support arbitrary balance replacement, deleting
 customers, or deleting ledger entries. Admin credits require a positive point
 amount and a reason. Each credit creates an immutable ledger transaction and a

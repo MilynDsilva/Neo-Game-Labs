@@ -55,8 +55,12 @@ export class AdminController {
   }
 
   @Get('customers')
-  listCustomers(@Query('search') search = '') {
-    return this.adminService.listCustomers(search);
+  listCustomers(
+    @Query('search') search = '',
+    @Query('page') page = '1',
+    @Query('limit') limit = '20',
+  ) {
+    return this.adminService.listCustomers({ limit, page, search });
   }
 
   @Get('audit')

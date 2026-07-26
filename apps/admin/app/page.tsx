@@ -6,6 +6,7 @@ import {
   type AdminGame,
   type AdminOverview,
 } from '../lib/admin-api';
+import Link from 'next/link';
 import { creditCustomer, updateFeedback, updateGame } from './actions';
 
 export const dynamic = 'force-dynamic';
@@ -19,11 +20,27 @@ const feedbackStatuses = [
   'closed',
 ];
 
-export default async function Dashboard() {
+export default async function Dashboard({
+  searchParams,
+}: {
+  searchParams: Promise<{
+    customerPage?: string;
+    customerSearch?: string;
+  }>;
+}) {
+  const parameters = await searchParams;
+  const customerPage = Math.max(1, Number(parameters.customerPage) || 1);
+  const customerSearch = parameters.customerSearch?.trim() ?? '';
   let data:
     | {
         audit: AdminAuditEvent[];
         customers: AdminCustomer[];
+        customerPagination: {
+          limit: number;
+          page: number;
+          pages: number;
+          total: number;
+        };
         feedback: AdminFeedback[];
         games: AdminGame[];
         overview: AdminOverview;
@@ -36,12 +53,27 @@ export default async function Dashboard() {
       adminRequest<AdminOverview>('/overview'),
       adminRequest<{ games: AdminGame[] }>('/games'),
       adminRequest<{ feedback: AdminFeedback[] }>('/feedback'),
-      adminRequest<{ customers: AdminCustomer[] }>('/customers'),
+      adminRequest<{
+        customers: AdminCustomer[];
+        pagination: {
+          limit: number;
+          page: number;
+          pages: number;
+          total: number;
+        };
+      }>(
+        `/customers?${new URLSearchParams({
+          limit: '20',
+          page: String(customerPage),
+          search: customerSearch,
+        })}`,
+      ),
       adminRequest<{ events: AdminAuditEvent[] }>('/audit'),
     ]);
     data = {
       audit: audit.events,
       customers: customers.customers,
+      customerPagination: customers.pagination,
       feedback: feedback.feedback,
       games: games.games,
       overview,
@@ -196,6 +228,21 @@ export default async function Dashboard() {
               title="Customers"
               description="Read-only customer and wallet visibility."
             />
+            <form action="/#customers" className="customer-search">
+              <label>
+                Search customers
+                <input
+                  defaultValue={customerSearch}
+                  name="customerSearch"
+                  placeholder="Name or email"
+                  type="search"
+                />
+              </label>
+              <button type="submit">Search</button>
+              {customerSearch ? (
+                <Link href="/#customers">Clear search</Link>
+              ) : null}
+            </form>
             <div className="table-wrap">
               <table>
                 <thead>
@@ -253,6 +300,40 @@ export default async function Dashboard() {
                 </tbody>
               </table>
             </div>
+            <nav aria-label="Customer pages" className="pagination">
+              <p>
+                Page {data.customerPagination.page} of{' '}
+                {data.customerPagination.pages} ·{' '}
+                {data.customerPagination.total} customers
+              </p>
+              <div>
+                {data.customerPagination.page > 1 ? (
+                  <Link
+                    href={`${customerPageUrl(
+                      data.customerPagination.page - 1,
+                      customerSearch,
+                    )}#customers`}
+                  >
+                    ← Previous
+                  </Link>
+                ) : (
+                  <span>← Previous</span>
+                )}
+                {data.customerPagination.page <
+                data.customerPagination.pages ? (
+                  <Link
+                    href={`${customerPageUrl(
+                      data.customerPagination.page + 1,
+                      customerSearch,
+                    )}#customers`}
+                  >
+                    Next →
+                  </Link>
+                ) : (
+                  <span>Next →</span>
+                )}
+              </div>
+            </nav>
           </section>
 
           <section id="audit">
@@ -284,6 +365,12 @@ export default async function Dashboard() {
       )}
     </div>
   );
+}
+
+function customerPageUrl(page: number, search: string) {
+  const parameters = new URLSearchParams({ customerPage: String(page) });
+  if (search) parameters.set('customerSearch', search);
+  return `/?${parameters}`;
 }
 
 function Metric({

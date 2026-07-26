@@ -46,6 +46,12 @@ const creditCustomerSchema = z
   })
   .strict();
 
+const customerQuerySchema = z.object({
+  limit: z.coerce.number().int().min(1).max(100).default(20),
+  page: z.coerce.number().int().min(1).default(1),
+  search: z.string().trim().max(120).default(''),
+});
+
 @Injectable()
 export class AdminService {
   constructor(
@@ -167,9 +173,14 @@ export class AdminService {
     return this.feedbackView(feedback);
   }
 
-  async listCustomers(search = '') {
-    const escaped = search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    const filter = search
+  async listCustomers(input: {
+    limit?: number | string;
+    page?: number | string;
+    search?: string;
+  }) {
+    const query = this.parse(customerQuerySchema, input);
+    const escaped = query.search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const filter = query.search
       ? {
           $or: [
             { displayName: { $regex: escaped, $options: 'i' } },
@@ -177,11 +188,15 @@ export class AdminService {
           ],
         }
       : {};
-    const customers = await this.customerModel
-      .find(filter)
-      .sort({ createdAt: -1 })
-      .limit(100)
-      .lean();
+    const [customers, total] = await Promise.all([
+      this.customerModel
+        .find(filter)
+        .sort({ createdAt: -1 })
+        .skip((query.page - 1) * query.limit)
+        .limit(query.limit)
+        .lean(),
+      this.customerModel.countDocuments(filter),
+    ]);
     const ids = customers.map((customer) => customer._id);
     const accounts = await this.pointsAccountModel
       .find({ customerId: { $in: ids } })
@@ -200,6 +215,12 @@ export class AdminService {
         id: customer._id.toString(),
         pointsBalance: balances.get(customer._id.toString()) ?? 0,
       })),
+      pagination: {
+        limit: query.limit,
+        page: query.page,
+        pages: Math.max(1, Math.ceil(total / query.limit)),
+        total,
+      },
     };
   }
 
