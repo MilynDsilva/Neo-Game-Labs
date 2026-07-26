@@ -18,6 +18,48 @@ const currencyFormatters = {
   USD: new Intl.NumberFormat('en-US', { currency: 'USD', style: 'currency' }),
 };
 
+type RazorpaySuccess = {
+  razorpay_order_id: string;
+  razorpay_payment_id: string;
+  razorpay_signature: string;
+};
+
+type RazorpayOptions = {
+  amount: number;
+  currency: string;
+  description: string;
+  handler: (response: RazorpaySuccess) => void;
+  key: string;
+  modal: { ondismiss: () => void };
+  name: string;
+  order_id: string;
+  theme: { color: string };
+};
+
+declare global {
+  interface Window {
+    Razorpay?: new (options: RazorpayOptions) => { open: () => void };
+  }
+}
+
+let razorpayScript: Promise<void> | undefined;
+
+function loadRazorpayCheckout(): Promise<void> {
+  if (window.Razorpay) return Promise.resolve();
+  if (razorpayScript) return razorpayScript;
+
+  razorpayScript = new Promise((resolve, reject) => {
+    const script = document.createElement('script');
+    script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+    script.async = true;
+    script.onload = () => resolve();
+    script.onerror = () =>
+      reject(new Error('Razorpay Checkout failed to load'));
+    document.head.appendChild(script);
+  });
+  return razorpayScript;
+}
+
 export function WalletPanel() {
   const { authenticated, loading: authLoading } = useAuth();
   const [wallet, setWallet] = useState<WalletResponse>();
@@ -55,19 +97,6 @@ export function WalletPanel() {
   }, [authenticated]);
 
   useEffect(() => {
-    const checkout = new URLSearchParams(window.location.search).get(
-      'checkout',
-    );
-    if (checkout === 'success') {
-      setCheckoutNotice(
-        'Payment received. Your balance updates after provider confirmation.',
-      );
-    } else if (checkout === 'cancelled') {
-      setCheckoutNotice('Checkout was cancelled. You were not charged.');
-    }
-  }, []);
-
-  useEffect(() => {
     if (!authLoading && authenticated) void loadWallet();
   }, [authLoading, authenticated, loadWallet]);
 
@@ -90,12 +119,66 @@ export function WalletPanel() {
             ? 'Point top-ups are currently paused.'
             : 'Checkout could not be started. Please try again.',
         );
+        setCheckoutPackage(undefined);
         return;
       }
-      const data = (await response.json()) as { url: string };
-      window.location.assign(data.url);
+      const order = (await response.json()) as {
+        amount: number;
+        currency: string;
+        description: string;
+        keyId: string;
+        name: string;
+        orderId: string;
+      };
+      await loadRazorpayCheckout();
+      if (!window.Razorpay) throw new Error('Razorpay Checkout unavailable');
+
+      const checkout = new window.Razorpay({
+        amount: order.amount,
+        currency: order.currency,
+        description: order.description,
+        handler: (result) => {
+          void verifyCheckout(result);
+        },
+        key: order.keyId,
+        modal: {
+          ondismiss: () => {
+            setCheckoutPackage(undefined);
+            setCheckoutNotice('Checkout was closed. No points were credited.');
+          },
+        },
+        name: order.name,
+        order_id: order.orderId,
+        theme: { color: '#9b7cff' },
+      });
+      checkout.open();
     } catch {
       setCheckoutError('Checkout could not be started. Check your connection.');
+      setCheckoutPackage(undefined);
+    }
+  }
+
+  async function verifyCheckout(result: RazorpaySuccess) {
+    try {
+      const response = await fetch(`${apiUrl}/v1/payments/razorpay/verify`, {
+        body: JSON.stringify({
+          orderId: result.razorpay_order_id,
+          paymentId: result.razorpay_payment_id,
+          signature: result.razorpay_signature,
+        }),
+        credentials: 'include',
+        headers: { 'content-type': 'application/json' },
+        method: 'POST',
+      });
+      if (!response.ok) {
+        throw new Error('Payment verification failed');
+      }
+      setCheckoutNotice('Payment confirmed. Your points have been credited.');
+      await loadWallet();
+    } catch {
+      setCheckoutError(
+        'Payment was received but confirmation is pending. Do not retry yet.',
+      );
     } finally {
       setCheckoutPackage(undefined);
     }
@@ -187,7 +270,7 @@ export function WalletPanel() {
                 {!topUpsEnabled
                   ? 'Currently unavailable'
                   : checkoutPackage === item.code
-                    ? 'Opening checkout…'
+                    ? 'Checkout in progress…'
                     : 'Continue to checkout'}
               </button>
             </article>
