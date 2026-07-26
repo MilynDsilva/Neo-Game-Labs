@@ -9,6 +9,7 @@ import {
 import { Game, GameSchema } from '../catalog/game.schema.js';
 import { Feedback, FeedbackSchema } from '../feedback/feedback.schema.js';
 import { Purchase, PurchaseSchema } from '../purchases/purchase.schema.js';
+import { WalletModule } from '../wallet/wallet.module.js';
 import {
   AdminAuditEvent,
   AdminAuditEventSchema,
@@ -20,6 +21,7 @@ import { AdminService } from './admin.service.js';
 @Module({
   controllers: [AdminController],
   imports: [
+    WalletModule,
     MongooseModule.forFeature([
       { name: Customer.name, schema: CustomerSchema },
       { name: PointsAccount.name, schema: PointsAccountSchema },

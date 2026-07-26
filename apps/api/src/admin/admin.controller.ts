@@ -6,6 +6,7 @@ import {
   Inject,
   Param,
   Patch,
+  Post,
   Query,
   UseGuards,
 } from '@nestjs/common';
@@ -61,5 +62,14 @@ export class AdminController {
   @Get('audit')
   listAudit() {
     return this.adminService.listAudit();
+  }
+
+  @Post('customers/:id/credits')
+  creditCustomer(
+    @Param('id') id: string,
+    @Body() body: unknown,
+    @Headers('x-admin-actor') actor = 'admin-dashboard',
+  ) {
+    return this.adminService.creditCustomer(id, body, actor);
   }
 }

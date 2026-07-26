@@ -28,3 +28,15 @@ export async function updateFeedback(formData: FormData) {
   });
   revalidatePath('/');
 }
+
+export async function creditCustomer(formData: FormData) {
+  const id = String(formData.get('id') ?? '');
+  await adminRequest(`/customers/${encodeURIComponent(id)}/credits`, {
+    body: JSON.stringify({
+      points: Number(formData.get('points')),
+      reason: String(formData.get('reason') ?? ''),
+    }),
+    method: 'POST',
+  });
+  revalidatePath('/');
+}

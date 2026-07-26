@@ -375,6 +375,18 @@ th {
   color: #ff8fa0;
 }
 
+.credit-form {
+  display: grid;
+  gap: 0.5rem;
+  grid-template-columns: 6rem minmax(10rem, 1fr) auto;
+  min-width: 24rem;
+}
+
+.credit-form input,
+.credit-form button {
+  padding: 0.65rem 0.75rem;
+}
+
 .audit-list > div {
   align-items: center;
   border-top: 1px solid var(--line);

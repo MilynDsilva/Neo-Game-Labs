@@ -6,7 +6,7 @@ import {
   type AdminGame,
   type AdminOverview,
 } from '../lib/admin-api';
-import { updateFeedback, updateGame } from './actions';
+import { creditCustomer, updateFeedback, updateGame } from './actions';
 
 export const dynamic = 'force-dynamic';
 
@@ -204,6 +204,7 @@ export default async function Dashboard() {
                     <th>Email</th>
                     <th>Points</th>
                     <th>Account</th>
+                    <th>Credit points</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -222,6 +223,30 @@ export default async function Dashboard() {
                             ? 'Deletion pending'
                             : 'Active'}
                         </span>
+                      </td>
+                      <td>
+                        <form action={creditCustomer} className="credit-form">
+                          <input name="id" type="hidden" value={customer.id} />
+                          <input
+                            aria-label={`Points to credit ${customer.displayName}`}
+                            max="100000"
+                            min="1"
+                            name="points"
+                            placeholder="Points"
+                            required
+                            type="number"
+                          />
+                          <input
+                            aria-label={`Reason for crediting ${customer.displayName}`}
+                            maxLength={200}
+                            minLength={3}
+                            name="reason"
+                            placeholder="Reason"
+                            required
+                            type="text"
+                          />
+                          <button type="submit">Credit</button>
+                        </form>
                       </td>
                     </tr>
                   ))}

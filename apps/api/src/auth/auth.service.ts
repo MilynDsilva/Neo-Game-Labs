@@ -20,6 +20,10 @@ import { CustomerSession } from './session.schema.js';
 import type { CustomerSessionDocument } from './session.schema.js';
 import { SecurityEvent } from './security-event.schema.js';
 import type { SecurityEventDocument } from './security-event.schema.js';
+import { LedgerEntry } from '../wallet/ledger-entry.schema.js';
+import type { LedgerEntryDocument } from '../wallet/ledger-entry.schema.js';
+import { LedgerTransaction } from '../wallet/ledger-transaction.schema.js';
+import type { LedgerTransactionDocument } from '../wallet/ledger-transaction.schema.js';
 
 const googleTokenSchema = z.object({ access_token: z.string().min(1) });
 const googleProfileSchema = z.object({
@@ -33,6 +37,7 @@ const googleProfileSchema = z.object({
 export const sessionCookieName = 'neo_session';
 export const oauthStateCookieName = 'neo_oauth_state';
 const sessionLifetimeMilliseconds = 30 * 24 * 60 * 60 * 1000;
+const welcomePoints = 150;
 
 @Injectable()
 export class AuthService {
@@ -48,6 +53,10 @@ export class AuthService {
     private readonly sessionModel: Model<CustomerSessionDocument>,
     @InjectModel(SecurityEvent.name)
     private readonly securityEventModel: Model<SecurityEventDocument>,
+    @InjectModel(LedgerTransaction.name)
+    private readonly ledgerTransactionModel: Model<LedgerTransactionDocument>,
+    @InjectModel(LedgerEntry.name)
+    private readonly ledgerEntryModel: Model<LedgerEntryDocument>,
   ) {}
 
   createAuthorizationRequest(): { state: string; url: string } {
@@ -144,11 +153,42 @@ export class AuthService {
       if (customer.deletionRequestedAt) {
         throw new UnauthorizedException('Account deletion is pending');
       }
-      await this.pointsAccountModel.updateOne(
+      const accountCreation = await this.pointsAccountModel.updateOne(
         { customerId: customer._id },
-        { $setOnInsert: { balance: 0, customerId: customer._id } },
+        {
+          $setOnInsert: {
+            balance: welcomePoints,
+            customerId: customer._id,
+          },
+        },
         { session: databaseSession, upsert: true },
       );
+      if (accountCreation.upsertedCount === 1) {
+        const [transaction] = await this.ledgerTransactionModel.create(
+          [
+            {
+              customerId: customer._id,
+              idempotencyKey: `welcome:${customer._id.toString()}`,
+              pointsDelta: welcomePoints,
+              reference: 'Welcome credit',
+              type: 'adjustment',
+            },
+          ],
+          { session: databaseSession },
+        );
+        if (!transaction) throw new Error('Welcome credit was not recorded');
+        await this.ledgerEntryModel.create(
+          [
+            {
+              balanceAfter: welcomePoints,
+              customerId: customer._id,
+              pointsDelta: welcomePoints,
+              transactionId: transaction._id,
+            },
+          ],
+          { session: databaseSession },
+        );
+      }
       await this.sessionModel.create(
         [
           {

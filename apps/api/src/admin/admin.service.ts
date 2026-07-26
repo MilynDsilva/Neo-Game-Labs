@@ -1,11 +1,13 @@
 import {
   BadRequestException,
+  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
+import { InjectConnection, InjectModel } from '@nestjs/mongoose';
+import { randomUUID } from 'node:crypto';
 import { isValidObjectId } from 'mongoose';
-import type { Model } from 'mongoose';
+import type { ClientSession, Connection, Model } from 'mongoose';
 import { z } from 'zod';
 
 import { Customer } from '../auth/customer.schema.js';
@@ -18,6 +20,7 @@ import { Feedback } from '../feedback/feedback.schema.js';
 import type { FeedbackDocument } from '../feedback/feedback.schema.js';
 import { Purchase } from '../purchases/purchase.schema.js';
 import type { PurchaseDocument } from '../purchases/purchase.schema.js';
+import { WalletService } from '../wallet/wallet.service.js';
 import { AdminAuditEvent } from './admin-audit.schema.js';
 import type { AdminAuditEventDocument } from './admin-audit.schema.js';
 
@@ -36,9 +39,17 @@ const feedbackUpdateSchema = z
   })
   .strict();
 
+const creditCustomerSchema = z
+  .object({
+    points: z.number().int().min(1).max(100_000),
+    reason: z.string().trim().min(3).max(200),
+  })
+  .strict();
+
 @Injectable()
 export class AdminService {
   constructor(
+    @InjectConnection() private readonly connection: Connection,
     @InjectModel(Customer.name)
     private readonly customerModel: Model<CustomerDocument>,
     @InjectModel(PointsAccount.name)
@@ -51,6 +62,7 @@ export class AdminService {
     private readonly purchaseModel: Model<PurchaseDocument>,
     @InjectModel(AdminAuditEvent.name)
     private readonly auditModel: Model<AdminAuditEventDocument>,
+    @Inject(WalletService) private readonly walletService: WalletService,
   ) {}
 
   async overview() {
@@ -210,6 +222,52 @@ export class AdminService {
     };
   }
 
+  async creditCustomer(id: string, input: unknown, actor: string) {
+    this.assertObjectId(id);
+    const credit = this.parse(creditCustomerSchema, input);
+    const customer = await this.customerModel.findById(id).lean();
+    if (!customer) throw new NotFoundException('Customer not found');
+
+    let ledgerTransactionId: string | undefined;
+    await this.connection.transaction(async (databaseSession) => {
+      const transaction = await this.walletService.applyChangeWithinTransaction(
+        {
+          customerId: id,
+          idempotencyKey: `admin-credit:${randomUUID()}`,
+          pointsDelta: credit.points,
+          reference: `Admin credit: ${credit.reason}`,
+          type: 'adjustment',
+        },
+        databaseSession,
+      );
+      ledgerTransactionId = transaction._id.toString();
+      await this.audit(
+        'customer.points-credited',
+        actor,
+        'customer',
+        id,
+        {
+          ledgerTransactionId,
+          points: credit.points,
+          reason: credit.reason,
+        },
+        databaseSession,
+      );
+    });
+    if (!ledgerTransactionId) {
+      throw new Error('Admin credit was not recorded');
+    }
+
+    const account = await this.pointsAccountModel
+      .findOne({ customerId: customer._id })
+      .lean();
+    return {
+      customerId: id,
+      ledgerTransactionId,
+      pointsBalance: account?.balance ?? 0,
+    };
+  }
+
   private feedbackView(feedback: {
     _id: { toString(): string };
     category: string;
@@ -238,14 +296,12 @@ export class AdminService {
     targetType: string,
     targetId: string,
     changes: Record<string, unknown>,
+    session?: ClientSession,
   ) {
-    await this.auditModel.create({
-      action,
-      actor,
-      changes,
-      targetId,
-      targetType,
-    });
+    await this.auditModel.create(
+      [{ action, actor, changes, targetId, targetType }],
+      session ? { session } : undefined,
+    );
   }
 
   private assertObjectId(id: string) {
