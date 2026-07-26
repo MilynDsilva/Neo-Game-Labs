@@ -4,6 +4,8 @@ import { purchaseResponseSchema } from '@neogamelabs/contracts';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
+import { useAuth } from './auth-provider';
+
 const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000';
 
 export function PurchaseButton({
@@ -11,6 +13,7 @@ export function PurchaseButton({
   pointPrice,
 }: Readonly<{ gameSlug: string; pointPrice: number }>) {
   const router = useRouter();
+  const { refresh } = useAuth();
   const [error, setError] = useState<string>();
   const [submitting, setSubmitting] = useState(false);
 
@@ -34,6 +37,7 @@ export function PurchaseButton({
       return;
     }
     purchaseResponseSchema.parse(await response.json());
+    await refresh();
     router.push('/library');
   }
 

@@ -3,6 +3,7 @@ import Link from 'next/link';
 import type { ReactNode } from 'react';
 
 import { SiteHeader } from '../components/site-header';
+import { AuthProvider } from '../components/auth-provider';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -16,22 +17,29 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <SiteHeader />
-        {children}
-        <footer className="site-footer">
-          <div>
-            <strong>Neo Game Labs</strong>
-            <p>Games built for players everywhere.</p>
+        <a className="skip-link" href="#main-content">
+          Skip to content
+        </a>
+        <AuthProvider>
+          <SiteHeader />
+          <div id="main-content" tabIndex={-1}>
+            {children}
           </div>
-          <nav aria-label="Footer navigation">
-            <Link href="/about">About</Link>
-            <Link href="/support">Support</Link>
-            <Link href="/contact">Contact</Link>
-            <Link href="/privacy">Privacy</Link>
-            <Link href="/terms">Terms</Link>
-          </nav>
-          <p>© {new Date().getFullYear()} Neo Game Labs</p>
-        </footer>
+          <footer className="site-footer">
+            <div>
+              <strong>Neo Game Labs</strong>
+              <p>Games built for players everywhere.</p>
+            </div>
+            <nav aria-label="Footer navigation">
+              <Link href="/about">About</Link>
+              <Link href="/support">Support</Link>
+              <Link href="/contact">Contact</Link>
+              <Link href="/privacy">Privacy</Link>
+              <Link href="/terms">Terms</Link>
+            </nav>
+            <p>© {new Date().getFullYear()} Neo Game Labs</p>
+          </footer>
+        </AuthProvider>
       </body>
     </html>
   );
