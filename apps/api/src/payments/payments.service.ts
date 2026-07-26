@@ -151,7 +151,12 @@ export class PaymentsService {
       razorpayPaymentSchema,
     );
     await this.completeCapturedPayment(payment, providerPayment);
-    return { credited: true };
+    const wallet = await this.walletService.getWallet(customerId);
+    return {
+      balance: wallet.balance,
+      credited: true,
+      points: payment.points,
+    };
   }
 
   constructWebhook(rawBody: Buffer, signature: string): RazorpayWebhook {

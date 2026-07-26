@@ -1489,6 +1489,99 @@ h2 {
   padding: 1rem;
 }
 
+.reward-overlay {
+  align-items: center;
+  animation: reward-fade-in 180ms ease-out;
+  background: rgb(3 4 9 / 82%);
+  display: flex;
+  inset: 0;
+  justify-content: center;
+  padding: 1.25rem;
+  position: fixed;
+  z-index: 100;
+}
+
+.reward-dialog {
+  align-items: center;
+  animation: reward-rise 320ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  background:
+    radial-gradient(circle at 50% 15%, rgb(155 124 255 / 28%), transparent 45%),
+    var(--surface);
+  border: 1px solid rgb(255 255 255 / 16%);
+  border-radius: 1.25rem;
+  box-shadow: 0 1.5rem 5rem rgb(0 0 0 / 55%);
+  display: flex;
+  flex-direction: column;
+  max-width: 25rem;
+  overflow: hidden;
+  padding: 2rem;
+  position: relative;
+  text-align: center;
+  width: 100%;
+}
+
+.reward-glow {
+  background: var(--accent);
+  filter: blur(4rem);
+  height: 7rem;
+  opacity: 0.18;
+  position: absolute;
+  top: -5rem;
+  width: 14rem;
+}
+
+.reward-token {
+  align-items: center;
+  background: linear-gradient(135deg, var(--accent), var(--accent-bright));
+  border: 1px solid rgb(255 255 255 / 35%);
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 0.45rem rgb(155 124 255 / 10%),
+    0 0 2.5rem rgb(155 124 255 / 38%);
+  display: flex;
+  font-family: var(--font-display);
+  font-size: 2rem;
+  height: 5rem;
+  justify-content: center;
+  margin: 0.5rem 0 1.5rem;
+  width: 5rem;
+}
+
+.reward-dialog h2 {
+  font-size: 1.7rem;
+  margin-bottom: 0.35rem;
+}
+
+.reward-amount {
+  color: var(--accent-bright);
+  font-family: var(--font-display);
+  font-size: clamp(3.5rem, 12vw, 5.5rem);
+  letter-spacing: -0.05em;
+  line-height: 1;
+}
+
+.reward-dialog > p:not(.eyebrow) {
+  color: var(--muted);
+  margin: 1rem 0 1.5rem;
+}
+
+.reward-dialog > button {
+  min-width: 11rem;
+}
+
+@keyframes reward-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes reward-rise {
+  from {
+    opacity: 0;
+    transform: scale(0.94) translateY(1rem);
+  }
+}
+
 .feature-paused {
   background: rgb(251 191 36 / 9%);
   border: 1px solid rgb(251 191 36 / 30%);

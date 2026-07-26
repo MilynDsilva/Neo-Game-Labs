@@ -70,6 +70,10 @@ export function WalletPanel() {
   const [checkoutError, setCheckoutError] = useState<string>();
   const [checkoutPackage, setCheckoutPackage] = useState<string>();
   const [checkoutNotice, setCheckoutNotice] = useState<string>();
+  const [reward, setReward] = useState<{
+    balance: number;
+    points: number;
+  }>();
 
   const loadWallet = useCallback(async () => {
     if (!authenticated) return;
@@ -173,7 +177,12 @@ export function WalletPanel() {
       if (!response.ok) {
         throw new Error('Payment verification failed');
       }
-      setCheckoutNotice('Payment confirmed. Your points have been credited.');
+      const confirmation = (await response.json()) as {
+        balance: number;
+        points: number;
+      };
+      setReward(confirmation);
+      setCheckoutNotice(undefined);
       await loadWallet();
     } catch {
       setCheckoutError(
@@ -221,6 +230,37 @@ export function WalletPanel() {
 
   return (
     <div className="wallet-layout">
+      {reward ? (
+        <div
+          aria-labelledby="reward-title"
+          aria-modal="true"
+          className="reward-overlay"
+          onKeyDown={(event) => {
+            if (event.key === 'Escape') setReward(undefined);
+          }}
+          role="dialog"
+        >
+          <div className="reward-dialog">
+            <div aria-hidden="true" className="reward-glow" />
+            <p className="eyebrow">Top-up complete</p>
+            <div aria-hidden="true" className="reward-token">
+              N
+            </div>
+            <h2 id="reward-title">Points acquired</h2>
+            <strong className="reward-amount">+{reward.points}</strong>
+            <p>
+              Your new balance is <strong>{reward.balance} points</strong>.
+            </p>
+            <button
+              autoFocus
+              onClick={() => setReward(undefined)}
+              type="button"
+            >
+              Continue
+            </button>
+          </div>
+        </div>
+      ) : null}
       {checkoutNotice ? (
         <p className="checkout-notice" role="status">
           {checkoutNotice}

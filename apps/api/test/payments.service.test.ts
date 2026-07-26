@@ -79,6 +79,10 @@ describe('PaymentsService Razorpay webhook verification', () => {
       status: 'pending',
     };
     const applyChange = vi.fn().mockResolvedValue({});
+    const getWallet = vi.fn().mockResolvedValue({
+      balance: 250,
+      transactions: [],
+    });
     const signature = createHmac('sha256', 'key-test-secret')
       .update('order_test_123|pay_test_123')
       .digest('hex');
@@ -102,7 +106,7 @@ describe('PaymentsService Razorpay webhook verification', () => {
       paymentModel: {
         findOne: vi.fn().mockResolvedValue(payment),
       },
-      walletService: { applyChange },
+      walletService: { applyChange, getWallet },
     });
 
     await expect(
@@ -111,7 +115,7 @@ describe('PaymentsService Razorpay webhook verification', () => {
         paymentId: 'pay_test_123',
         signature,
       }),
-    ).resolves.toEqual({ credited: true });
+    ).resolves.toEqual({ balance: 250, credited: true, points: 100 });
     expect(applyChange).toHaveBeenCalledWith(
       expect.objectContaining({
         idempotencyKey: 'razorpay:order_test_123',
@@ -121,5 +125,6 @@ describe('PaymentsService Razorpay webhook verification', () => {
     );
     expect(payment.status).toBe('succeeded');
     expect(save).toHaveBeenCalled();
+    expect(getWallet).toHaveBeenCalledWith('507f1f77bcf86cd799439011');
   });
 });
