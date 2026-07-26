@@ -39,12 +39,13 @@ Last updated: 2026-07-26
 | Product    | Shared library data and detailed download experience                            | `feat/library-experience`        | `9bf19a7`         | Complete        |
 | Product    | Private feedback context, validation, and confirmation                          | `feat/feedback-polish`           | `8ef5701`         | Complete        |
 | Product    | Clear account sections, action feedback, and deletion safeguards                | `feat/account-experience`        | `31d082a`         | Complete        |
+| Product    | Visual system, catalog clarity, and responsive layouts                          | `feat/visual-responsive-polish`  | `121107e`         | Complete        |
 
 ## Ready for review
 
-| Phase   | Deliverable                                            | Branch                          | Status           |
-| ------- | ------------------------------------------------------ | ------------------------------- | ---------------- |
-| Product | Visual system, catalog clarity, and responsive layouts | `feat/visual-responsive-polish` | Ready for review |
+| Phase   | Deliverable                                                   | Branch                      | Status           |
+| ------- | ------------------------------------------------------------- | --------------------------- | ---------------- |
+| Product | Accessibility semantics, keyboard focus, and automated checks | `fix/accessibility-quality` | Ready for review |
 
 ## Paused decisions and blockers
 
@@ -67,8 +68,8 @@ Stripe code is already merged, but real payment activation is paused.
 
 | Priority | Phase   | Work                                                       | Suggested branch           | Status                                |
 | -------- | ------- | ---------------------------------------------------------- | -------------------------- | ------------------------------------- |
-| 1        | Product | Customer journey and visual/responsive polish              | Focused feature branches   | Ready for review                      |
-| 2        | Product | Accessibility and automated browser quality                | Focused fix/chore branches | Not started                           |
+| 1        | Product | Customer journey and visual/responsive polish              | Focused feature branches   | Complete                              |
+| 2        | Product | Accessibility and automated browser quality                | Focused fix/chore branches | Ready for review                      |
 | 4        | 6       | Configure monitoring, backups, and restoration rehearsal   | Focused chore branches     | Not started                           |
 | 5        | 6       | Legal, tax, privacy, refunds, and acceptable-use review    | External review            | Not started                           |
 | Last     | 6       | Select host, deploy staging, then configure domain/DNS/TLS | Host-specific chore branch | Deferred until product polish         |
@@ -95,8 +96,8 @@ Stripe code is already merged, but real payment activation is paused.
 2. Confirm `development` contains the merge commits listed above.
 3. Do not resume production payment activation without a compliant provider
    decision.
-4. Merge `feat/visual-responsive-polish`; then continue with accessibility and
-   automated browser quality.
+4. Merge `fix/accessibility-quality`; then review the product locally across
+   customer journeys before beginning launch infrastructure.
 5. Per product-owner direction, hosting, domain, DNS, and deployment remain last
    until the customer experience is working and visually approved.
 6. Update this file in every feature branch when its status, scope, blocker, or
