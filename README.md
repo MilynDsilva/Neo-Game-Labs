@@ -3,6 +3,50 @@
 Customer-facing game catalog, points wallet, purchase library, and feedback
 platform for `neogamelabs.com`.
 
+## Product preview
+
+Discover original games through a cinematic storefront designed for players.
+
+<p align="center">
+  <img
+    src="docs/product-images/home-top.png"
+    alt="Neo Game Labs storefront featuring the Neon Drift game"
+    width="100%"
+  />
+</p>
+
+<p align="center">
+  <img
+    src="docs/product-images/home-bottom.png"
+    alt="Neo Game Labs catalog call to action"
+    width="100%"
+  />
+</p>
+
+Players can manage their points wallet and send private, game-specific feedback
+from the same account experience.
+
+<table>
+  <tr>
+    <td width="50%">
+      <img
+        src="docs/product-images/wallet.png"
+        alt="Neo Game Labs points wallet and top-up packages"
+      />
+    </td>
+    <td width="50%">
+      <img
+        src="docs/product-images/feedback.png"
+        alt="Neo Game Labs private player feedback form"
+      />
+    </td>
+  </tr>
+  <tr>
+    <td align="center"><strong>Points wallet</strong></td>
+    <td align="center"><strong>Player feedback</strong></td>
+  </tr>
+</table>
+
 ## Applications
 
 - `apps/web`: Next.js customer website
