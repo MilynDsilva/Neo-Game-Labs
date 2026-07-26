@@ -5,6 +5,7 @@ import {
   downloadListResponseSchema,
   feedbackSubmissionResponseSchema,
   gameCommentSchema,
+  gameCommentsResponseSchema,
   topUpPackagesResponseSchema,
   gameDetailSchema,
   gamePlatformDetailsSchema,
@@ -32,6 +33,18 @@ describe('gameCommentSchema', () => {
         createdAt: '2026-07-26T10:00:00.000Z',
         id: 'comment-id',
         message: 'A thoughtful game comment.',
+      }).success,
+    ).toBe(true);
+  });
+
+  it('accepts ten-item pagination metadata', () => {
+    expect(
+      gameCommentsResponseSchema.safeParse({
+        comments: [],
+        page: 1,
+        pageSize: 10,
+        total: 0,
+        totalPages: 0,
       }).success,
     ).toBe(true);
   });

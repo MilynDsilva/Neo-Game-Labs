@@ -36,7 +36,15 @@ describe('GameComments', () => {
     authenticated = false;
     vi.stubGlobal(
       'fetch',
-      vi.fn().mockResolvedValue(jsonResponse({ comments: [existingComment] })),
+      vi.fn().mockResolvedValue(
+        jsonResponse({
+          comments: [existingComment],
+          page: 1,
+          pageSize: 10,
+          total: 1,
+          totalPages: 1,
+        }),
+      ),
     );
 
     render(<GameComments gameSlug="orbit-breaker" />);
@@ -59,7 +67,15 @@ describe('GameComments', () => {
     };
     const fetchMock = vi
       .fn()
-      .mockResolvedValueOnce(jsonResponse({ comments: [existingComment] }))
+      .mockResolvedValueOnce(
+        jsonResponse({
+          comments: [existingComment],
+          page: 1,
+          pageSize: 10,
+          total: 1,
+          totalPages: 1,
+        }),
+      )
       .mockResolvedValueOnce(jsonResponse(postedComment));
     vi.stubGlobal('fetch', fetchMock);
 
@@ -79,6 +95,49 @@ describe('GameComments', () => {
     expect(fetchMock).toHaveBeenLastCalledWith(
       'http://localhost:4000/v1/games/orbit-breaker/comments',
       expect.objectContaining({ method: 'POST' }),
+    );
+  });
+
+  it('loads comments in newest-first pages of ten', async () => {
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce(
+        jsonResponse({
+          comments: [existingComment],
+          page: 1,
+          pageSize: 10,
+          total: 11,
+          totalPages: 2,
+        }),
+      )
+      .mockResolvedValueOnce(
+        jsonResponse({
+          comments: [
+            {
+              ...existingComment,
+              id: 'older-comment',
+              message: 'An older comment on page two.',
+            },
+          ],
+          page: 2,
+          pageSize: 10,
+          total: 11,
+          totalPages: 2,
+        }),
+      );
+    vi.stubGlobal('fetch', fetchMock);
+
+    render(<GameComments gameSlug="orbit-breaker" />);
+
+    expect(await screen.findByText('Page 1 of 2')).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: 'Next' }));
+
+    expect(
+      await screen.findByText('An older comment on page two.'),
+    ).toBeInTheDocument();
+    expect(screen.getByText('Page 2 of 2')).toBeInTheDocument();
+    expect(fetchMock).toHaveBeenLastCalledWith(
+      'http://localhost:4000/v1/games/orbit-breaker/comments?page=2',
     );
   });
 });

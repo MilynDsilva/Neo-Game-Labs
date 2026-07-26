@@ -16,6 +16,9 @@ const maximumLength = 500;
 export function GameComments({ gameSlug }: Readonly<{ gameSlug: string }>) {
   const { authenticated, loading: authLoading } = useAuth();
   const [comments, setComments] = useState<GameComment[]>([]);
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState<string>();
@@ -23,17 +26,18 @@ export function GameComments({ gameSlug }: Readonly<{ gameSlug: string }>) {
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
-  async function loadComments() {
+  async function loadComments(targetPage: number) {
     setLoadError(undefined);
     setLoading(true);
     try {
       const response = await fetch(
-        `${apiUrl}/v1/games/${encodeURIComponent(gameSlug)}/comments`,
+        `${apiUrl}/v1/games/${encodeURIComponent(gameSlug)}/comments?page=${targetPage}`,
       );
       if (!response.ok) throw new Error('Comment request failed');
-      setComments(
-        gameCommentsResponseSchema.parse(await response.json()).comments,
-      );
+      const result = gameCommentsResponseSchema.parse(await response.json());
+      setComments(result.comments);
+      setTotal(result.total);
+      setTotalPages(result.totalPages);
     } catch {
       setLoadError('Comments could not be loaded.');
     } finally {
@@ -42,8 +46,8 @@ export function GameComments({ gameSlug }: Readonly<{ gameSlug: string }>) {
   }
 
   useEffect(() => {
-    void loadComments();
-  }, [gameSlug]);
+    void loadComments(page);
+  }, [gameSlug, page]);
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -78,7 +82,16 @@ export function GameComments({ gameSlug }: Readonly<{ gameSlug: string }>) {
       if (!response.ok) throw new Error('Comment submission failed');
 
       const comment = gameCommentSchema.parse(await response.json());
-      setComments((current) => [comment, ...current]);
+      if (page === 1) {
+        setComments((current) => [comment, ...current].slice(0, 10));
+      } else {
+        setPage(1);
+      }
+      setTotal((current) => {
+        const nextTotal = current + 1;
+        setTotalPages(Math.ceil(nextTotal / 10));
+        return nextTotal;
+      });
       setMessage('');
       setSubmitted(true);
     } catch {
@@ -97,7 +110,7 @@ export function GameComments({ gameSlug }: Readonly<{ gameSlug: string }>) {
         </div>
         {!loading && !loadError ? (
           <span>
-            {comments.length} {comments.length === 1 ? 'comment' : 'comments'}
+            {total} {total === 1 ? 'comment' : 'comments'}
           </span>
         ) : null}
       </div>
@@ -155,7 +168,7 @@ export function GameComments({ gameSlug }: Readonly<{ gameSlug: string }>) {
       {loadError ? (
         <div className="inline-error" role="alert">
           <p>{loadError}</p>
-          <button onClick={() => void loadComments()} type="button">
+          <button onClick={() => void loadComments(page)} type="button">
             Try again
           </button>
         </div>
@@ -164,31 +177,55 @@ export function GameComments({ gameSlug }: Readonly<{ gameSlug: string }>) {
         <p className="empty-state">No comments yet. Start the discussion.</p>
       ) : null}
       {comments.length > 0 ? (
-        <ol className="comment-list">
-          {comments.map((comment) => (
-            <li key={comment.id}>
-              <div className="comment-author">
-                {comment.author.pictureUrl ? (
-                  <img alt="" src={comment.author.pictureUrl} />
-                ) : (
-                  <span aria-hidden="true">
-                    {comment.author.displayName.charAt(0).toUpperCase()}
-                  </span>
-                )}
-                <div>
-                  <strong>{comment.author.displayName}</strong>
-                  <time dateTime={comment.createdAt}>
-                    {new Intl.DateTimeFormat('en', {
-                      dateStyle: 'medium',
-                      timeStyle: 'short',
-                    }).format(new Date(comment.createdAt))}
-                  </time>
+        <div className="comment-group">
+          <h3>Recent comments</h3>
+          <ol className="comment-list" start={(page - 1) * 10 + 1}>
+            {comments.map((comment) => (
+              <li key={comment.id}>
+                <div className="comment-author">
+                  {comment.author.pictureUrl ? (
+                    <img alt="" src={comment.author.pictureUrl} />
+                  ) : (
+                    <span aria-hidden="true">
+                      {comment.author.displayName.charAt(0).toUpperCase()}
+                    </span>
+                  )}
+                  <div>
+                    <strong>{comment.author.displayName}</strong>
+                    <time dateTime={comment.createdAt}>
+                      {new Intl.DateTimeFormat('en', {
+                        dateStyle: 'medium',
+                        timeStyle: 'short',
+                      }).format(new Date(comment.createdAt))}
+                    </time>
+                  </div>
                 </div>
-              </div>
-              <p>{comment.message}</p>
-            </li>
-          ))}
-        </ol>
+                <p>{comment.message}</p>
+              </li>
+            ))}
+          </ol>
+          {totalPages > 1 ? (
+            <nav aria-label="Comment pages" className="comment-pagination">
+              <button
+                disabled={page === 1 || loading}
+                onClick={() => setPage((current) => current - 1)}
+                type="button"
+              >
+                Previous
+              </button>
+              <span aria-live="polite">
+                Page {page} of {totalPages}
+              </span>
+              <button
+                disabled={page === totalPages || loading}
+                onClick={() => setPage((current) => current + 1)}
+                type="button"
+              >
+                Next
+              </button>
+            </nav>
+          ) : null}
+        </div>
       ) : null}
     </section>
   );

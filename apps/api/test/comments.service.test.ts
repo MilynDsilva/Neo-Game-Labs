@@ -72,4 +72,45 @@ describe('CommentsService', () => {
     });
     expect(result).not.toHaveProperty('email');
   });
+
+  it('returns no more than ten recent comments per page', async () => {
+    const gameId = new Types.ObjectId();
+    const skip = vi.fn().mockReturnThis();
+    const limit = vi.fn().mockReturnThis();
+    const exec = vi.fn().mockResolvedValue([]);
+    const gameModel = {
+      findOne: vi.fn().mockReturnValue({
+        select: vi.fn().mockReturnValue({
+          lean: vi.fn().mockReturnValue(leanQuery({ _id: gameId })),
+        }),
+      }),
+    };
+    const commentModel = {
+      countDocuments: vi.fn().mockReturnValue(leanQuery(24)),
+      find: vi.fn().mockReturnValue({
+        exec,
+        lean: vi.fn().mockReturnValue({ exec }),
+        limit,
+        skip,
+        sort: vi.fn().mockReturnThis(),
+      }),
+    };
+    const service = new CommentsService(
+      commentModel as unknown as Model<GameCommentDocument>,
+      gameModel as unknown as Model<GameDocument>,
+      {} as Model<CustomerDocument>,
+    );
+
+    const result = await service.findForGame('orbit-breaker', 2);
+
+    expect(skip).toHaveBeenCalledWith(10);
+    expect(limit).toHaveBeenCalledWith(10);
+    expect(result).toEqual({
+      comments: [],
+      page: 2,
+      pageSize: 10,
+      total: 24,
+      totalPages: 3,
+    });
+  });
 });

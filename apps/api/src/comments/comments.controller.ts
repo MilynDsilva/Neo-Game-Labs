@@ -6,6 +6,7 @@ import {
   Inject,
   Param,
   Post,
+  Query,
   Req,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -21,6 +22,7 @@ const slugSchema = z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/);
 const commentRequestSchema = z.object({
   message: z.string().trim().min(3).max(500),
 });
+const pageSchema = z.coerce.number().int().positive().max(10_000).default(1);
 
 @Controller('games/:slug/comments')
 export class CommentsController {
@@ -32,10 +34,13 @@ export class CommentsController {
   ) {}
 
   @Get()
-  findAll(@Param('slug') slug: string) {
+  findAll(@Param('slug') slug: string, @Query('page') page: unknown) {
     const parsedSlug = slugSchema.safeParse(slug);
-    if (!parsedSlug.success) throw new BadRequestException('Invalid game slug');
-    return this.commentsService.findForGame(parsedSlug.data);
+    const parsedPage = pageSchema.safeParse(page);
+    if (!parsedSlug.success || !parsedPage.success) {
+      throw new BadRequestException('Invalid comment query');
+    }
+    return this.commentsService.findForGame(parsedSlug.data, parsedPage.data);
   }
 
   @Post()

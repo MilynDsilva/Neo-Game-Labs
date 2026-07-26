@@ -158,6 +158,10 @@ export const gameCommentSchema = z.object({
 
 export const gameCommentsResponseSchema = z.object({
   comments: z.array(gameCommentSchema),
+  page: z.number().int().positive(),
+  pageSize: z.literal(10),
+  total: z.number().int().nonnegative(),
+  totalPages: z.number().int().nonnegative(),
 });
 
 export type GameCatalogResponse = z.infer<typeof gameCatalogResponseSchema>;
