@@ -10,6 +10,7 @@ export function SiteHeader() {
       <nav aria-label="Main navigation">
         <Link href="/games">Games</Link>
         <Link href="/support">Support</Link>
+        <Link href="/feedback">Feedback</Link>
         <Link href="/wallet">Wallet</Link>
         <Link href="/library">Library</Link>
         <Link href="/account">Sign in</Link>

@@ -28,6 +28,17 @@ rating and written feedback.
 If public reviews are later required, add moderation states, reporting, spoiler
 handling, edit history, and appeal rules before publishing customer content.
 
+## Customer-dashboard implementation boundary
+
+- This repository accepts private, authenticated submissions and stores
+  moderation status plus non-customer-visible internal notes.
+- Feedback expires automatically after 730 days. Account-deletion processing
+  must remove or irreversibly anonymize associated feedback sooner.
+- Moderation endpoints, staff authorization, audit actions, and support-channel
+  notifications belong to the separate admin-dashboard repository. They must
+  never be exposed through customer session authorization.
+- No attachments are accepted. Public reviews remain out of scope.
+
 ## Exit criteria
 
 - Feedback cannot expose another customer's identity or purchases.
