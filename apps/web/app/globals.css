@@ -507,6 +507,18 @@ h2 {
   top: 1rem;
 }
 
+.owned-label {
+  background: #d8fff2;
+  border-radius: 999px;
+  bottom: 1rem;
+  color: #07392b;
+  font-size: 0.7rem;
+  font-weight: 800;
+  padding: 0.45rem 0.65rem;
+  position: absolute;
+  right: 1rem;
+}
+
 .game-card-body {
   display: flex;
   flex-direction: column;
@@ -695,6 +707,25 @@ h2 {
 .purchase-action button:disabled {
   cursor: wait;
   opacity: 0.65;
+}
+
+.purchase-owned {
+  align-items: flex-end;
+  display: grid;
+  gap: 0.3rem;
+  justify-items: end;
+}
+
+.purchase-owned span,
+.purchase-status {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.purchase-owned a {
+  color: var(--accent-bright);
+  font-size: 0.9rem;
+  font-weight: 700;
 }
 
 .library-layout {
