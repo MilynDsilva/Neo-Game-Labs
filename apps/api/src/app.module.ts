@@ -5,6 +5,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 
 import { CatalogModule } from './catalog/catalog.module.js';
+import { CommentsModule } from './comments/comments.module.js';
 import { AuthModule } from './auth/auth.module.js';
 import { validateEnvironment } from './config/environment.js';
 import { HealthController } from './health/health.controller.js';
@@ -31,6 +32,7 @@ import { WalletModule } from './wallet/wallet.module.js';
     }),
     AuthModule,
     CatalogModule,
+    CommentsModule,
     DownloadsModule,
     FeedbackModule,
     PaymentsModule,

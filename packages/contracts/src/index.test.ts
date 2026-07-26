@@ -4,6 +4,7 @@ import {
   downloadGrantResponseSchema,
   downloadListResponseSchema,
   feedbackSubmissionResponseSchema,
+  gameCommentSchema,
   topUpPackagesResponseSchema,
   gameDetailSchema,
   gamePlatformDetailsSchema,
@@ -18,6 +19,19 @@ describe('feedbackSubmissionResponseSchema', () => {
         createdAt: new Date().toISOString(),
         reference: 'NGL-A1B2C3D4E5F6',
         status: 'new',
+      }).success,
+    ).toBe(true);
+  });
+});
+
+describe('gameCommentSchema', () => {
+  it('accepts a safe public comment shape', () => {
+    expect(
+      gameCommentSchema.safeParse({
+        author: { displayName: 'Nova Player' },
+        createdAt: '2026-07-26T10:00:00.000Z',
+        id: 'comment-id',
+        message: 'A thoughtful game comment.',
       }).success,
     ).toBe(true);
   });

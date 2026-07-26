@@ -146,6 +146,20 @@ export const feedbackSubmissionResponseSchema = z.object({
   status: z.enum(['new', 'triaged', 'in-progress', 'resolved', 'closed']),
 });
 
+export const gameCommentSchema = z.object({
+  author: z.object({
+    displayName: z.string().trim().min(1).max(100),
+    pictureUrl: z.url().optional(),
+  }),
+  createdAt: z.iso.datetime(),
+  id: z.string().min(1),
+  message: z.string().trim().min(3).max(500),
+});
+
+export const gameCommentsResponseSchema = z.object({
+  comments: z.array(gameCommentSchema),
+});
+
 export type GameCatalogResponse = z.infer<typeof gameCatalogResponseSchema>;
 export type GameDetail = z.infer<typeof gameDetailSchema>;
 export type GamePlatform = z.infer<typeof gamePlatformSchema>;
@@ -161,3 +175,5 @@ export type DownloadGrantResponse = z.infer<typeof downloadGrantResponseSchema>;
 export type FeedbackSubmissionResponse = z.infer<
   typeof feedbackSubmissionResponseSchema
 >;
+export type GameComment = z.infer<typeof gameCommentSchema>;
+export type GameCommentsResponse = z.infer<typeof gameCommentsResponseSchema>;
