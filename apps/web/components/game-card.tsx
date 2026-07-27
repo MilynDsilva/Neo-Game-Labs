@@ -57,6 +57,13 @@ export function GameCard({ game }: Readonly<{ game: GameSummary }>) {
                 ? 'Free'
                 : `${game.pointPrice} pts`}
           </strong>
+          <Link
+            aria-label={`Explore ${game.title}`}
+            className="game-card-action"
+            href={`/games/${game.slug}`}
+          >
+            Explore <span aria-hidden="true">→</span>
+          </Link>
         </div>
       </div>
     </article>

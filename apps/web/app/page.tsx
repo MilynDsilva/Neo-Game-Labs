@@ -70,27 +70,55 @@ export default async function Home() {
           </dl>
         </div>
         {spotlight ? (
-          <Link
-            aria-label={`Discover ${spotlight.title}`}
-            className="hero-spotlight"
-            href={`/games/${spotlight.slug}`}
-          >
-            <img alt="" src={spotlight.coverImageUrl} />
-            <span className="hero-spotlight-shade" />
-            <span className="spotlight-index">Featured / 01</span>
-            <span className="spotlight-content">
-              <span>
-                {spotlight.platforms
-                  .map((platform) => platformLabels[platform.kind])
-                  .join(' · ')}
+          <div className="showcase-stage">
+            <Link
+              aria-label={`Discover ${spotlight.title}`}
+              className="hero-spotlight"
+              href={`/games/${spotlight.slug}`}
+            >
+              <img alt="" src={spotlight.coverImageUrl} />
+              <span className="hero-spotlight-shade" />
+              <span className="spotlight-index">Popular now</span>
+              <span className="spotlight-content">
+                <span>
+                  {spotlight.platforms
+                    .map((platform) => platformLabels[platform.kind])
+                    .join(' · ')}
+                </span>
+                <strong>{spotlight.title}</strong>
+                <small>{spotlight.tagline}</small>
               </span>
-              <strong>{spotlight.title}</strong>
-              <small>{spotlight.tagline}</small>
-            </span>
-            <span className="spotlight-arrow" aria-hidden="true">
-              ↗
-            </span>
-          </Link>
+              <span className="spotlight-arrow" aria-hidden="true">
+                ↗
+              </span>
+            </Link>
+            <aside
+              className="spotlight-panel"
+              aria-label="Featured game details"
+            >
+              <div>
+                <p className="eyebrow">Featured release</p>
+                <h2>{spotlight.title}</h2>
+                <p>{spotlight.tagline}</p>
+              </div>
+              <ul aria-label="Available platforms">
+                {spotlight.platforms.map((platform) => (
+                  <li key={platform.kind}>{platformLabels[platform.kind]}</li>
+                ))}
+              </ul>
+              <div className="spotlight-purchase">
+                <span>
+                  <small>Access</small>
+                  <strong>
+                    {spotlight.pointPrice === 0
+                      ? 'Free'
+                      : `${spotlight.pointPrice} pts`}
+                  </strong>
+                </span>
+                <Link href={`/games/${spotlight.slug}`}>View game →</Link>
+              </div>
+            </aside>
+          </div>
         ) : (
           <div aria-hidden="true" className="hero-spotlight hero-abstract">
             <span className="hero-planet" />

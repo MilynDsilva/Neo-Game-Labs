@@ -50,6 +50,7 @@ Last updated: 2026-07-26
 | ------- | --------------------------------------------------------------- | ------------------------ | ---------------- |
 | Product | Premium homepage showcase and discovery experience              | `feat/homepage-showcase` | Ready for review |
 | 4       | Razorpay checkout, verification, webhooks, and ledger crediting | `feat/razorpay-topups`   | Ready for review |
+| Product | Reference-led storefront layout and visual-system refresh       | `feat/storefront-revamp` | Ready for review |
 
 ## Paused decisions and blockers
 
