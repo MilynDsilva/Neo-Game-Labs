@@ -2804,6 +2804,135 @@ body {
     border-left-color: #c4b5fd;
     color: white;
   }
+
+  .site-header {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
+/* Consistent dashboard typography and inner pages */
+
+:root {
+  --font-display:
+    'Avenir Next', Avenir, 'Segoe UI', ui-sans-serif, system-ui, sans-serif;
+}
+
+.content-page {
+  max-width: 92rem;
+  padding: clamp(1.25rem, 3vw, 3rem);
+}
+
+.content-page-header {
+  background:
+    radial-gradient(
+      circle at 90% 10%,
+      rgb(108 92 231 / 16%),
+      transparent 24rem
+    ),
+    var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 1.75rem;
+  margin-bottom: 1rem;
+  max-width: none;
+  padding: clamp(2rem, 5vw, 4.5rem);
+}
+
+.content-page-header h1,
+.status-page h1,
+.page-heading h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2.75rem, 5vw, 5rem);
+  font-weight: 850;
+  letter-spacing: -0.065em;
+  line-height: 0.98;
+  max-width: 17ch;
+}
+
+.content-page-header > p:last-child,
+.status-page > p:not(.eyebrow) {
+  font-size: 1rem;
+  line-height: 1.65;
+  max-width: 48rem;
+}
+
+.content-sections {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.content-sections section {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 1.35rem;
+  padding: clamp(1.35rem, 3vw, 2rem);
+}
+
+.content-sections section + section {
+  border-top: 1px solid var(--line);
+  padding-top: clamp(1.35rem, 3vw, 2rem);
+}
+
+.content-sections h2 {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+}
+
+.content-sections p {
+  font-size: 0.9rem;
+  line-height: 1.7;
+}
+
+.page-heading,
+.library-layout,
+.feedback-layout,
+.account-layout,
+.wallet-layout,
+.status-page {
+  max-width: 92rem;
+}
+
+.page-heading {
+  padding-bottom: 2rem;
+  padding-top: 3rem;
+}
+
+html[data-theme='light'] .content-page-header {
+  background:
+    radial-gradient(circle at 90% 10%, rgb(108 92 231 / 9%), transparent 24rem),
+    white;
+}
+
+html[data-theme='light'] .content-sections section {
+  background: rgb(255 255 255 / 82%);
+  box-shadow: 0 0.8rem 2rem rgb(55 67 112 / 7%);
+}
+
+@media (max-width: 960px) {
+  .content-sections {
+    grid-template-columns: 1fr;
+  }
+
+  .content-page-header h1,
+  .status-page h1,
+  .page-heading h1 {
+    font-size: clamp(2.5rem, 9vw, 4.5rem);
+  }
+}
+
+@media (max-width: 600px) {
+  .content-page {
+    padding: 0.75rem;
+  }
+
+  .content-page-header {
+    border-radius: 1.35rem;
+    padding: 2rem 1.25rem;
+  }
 }
 
 /* Dashboard shell and color themes */
@@ -3589,4 +3718,14 @@ body {
     border-left-color: #c4b5fd;
     color: white;
   }
+
+  .site-header {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
+:root {
+  --font-display:
+    'Avenir Next', Avenir, 'Segoe UI', ui-sans-serif, system-ui, sans-serif;
 }

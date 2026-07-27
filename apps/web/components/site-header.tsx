@@ -166,9 +166,7 @@ export function SiteHeader() {
         </div>
       </div>
       <div className="utility-copy">
-        <p>
-          Good day, {customer?.displayName.split(/\s+/)[0] ?? 'Player'}!
-        </p>
+        <p>Good day, {customer?.displayName.split(/\s+/)[0] ?? 'Player'}!</p>
         <span>Discover your next world</span>
       </div>
       <div className="header-customer">
