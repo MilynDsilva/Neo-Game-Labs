@@ -7,9 +7,12 @@ import { useEffect, useRef, useState } from 'react';
 import { useAuth } from './auth-provider';
 
 const primaryLinks = [
-  { href: '/games', label: 'Games' },
-  { href: '/support', label: 'Support' },
-  { href: '/feedback', label: 'Feedback' },
+  { href: '/', icon: '⌂', label: 'Home' },
+  { href: '/games', icon: '◇', label: 'Store' },
+  { href: '/library', icon: '▤', label: 'Library' },
+  { href: '/wallet', icon: '▣', label: 'Wallet' },
+  { href: '/feedback', icon: '✦', label: 'Feedback' },
+  { href: '/support', icon: '?', label: 'Support' },
 ];
 
 const customerLinks = [
@@ -26,6 +29,7 @@ export function SiteHeader() {
   const [accountOpen, setAccountOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [signingOut, setSigningOut] = useState(false);
+  const [theme, setTheme] = useState<'dark' | 'light'>('dark');
   const accountContainer = useRef<HTMLDivElement>(null);
   const accountTrigger = useRef<HTMLButtonElement>(null);
   const mobileNavigation = useRef<HTMLElement>(null);
@@ -35,6 +39,12 @@ export function SiteHeader() {
     setAccountOpen(false);
     setMobileOpen(false);
   }, [pathname]);
+
+  useEffect(() => {
+    setTheme(
+      document.documentElement.dataset.theme === 'light' ? 'light' : 'dark',
+    );
+  }, []);
 
   useEffect(() => {
     document.body.style.overflow = mobileOpen ? 'hidden' : '';
@@ -96,6 +106,14 @@ export function SiteHeader() {
     setSigningOut(false);
   }
 
+  function toggleTheme() {
+    const nextTheme = theme === 'dark' ? 'light' : 'dark';
+    document.documentElement.dataset.theme = nextTheme;
+    document.documentElement.style.colorScheme = nextTheme;
+    localStorage.setItem('neo-theme', nextTheme);
+    setTheme(nextTheme);
+  }
+
   const initials =
     customer?.displayName
       .split(/\s+/)
@@ -106,21 +124,53 @@ export function SiteHeader() {
 
   return (
     <header className="site-header">
-      <Link className="brand" href="/">
-        <span className="brand-mark">N</span>
-        <span>Neo Game Labs</span>
-      </Link>
-      <nav aria-label="Main navigation" className="desktop-navigation">
-        {primaryLinks.map((link) => (
-          <Link
-            aria-current={pathname.startsWith(link.href) ? 'page' : undefined}
-            href={link.href}
-            key={link.href}
+      <div className="sidebar-navigation">
+        <Link className="brand" href="/">
+          <span className="brand-mark">N</span>
+          <span>
+            <strong>Neo</strong> Game Labs
+          </span>
+        </Link>
+        <nav aria-label="Main navigation" className="desktop-navigation">
+          {primaryLinks.map((link) => (
+            <Link
+              aria-current={
+                link.href === '/'
+                  ? pathname === '/'
+                    ? 'page'
+                    : undefined
+                  : pathname.startsWith(link.href)
+                    ? 'page'
+                    : undefined
+              }
+              href={link.href}
+              key={link.href}
+            >
+              <span aria-hidden="true">{link.icon}</span>
+              {link.label}
+            </Link>
+          ))}
+        </nav>
+        <div className="sidebar-theme">
+          <span>{theme === 'dark' ? 'Dark mode' : 'Light mode'}</span>
+          <button
+            aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}
+            aria-pressed={theme === 'light'}
+            className="theme-toggle"
+            onClick={toggleTheme}
+            type="button"
           >
-            {link.label}
-          </Link>
-        ))}
-      </nav>
+            <span aria-hidden="true">☀</span>
+            <span aria-hidden="true">☾</span>
+          </button>
+        </div>
+      </div>
+      <div className="utility-copy">
+        <p>
+          Good day, {customer?.displayName.split(/\s+/)[0] ?? 'Player'}!
+        </p>
+        <span>Discover your next world</span>
+      </div>
       <div className="header-customer">
         {loading ? (
           <span

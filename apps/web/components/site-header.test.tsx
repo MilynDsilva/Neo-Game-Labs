@@ -32,6 +32,8 @@ vi.mock('./auth-provider', () => ({
 
 beforeEach(() => {
   authenticated = true;
+  document.documentElement.dataset.theme = 'dark';
+  localStorage.clear();
   push.mockReset();
   refresh.mockReset();
   signOut.mockReset();
@@ -65,10 +67,24 @@ describe('SiteHeader', () => {
     expect(
       screen.getByRole('navigation', { name: 'Mobile navigation' }),
     ).toBeInTheDocument();
-    expect(screen.getAllByRole('link', { name: 'Games' })[1]).toHaveFocus();
+    expect(screen.getAllByRole('link', { name: 'Home' })[1]).toHaveFocus();
     fireEvent.keyDown(document, { key: 'Escape' });
     expect(
       screen.getByRole('button', { name: 'Open navigation' }),
     ).toHaveFocus();
+  });
+
+  it('persists the selected color theme', () => {
+    render(<SiteHeader />);
+
+    fireEvent.click(
+      screen.getByRole('button', { name: 'Switch to light theme' }),
+    );
+
+    expect(document.documentElement.dataset.theme).toBe('light');
+    expect(localStorage.getItem('neo-theme')).toBe('light');
+    expect(
+      screen.getByRole('button', { name: 'Switch to dark theme' }),
+    ).toBeInTheDocument();
   });
 });
