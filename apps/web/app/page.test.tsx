@@ -12,13 +12,11 @@ describe('Home', () => {
     render(await Home());
 
     expect(
-      screen.getByRole('heading', { name: 'Games worth getting lost in.' }),
+      screen.getByRole('heading', { name: 'Discover games' }),
     ).toBeInTheDocument();
+    expect(screen.getAllByRole('link', { name: 'See all →' })).toHaveLength(2);
     expect(
-      screen.getByRole('link', { name: 'Explore the catalog' }),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole('heading', { name: 'Ready when you are.' }),
+      screen.getByRole('heading', { name: 'Popular Games' }),
     ).toBeInTheDocument();
   });
 });

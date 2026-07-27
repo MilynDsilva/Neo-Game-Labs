@@ -30,78 +30,70 @@ export default async function Home() {
   }
 
   const spotlight = featuredGames[0] ?? latestGames[0];
+  const popularGames =
+    featuredGames.length > 0
+      ? featuredGames.slice(0, 2)
+      : latestGames.slice(0, 2);
 
   return (
     <main className="home-page">
-      <section className="home-hero home-showcase">
-        <div className="hero-copy">
-          <p className="eyebrow">Independent games · Built with intent</p>
-          <h1>
-            Games worth
-            <span> getting lost in.</span>
-          </h1>
-          <p className="hero-description">
-            Strange worlds, sharp mechanics, and stories that stay with you.
-            Discover original games from Neo Game Labs on desktop, mobile, and
-            the web.
-          </p>
-          <div className="hero-actions">
-            <Link className="primary-action" href="/games">
-              Explore the catalog
-              <span aria-hidden="true">↗</span>
-            </Link>
-            <Link className="secondary-action" href="/about">
-              Inside the lab
-            </Link>
+      {!catalogAvailable ? (
+        <p className="notice">
+          The catalog service is unavailable. Start the API and seed the catalog
+          to preview games.
+        </p>
+      ) : null}
+      <section className="store-dashboard" aria-label="Game store">
+        <div className="store-main">
+          <div className="store-section-heading">
+            <div>
+              <p className="eyebrow">Store</p>
+              <h1>Discover games</h1>
+            </div>
+            <Link href="/games">See all →</Link>
           </div>
-          <dl className="hero-facts">
-            <div>
-              <dt>Original worlds</dt>
-              <dd>Made independently</dd>
-            </div>
-            <div>
-              <dt>Cross-platform</dt>
-              <dd>Desktop & mobile</dd>
-            </div>
-            <div>
-              <dt>Player-led</dt>
-              <dd>Your feedback matters</dd>
-            </div>
-          </dl>
-        </div>
-        {spotlight ? (
-          <div className="showcase-stage">
+          {spotlight ? (
             <Link
               aria-label={`Discover ${spotlight.title}`}
-              className="hero-spotlight"
+              className="store-feature"
               href={`/games/${spotlight.slug}`}
             >
               <img alt="" src={spotlight.coverImageUrl} />
-              <span className="hero-spotlight-shade" />
-              <span className="spotlight-index">Popular now</span>
-              <span className="spotlight-content">
-                <span>
-                  {spotlight.platforms
-                    .map((platform) => platformLabels[platform.kind])
-                    .join(' · ')}
-                </span>
+              <span className="store-feature-shade" />
+              <span className="store-feature-badge">Popular</span>
+              <span className="store-feature-platforms">
+                {spotlight.platforms
+                  .map((platform) => platformLabels[platform.kind])
+                  .join(' · ')}
+              </span>
+              <span className="store-feature-copy">
                 <strong>{spotlight.title}</strong>
                 <small>{spotlight.tagline}</small>
               </span>
-              <span className="spotlight-arrow" aria-hidden="true">
-                ↗
-              </span>
             </Link>
-            <aside
-              className="spotlight-panel"
-              aria-label="Featured game details"
-            >
+          ) : (
+            <div className="store-feature store-feature-empty">
+              <strong>New worlds are loading</strong>
+            </div>
+          )}
+          <div className="popular-heading">
+            <h2>Popular Games</h2>
+            <Link href="/games?featured=true">See all →</Link>
+          </div>
+          <CatalogGrid
+            emptyMessage="Featured games are coming soon."
+            games={popularGames}
+          />
+        </div>
+        <aside className="store-inspector" aria-label="Featured game details">
+          {spotlight ? (
+            <>
               <div>
                 <p className="eyebrow">Featured release</p>
                 <h2>{spotlight.title}</h2>
                 <p>{spotlight.tagline}</p>
               </div>
-              <ul aria-label="Available platforms">
+              <ul className="inspector-tags" aria-label="Available platforms">
                 {spotlight.platforms.map((platform) => (
                   <li key={platform.kind}>{platformLabels[platform.kind]}</li>
                 ))}
@@ -117,84 +109,21 @@ export default async function Home() {
                 </span>
                 <Link href={`/games/${spotlight.slug}`}>View game →</Link>
               </div>
-            </aside>
-          </div>
-        ) : (
-          <div aria-hidden="true" className="hero-spotlight hero-abstract">
-            <span className="hero-planet" />
-            <span className="hero-moon" />
-          </div>
-        )}
-      </section>
-      <section aria-label="Neo Game Labs promise" className="home-marquee">
-        <p>
-          <span>Discover.</span>
-          <span>Play.</span>
-          <span>Collect.</span>
-          <span>Shape what comes next.</span>
-        </p>
-      </section>
-      {!catalogAvailable ? (
-        <section className="content-section">
-          <p className="notice">
-            The catalog service is unavailable. Start the API and seed the
-            catalog to preview games.
-          </p>
-        </section>
-      ) : null}
-      <section className="content-section">
-        <div className="section-heading">
-          <div>
-            <p className="eyebrow">The front row</p>
-            <h2>Start somewhere unforgettable.</h2>
-          </div>
-          <Link href="/games?featured=true">See all featured ↗</Link>
-        </div>
-        <CatalogGrid
-          emptyMessage="Featured games are coming soon."
-          games={featuredGames}
-        />
-      </section>
-      <section className="home-manifesto">
-        <div>
-          <p className="eyebrow">Made with players</p>
-          <h2>The credits may roll. The conversation keeps going.</h2>
-        </div>
-        <div>
-          <p>
-            Every world gets better when players have a voice. Join game
-            discussions, share private feedback, and help shape what leaves the
-            lab next.
-          </p>
-          <Link className="secondary-action" href="/games">
-            Find a world to explore
-          </Link>
-        </div>
-      </section>
-      <section className="content-section">
-        <div className="section-heading">
-          <div>
-            <p className="eyebrow">Fresh from the lab</p>
-            <h2>New signals detected.</h2>
-          </div>
-          <Link href="/games">Browse everything ↗</Link>
-        </div>
-        <CatalogGrid
-          emptyMessage="New releases are being prepared."
-          games={latestGames}
-        />
-      </section>
-      <section className="home-final-cta">
-        <p className="eyebrow">Your next world is waiting</p>
-        <h2>Ready when you are.</h2>
-        <p>
-          Explore the complete Neo Game Labs catalog and build a library that
-          goes wherever you play.
-        </p>
-        <Link className="primary-action" href="/games">
-          Enter the catalog
-          <span aria-hidden="true">→</span>
-        </Link>
+              {latestGames.length > 1 ? (
+                <div className="inspector-previews">
+                  {latestGames.slice(1, 3).map((game) => (
+                    <Link href={`/games/${game.slug}`} key={game.slug}>
+                      <img alt="" src={game.coverImageUrl} />
+                      <span>{game.title}</span>
+                    </Link>
+                  ))}
+                </div>
+              ) : null}
+            </>
+          ) : (
+            <p>Featured game details will appear here.</p>
+          )}
+        </aside>
       </section>
     </main>
   );
